@@ -49,7 +49,7 @@ dependencies {
     implementation ("com.squareup.picasso:picasso:2.8")
     //firebase
     implementation("com.google.firebase:firebase-database:20.3.1")
-    implementation("com.google.firebase:firebase-auth:22.3.1")
+    implementation("com.google.firebase:firebase-auth:20.0.3")
     implementation("com.google.firebase:firebase-core:19.0.0")
 
     testImplementation("junit:junit:4.13.2")
