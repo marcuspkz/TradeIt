@@ -12,6 +12,7 @@ import com.example.tradeit.databinding.ActivityMainBinding
 import com.example.tradeit.model.Product
 import com.google.firebase.*
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -23,7 +24,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var firebaseAuth: FirebaseAuth
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -33,9 +33,15 @@ class MainActivity : AppCompatActivity() {
         val emailET = binding.emailET
         val passwordET = binding.passwordET
         val loginButton = binding.loginButton
+        var registerButton = binding.registerButton
 
         loginButton.setOnClickListener {
             loginUser(emailET.text.toString(), passwordET.text.toString())
+        }
+
+        registerButton.setOnClickListener {
+            val intent = Intent(this, RegisterUserActivity::class.java)
+            startActivity(intent)
         }
     }
 
@@ -50,6 +56,12 @@ class MainActivity : AppCompatActivity() {
                     val intent = Intent(this, StartActivity::class.java)
                     startActivity(intent)
                     finish() //cerrar esta actividad para que no se pueda volver atrás
+                    var displayName = getDisplayName()
+                    Toast.makeText(
+                        this,
+                        "¡Bienvenido, $displayName!",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 } else {
                     //autenticación fallida
                     Toast.makeText(
@@ -61,7 +73,17 @@ class MainActivity : AppCompatActivity() {
             }
     }
 
-    private fun registerUser() {
-        
+    //debug
+    private fun getDisplayName(): String? {
+        val user = Firebase.auth.currentUser
+        var name: String?
+        name = ""
+        user?.let {
+            for (profile in it.providerData) {
+                name = profile.displayName
+            }
+        }
+
+        return name
     }
 }
