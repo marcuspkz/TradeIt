@@ -3,6 +3,7 @@ package com.example.tradeit
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.Settings.Global
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
@@ -56,7 +57,7 @@ class MainActivity : AppCompatActivity() {
                     val intent = Intent(this, StartActivity::class.java)
                     startActivity(intent)
                     finish() //cerrar esta actividad para que no se pueda volver atrás
-                    var displayName = getDisplayName()
+                    var displayName = GlobalFunctions.getDisplayName()
                     Toast.makeText(
                         this,
                         "¡Bienvenido, $displayName!",
@@ -71,19 +72,5 @@ class MainActivity : AppCompatActivity() {
                     ).show()
                 }
             }
-    }
-
-    //debug
-    private fun getDisplayName(): String? {
-        val user = Firebase.auth.currentUser
-        var name: String?
-        name = ""
-        user?.let {
-            for (profile in it.providerData) {
-                name = profile.displayName
-            }
-        }
-
-        return name
     }
 }

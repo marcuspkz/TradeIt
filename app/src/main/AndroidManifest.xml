@@ -24,7 +24,8 @@
 
         <activity
             android:name=".StartActivity"
-            android:exported="true">
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan">
         </activity>
 
         <activity

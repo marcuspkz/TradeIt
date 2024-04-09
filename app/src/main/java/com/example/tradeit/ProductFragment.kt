@@ -1,4 +1,4 @@
-package com.example.pruebalayout
+package com.example.tradeit
 
 import android.content.ContentValues
 import android.os.Bundle
@@ -33,7 +33,6 @@ class ProductFragment : Fragment() {
         super.onCreate(savedInstanceState)
         binding = FragmentProductBinding.inflate(layoutInflater)
         firebase = FirebaseDatabase.getInstance()
-        initUI()
     }
 
     //se inicializa el layout
@@ -52,7 +51,7 @@ class ProductFragment : Fragment() {
     }
 
     private fun initUI() {
-        binding.searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener
+        binding.searchViewProducts.setOnQueryTextListener(object: SearchView.OnQueryTextListener
         {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 getProductsByTitle(query.orEmpty())
