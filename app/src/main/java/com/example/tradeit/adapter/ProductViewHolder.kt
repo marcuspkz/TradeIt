@@ -14,6 +14,6 @@ class ProductViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         binding.tvDescription.text = product.description
         binding.tvSeller.text = product.seller
         binding.tvPrice.text = product.price.toString() + "€"
-        Picasso.get().load(product.image).into(binding.ivImage)
+        //Picasso.get().load(product.image).into(binding.ivImage)
     }
 }

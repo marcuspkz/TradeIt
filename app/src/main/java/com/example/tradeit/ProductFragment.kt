@@ -1,6 +1,7 @@
 package com.example.tradeit
 
 import android.content.ContentValues
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -48,6 +49,7 @@ class ProductFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         initUI()
         getAllProducts()
+        //generateTestData()
     }
 
     private fun initUI() {
@@ -59,6 +61,12 @@ class ProductFragment : Fragment() {
             }
             override fun onQueryTextChange(newText: String?) = false
         })
+
+        binding.addButton.setOnClickListener {
+            val intent = Intent(requireContext(), NewProductActivity::class.java)
+            startActivity(intent)
+        }
+
         productAdapter = ProductAdapter()
         binding.rvProducts.setHasFixedSize(true)
         binding.rvProducts.layoutManager = LinearLayoutManager(context)
