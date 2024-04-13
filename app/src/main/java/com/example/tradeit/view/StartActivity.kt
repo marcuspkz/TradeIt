@@ -1,9 +1,14 @@
 package com.example.tradeit.view
 
+import android.annotation.SuppressLint
+import android.content.res.ColorStateList
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.ContextCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.example.pruebalayout.FragmentPageAdapter
+import com.example.tradeit.R
 import com.example.tradeit.controller.adapter.ProductAdapter
 import com.example.tradeit.databinding.ActivityStartBinding
 import com.google.android.material.tabs.TabLayout
@@ -32,6 +37,21 @@ class StartActivity : AppCompatActivity() {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 if (tab != null) {
                     viewPager2.currentItem = tab.position
+                    if (tab.position == 1) {
+                        tabLayout.backgroundTintList = ContextCompat.getColorStateList(this@StartActivity, R.color.blue_clear)
+                        tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(this@StartActivity, R.color.blue_dark))
+                        tabLayout.setTabTextColors(
+                            ContextCompat.getColor(this@StartActivity, R.color.gray), //pestaña no seleccionada
+                            ContextCompat.getColor(this@StartActivity, R.color.blue_dark)
+                        )
+                    } else {
+                        tabLayout.backgroundTintList = ContextCompat.getColorStateList(this@StartActivity, R.color.main_bg)
+                        tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(this@StartActivity, R.color.main))
+                        tabLayout.setTabTextColors(
+                            ContextCompat.getColor(this@StartActivity, R.color.gray), //pestaña no seleccionada
+                            ContextCompat.getColor(this@StartActivity, R.color.main_dark)
+                        )
+                    }
                 }
             }
 

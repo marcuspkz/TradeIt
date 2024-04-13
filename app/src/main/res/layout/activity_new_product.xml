@@ -10,7 +10,7 @@
         android:id="@+id/newProduct"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="NUEVO PRODUCTO"
+        android:text="@string/np_title"
         android:textSize="25sp"
         android:textStyle="bold"
         android:textColor="@color/black"
@@ -40,7 +40,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Nombre:"
+                android:text="@string/np_name"
                 android:layout_marginRight="10dp">
             </TextView>
 
@@ -62,7 +62,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Descripción:"
+                android:text="@string/np_description"
                 android:layout_marginRight="10dp">
             </TextView>
 
@@ -84,7 +84,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Categoría:"
+                android:text="@string/np_category"
                 android:layout_marginRight="10dp">
             </TextView>
 
@@ -106,7 +106,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Precio:"
+                android:text="@string/np_price"
                 android:layout_marginRight="10dp">
             </TextView>
 
@@ -125,7 +125,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="50dp"
-            android:text="Publicar producto">
+            android:backgroundTint="@color/main"
+            android:text="@string/np_publish">
         </Button>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

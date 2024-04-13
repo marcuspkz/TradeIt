@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="black">#FF000000</color>
+    <color name="gray">#49454F</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="main">#03B173</color>
+    <color name="main_clear">#33EAA9</color>
+    <color name="main_bg">#DEFDEA</color>
+    <color name="main_card">#D1FFDE</color>
+    <color name="main_dark">#008052</color>
+    <color name="blue_dark">#2291FF</color>
+    <color name="blue_clear">#CCEEFF</color>
 </resources>

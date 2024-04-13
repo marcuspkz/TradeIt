@@ -12,7 +12,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:queryHint="Contrata un servicio..."
+        app:queryHint="@string/searchservice"
         app:iconifiedByDefault="false" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -45,6 +45,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="25dp"
         android:layout_marginLeft="300dp">
-
     </TextView>
 </androidx.constraintlayout.widget.ConstraintLayout>
