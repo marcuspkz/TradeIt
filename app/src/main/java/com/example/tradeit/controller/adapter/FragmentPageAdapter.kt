@@ -4,9 +4,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.example.tradeit.ProductFragment
-import com.example.tradeit.ServiceFragment
-import com.example.tradeit.UserFragment
+import com.example.tradeit.view.ProductFragment
+import com.example.tradeit.view.ServiceFragment
+import com.example.tradeit.view.UserFragment
 
 class FragmentPageAdapter (
     fragmentManager: FragmentManager,

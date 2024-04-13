@@ -1,10 +1,10 @@
-package com.example.tradeit
+package com.example.tradeit.view
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
 import com.example.pruebalayout.FragmentPageAdapter
-import com.example.tradeit.adapter.ProductAdapter
+import com.example.tradeit.controller.adapter.ProductAdapter
 import com.example.tradeit.databinding.ActivityStartBinding
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.database.FirebaseDatabase

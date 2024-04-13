@@ -1,4 +1,4 @@
-package com.example.tradeit.adapter
+package com.example.tradeit.controller.adapter
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
