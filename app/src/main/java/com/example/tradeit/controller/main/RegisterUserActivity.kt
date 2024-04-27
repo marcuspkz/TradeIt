@@ -3,7 +3,7 @@ package com.example.tradeit.controller.main
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
-import com.example.tradeit.controller.FirebaseFunctions
+import com.example.tradeit.controller.statics.FirebaseFunctions
 import com.example.tradeit.databinding.ActivityRegisterUserBinding
 import com.google.firebase.auth.FirebaseAuth
 

@@ -10,10 +10,10 @@ class ProductViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     private val binding = ItemProductBinding.bind(view)
 
     fun bind(product: Product) {
-        binding.tvTitle.text = product.title
-        binding.tvDescription.text = product.description
-        binding.tvSeller.text = product.seller
-        binding.tvPrice.text = product.price.toString() + "€"
-        Picasso.get().load(product.image).into(binding.ivImage)
+        binding.tvTitle.text = product.getTitle()
+        binding.tvDescription.text = product.getDescription()
+        binding.tvSeller.text = product.getSeller()
+        binding.tvPrice.text = product.getPrice().toString() + "€"
+        Picasso.get().load(product.getImage()).into(binding.ivImage)
     }
 }

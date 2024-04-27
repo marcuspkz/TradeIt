@@ -1,4 +1,4 @@
-package com.example.tradeit.controller.main
+package com.example.tradeit.controller.main.fragments
 
 import android.content.Intent
 import android.os.Bundle
@@ -9,7 +9,8 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.tradeit.controller.adapter.ProductAdapter
-import com.example.tradeit.controller.FirebaseFunctions
+import com.example.tradeit.controller.statics.FirebaseFunctions
+import com.example.tradeit.controller.main.publish.NewProductActivity
 import com.example.tradeit.databinding.FragmentProductBinding
 import com.google.firebase.database.FirebaseDatabase
 

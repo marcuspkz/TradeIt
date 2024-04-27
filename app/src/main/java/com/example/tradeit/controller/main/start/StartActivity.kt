@@ -1,4 +1,4 @@
-package com.example.tradeit.controller.main
+package com.example.tradeit.controller.main.start
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

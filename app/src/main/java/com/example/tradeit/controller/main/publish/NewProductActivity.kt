@@ -1,13 +1,10 @@
-package com.example.tradeit.controller.main
+package com.example.tradeit.controller.main.publish
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
-import com.example.tradeit.controller.FirebaseFunctions
-import com.example.tradeit.controller.GlobalFunctions
+import com.example.tradeit.controller.statics.GlobalFunctions
 import com.example.tradeit.databinding.ActivityNewProductBinding
-import com.example.tradeit.model.Product
 import com.google.firebase.database.FirebaseDatabase
 
 class NewProductActivity : AppCompatActivity() {

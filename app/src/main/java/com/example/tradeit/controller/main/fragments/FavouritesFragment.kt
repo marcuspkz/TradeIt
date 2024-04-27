@@ -1,21 +1,22 @@
-package com.example.tradeit.controller.main
+package com.example.tradeit.controller.main.fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.tradeit.controller.FirebaseFunctions
+import com.example.tradeit.controller.statics.FirebaseFunctions
+import com.example.tradeit.databinding.FragmentFavouritesBinding
 import com.example.tradeit.databinding.FragmentMyaccountBinding
 import com.google.firebase.database.FirebaseDatabase
 
-class MyAccountFragment : Fragment() {
-    private lateinit var binding: FragmentMyaccountBinding
+class FavouritesFragment : Fragment() {
+    private lateinit var binding: FragmentFavouritesBinding
     private lateinit var firebase: FirebaseDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = FragmentMyaccountBinding.inflate(layoutInflater)
+        binding = FragmentFavouritesBinding.inflate(layoutInflater)
         firebase = FirebaseDatabase.getInstance()
     }
 
@@ -23,7 +24,7 @@ class MyAccountFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentMyaccountBinding.inflate(inflater, container, false)
+        binding = FragmentFavouritesBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -32,7 +33,6 @@ class MyAccountFragment : Fragment() {
     }
 
     private fun initUI() {
-        binding.mailText.text = FirebaseFunctions.getEmail()
-        binding.displayNameText.text = FirebaseFunctions.getDisplayName()
+
     }
 }

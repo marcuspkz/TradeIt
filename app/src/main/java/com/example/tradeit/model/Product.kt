@@ -1,18 +1,52 @@
 package com.example.tradeit.model
 
 data class Product (
-    //var id_product: String,
-    var title: String,
-    val description: String,
-    val category: String,
-    val ubication: String,
-    val price: Float,
-    val image: String,
-    val seller: String,
+    private var productId: String,
+    private var title: String,
+    private val description: String,
+    private val category: String,
+    private val ubication: String,
+    private val price: Float,
+    private val image: String,
+    private val seller: String,
+    private val postingDate: String
 ) {
-    constructor() : this("", "", "", "", 0.0f, "", "")
+    constructor() : this("", "", "", "", "", 0.0f, "", "", "")
 
-    public fun setNewTitle(title: String) {
-        this.title = title;
+    //getters para cada campo
+    fun getProductId(): String {
+        return productId
+    }
+
+    fun getTitle(): String {
+        return title
+    }
+
+    fun getDescription(): String {
+        return description
+    }
+
+    fun getCategory(): String {
+        return category
+    }
+
+    fun getUbication(): String {
+        return ubication
+    }
+
+    fun getPrice(): Float {
+        return price
+    }
+
+    fun getImage(): String {
+        return image
+    }
+
+    fun getSeller(): String {
+        return seller
+    }
+
+    fun getPostingDate(): String {
+        return postingDate
     }
 }

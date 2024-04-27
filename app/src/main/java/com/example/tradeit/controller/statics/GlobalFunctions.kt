@@ -1,4 +1,4 @@
-package com.example.tradeit.controller
+package com.example.tradeit.controller.statics
 
 import android.app.AlertDialog
 import android.content.Context

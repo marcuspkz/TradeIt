@@ -1,0 +1,37 @@
+package com.example.tradeit.controller.main.fragments
+
+import android.os.Bundle
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import com.example.tradeit.controller.statics.FirebaseFunctions
+import com.example.tradeit.databinding.FragmentChatBinding
+import com.example.tradeit.databinding.FragmentMyaccountBinding
+import com.google.firebase.database.FirebaseDatabase
+
+class ChatFragment : Fragment() {
+    private lateinit var binding: FragmentChatBinding
+    private lateinit var firebase: FirebaseDatabase
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = FragmentChatBinding.inflate(layoutInflater)
+        firebase = FirebaseDatabase.getInstance()
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = FragmentChatBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        initUI()
+    }
+
+    private fun initUI() {
+    }
+}

@@ -31,11 +31,31 @@
     <string name="np_next">Siguiente >>></string>
     <string name="np_imagetitle">Título del producto</string>
 
+    <!-- myaccount -->
+    <string name="mc_title">Mi cuenta</string>
+    <string name="mc_smalltitle">\nConsulta y modifica fácilmente los datos\nde tu cuenta.</string>
+    <string name="mc_testname">Nombre Prueba</string>
+    <string name="mc_rating">Valoración:</string>
+    <string name="mc_info">Información de la cuenta</string>
+    <string name="mc_products">Mis productos</string>
+    <string name="mc_services">Mis servicios</string>
+    <string name="mc_config">Configuración</string>
+
+    <!-- productdetail -->
+    <string name="pd_title">Detalles de producto</string>
+    <string name="pd_description">Descripción completa del producto seleccionado.</string>
+    <string name="pd_testtitle">Título de prueba 123 456</string>
+    <string name="pd_testprice">1500€</string>
+    <string name="pd_testdescription">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</string>
+    <string name="pd_testuser">Usuario Pruebez</string>
+    <string name="pd_testdate">Publicado el 27/04/24</string>
     <!-- fragmentproduct-->
     <string name="searchproduct">Busca un producto...</string>
 
     <!-- serviceproduct -->
     <string name="searchservice">Contrata un servicio...</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <!-- userfragment -->
 

@@ -1,4 +1,4 @@
-package com.example.tradeit.controller
+package com.example.tradeit.controller.statics
 
 import android.content.ContentValues
 import android.content.Context
@@ -9,7 +9,7 @@ import com.example.tradeit.controller.adapter.ProductAdapter
 import com.example.tradeit.model.Product
 import com.example.tradeit.controller.main.MainActivity
 import com.example.tradeit.controller.main.RegisterUserActivity
-import com.example.tradeit.controller.main.StartActivity
+import com.example.tradeit.controller.main.start.StartActivity
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
@@ -29,11 +29,39 @@ object FirebaseFunctions {
         return productId
     }
 
+    fun getProduct(productId: String, firebase: FirebaseDatabase, callback: (Product?) -> Unit) {
+        val databaseReference = firebase.reference
+        val productRef = databaseReference.child("Products").child(productId)
+
+        productRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    val product = dataSnapshot.getValue(Product::class.java)
+                    callback(product)
+                } else {
+                    callback(null)
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                //maneja el error aquí si es necesario
+                callback(null)
+            }
+        })
+    }
+
     //modificar imagen producto
     fun modifyProductImage(productId: String, image: String, firebase: FirebaseDatabase) {
         val databaseReference = firebase.reference
         val productRef = databaseReference.child("Products").child(productId)
         productRef.child("image").setValue(image)
+    }
+
+    //establecer id dentro del propio producto
+    fun setProductId(productId: String, firebase: FirebaseDatabase) {
+        val databaseReference = firebase.reference
+        val productRef = databaseReference.child("Products").child(productId)
+        productRef.child("productId").setValue(productId)
     }
 
     //obtener display name
@@ -76,7 +104,7 @@ object FirebaseFunctions {
                     val intent = Intent(context, StartActivity::class.java)
                     context.startActivity(intent)
                     context.finish() //cerrar esta actividad para que no se pueda volver atrás
-                    var displayName = FirebaseFunctions.getDisplayName()
+                    var displayName = getDisplayName()
                     Toast.makeText(
                         context,
                         "¡Bienvenido, $displayName!",
@@ -170,7 +198,7 @@ object FirebaseFunctions {
                 for (data in snapshot.children) {
                     val product = data.getValue(Product::class.java)
                     product?.let {
-                        if (GlobalFunctions.removeAccents(it.title).lowercase().contains(searchTerm)) {
+                        if (GlobalFunctions.removeAccents(it.getTitle()).lowercase().contains(searchTerm)) {
                             productList.add(it)
                         }
                     }
@@ -187,43 +215,51 @@ object FirebaseFunctions {
 
     fun generateTestData(firebase: FirebaseDatabase) {
         val product1 = Product(
+            "",
             "Smartphone Samsung Galaxy S21",
             "El último smartphone de Samsung con increíble rendimiento y cámara de alta resolución.",
             "Electrónicos",
             "Zaragoza",
             999.99f,
             "https://ejemplo.com/imagen1.jpg",
-            "Samsung Store"
+            "Samsung Store",
+            ""
         )
 
         val product2 = Product(
+            "",
             "Portátil HP Pavilion",
             "Potente portátil con procesador Intel Core i7 y pantalla Full HD de 15.6 pulgadas.",
             "Informática",
             "Zaragoza",
             849.99f,
             "https://ejemplo.com/imagen2.jpg",
-            "HP Store"
+            "HP Store",
+            ""
         )
 
         val product3 = Product(
+            "",
             "Zapatillas Nike Air Max",
             "Zapatillas deportivas con tecnología de amortiguación Air Max para mayor comodidad.",
             "Moda",
             "Zaragoza",
             129.99f,
             "https://ejemplo.com/imagen3.jpg",
-            "Nike Store"
+            "Nike Store",
+            ""
         )
 
         val product4 = Product(
+            "",
             "Televisor LG OLED 4K",
             "Televisor con tecnología OLED y resolución 4K para una experiencia visual impresionante.",
             "Electrónicos",
             "Zaragoza",
             1499.99f,
             "https://ejemplo.com/imagen4.jpg",
-            "LG Store"
+            "LG Store",
+            ""
         )
 
         addProduct(product1, firebase)

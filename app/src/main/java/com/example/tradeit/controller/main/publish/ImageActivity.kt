@@ -1,20 +1,14 @@
-package com.example.tradeit.controller.main
+package com.example.tradeit.controller.main.publish
 
 import android.content.Intent
-import android.graphics.Bitmap
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.MediaStore
-import android.util.Log
-import android.widget.Button
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import com.example.tradeit.R
-import com.example.tradeit.controller.FirebaseFunctions
+import com.example.tradeit.controller.statics.FirebaseFunctions
+import com.example.tradeit.controller.main.start.StartActivity
 import com.example.tradeit.databinding.ActivityImageBinding
-import com.example.tradeit.databinding.ActivityNewProductBinding
 import com.example.tradeit.model.Product
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
@@ -81,12 +75,14 @@ class ImageActivity : AppCompatActivity() {
 
         publishButton.setOnClickListener {
             if (selectedImageUri != null) {
-                //generamos el producto sin la imagen y lo subimos
-                val product = Product(title, description, category, ubication, price.toFloat(), "", displayName)
+                //generamos el producto sin la imagen y sin id, y lo subimos
+                //lo del id es sencillo. se inserta, se genera su id de firebase pero luego ese id mi programa también
+                //lo tiene que conocer, dado que si no, es imposible identificarlo posteriormente en el adapter
+                val product = Product("", title, description, category, ubication, price.toFloat(), "", displayName, "")
                 val productId = FirebaseFunctions.addProduct(product, firebase)
 
                 //subimos la imagen y obtenemos la URL
-                var image = uploadImage(selectedImageUri!!, productId) {imageUrl ->
+                uploadImage(selectedImageUri!!, productId) {imageUrl ->
                     if (imageUrl == "error") {
                         Toast.makeText(
                             baseContext,
@@ -95,11 +91,14 @@ class ImageActivity : AppCompatActivity() {
                         ).show()
                     } else {
                         FirebaseFunctions.modifyProductImage(productId, imageUrl, firebase)
+                        FirebaseFunctions.setProductId(productId, firebase)
                         Toast.makeText(
                             baseContext,
                             "Producto publicado correctamente.",
                             Toast.LENGTH_SHORT,
                         ).show()
+                        val intent = Intent(this, StartActivity::class.java)
+                        startActivity(intent)
                     }
                 }
             } else {
@@ -110,22 +109,5 @@ class ImageActivity : AppCompatActivity() {
                 ).show()
             }
         }
-
-        /*
-        nextButton.setOnClickListener {
-            val title = titleET.text.toString()
-            val description = descriptionET.text.toString()
-            val category = categoryET.text.toString()
-            val priceString = priceET.text.toString()
-            val product = Product(title, description, category, priceString.toFloat(), "", "Vendedor")
-            FirebaseFunctions.addProduct(product, firebase)
-
-            //añadir comprobacion de fallo al insertar
-            Toast.makeText(
-                baseContext,
-                "Insertado $title.",
-                Toast.LENGTH_SHORT,
-            ).show()
-        }*/
     }
 }
