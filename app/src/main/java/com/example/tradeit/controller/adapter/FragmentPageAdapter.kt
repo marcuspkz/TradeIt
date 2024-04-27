@@ -4,9 +4,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.example.tradeit.view.ProductFragment
-import com.example.tradeit.view.ServiceFragment
-import com.example.tradeit.view.UserFragment
+import com.example.tradeit.controller.main.ProductFragment
+import com.example.tradeit.controller.main.ServiceFragment
+import com.example.tradeit.controller.main.MyAccountFragment
 
 class FragmentPageAdapter (
     fragmentManager: FragmentManager,
@@ -20,9 +20,9 @@ class FragmentPageAdapter (
         return when (position) {
             0 -> ProductFragment()
             1 -> ServiceFragment()
-            2 -> UserFragment()
-            3 -> UserFragment()
-            4 -> UserFragment()
+            2 -> MyAccountFragment()
+            3 -> MyAccountFragment()
+            4 -> MyAccountFragment()
             else -> throw IllegalArgumentException("Posición no válida: $position")
         }
     }

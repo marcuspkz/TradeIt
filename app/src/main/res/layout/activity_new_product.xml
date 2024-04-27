@@ -4,129 +4,126 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.NewProductActivity">
-
-    <TextView
-        android:id="@+id/newProduct"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/np_title"
-        android:textSize="25sp"
-        android:textStyle="bold"
-        android:textColor="@color/black"
-        android:layout_marginTop="16dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-    </TextView>
+    tools:context=".controller.main.NewProductActivity">
 
     <LinearLayout
-        android:id="@+id/addProductLL"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:id="@+id/titleLL"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="45dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/newProductTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/np_title"
+            android:textColor="@color/black"
+            android:textSize="25sp"
+            android:textStyle="bold"></TextView>
+
+        <TextView
+            android:id="@+id/newProductSmallTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/np_smalltitle"
+            android:textColor="@color/black"
+            android:textSize="16sp"></TextView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/fields"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="85dp"
+        android:gravity="right"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@id/next"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/titleLL">
+
+        <EditText
+            android:id="@+id/productTitleET"
+            android:layout_width="320dp"
+            android:layout_height="35dp"
+            android:background="@drawable/tb_background"
+            android:hint="@string/np_name"
+            android:maxLines="1"
+            android:maxLength="30"
+            android:textSize="15sp"></EditText>
+
+        <EditText
+            android:id="@+id/productDescriptionET"
+            android:layout_width="320dp"
+            android:layout_height="120dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/tb_background"
+            android:gravity="top|left"
+            android:hint="@string/np_description"
+            android:maxLines="8"
+            android:maxLength="500"
+            android:paddingTop="10dp"
+            android:textSize="15sp"></EditText>
+
+        <EditText
+            android:id="@+id/productCategoryET"
+            android:layout_width="320dp"
+            android:layout_height="35dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/tb_background"
+            android:hint="@string/np_category"
+            android:maxLines="1"
+            android:maxLength="30"
+            android:textSize="15sp"></EditText>
+
+        <EditText
+            android:id="@+id/productUbicationET"
+            android:layout_width="320dp"
+            android:layout_height="35dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/tb_background"
+            android:hint="@string/np_ubication"
+            android:maxLines="1"
+            android:maxLength="30"
+            android:textSize="15sp"></EditText>
+
+        <EditText
+            android:id="@+id/productPriceET"
+            android:layout_width="100dp"
+            android:layout_height="35dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/tb_background"
+            android:hint="@string/np_price"
+            android:maxLines="1"
+            android:maxLength="10"
+            android:textSize="15sp"></EditText>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
         android:orientation="vertical"
         android:layout_marginTop="100dp"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/newProduct"
-        app:layout_constraintBottom_toBottomOf="parent">
-
-        <LinearLayout
-            android:id="@+id/productTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="center">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/np_name"
-                android:layout_marginRight="10dp">
-            </TextView>
-
-            <EditText
-                android:id="@+id/productTitleET"
-                android:layout_width="250dp"
-                android:layout_height="45dp"
-                android:textSize="15sp"
-                android:maxLines="1">
-            </EditText>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/productDescription"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="center">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/np_description"
-                android:layout_marginRight="10dp">
-            </TextView>
-
-            <EditText
-                android:id="@+id/productDescriptionET"
-                android:layout_width="250dp"
-                android:layout_height="45dp"
-                android:textSize="15sp"
-                android:maxLines="4">
-            </EditText>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/productSeller"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="center">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/np_category"
-                android:layout_marginRight="10dp">
-            </TextView>
-
-            <EditText
-                android:id="@+id/productCategoryET"
-                android:layout_width="250dp"
-                android:layout_height="45dp"
-                android:textSize="15sp"
-                android:maxLines="4">
-            </EditText>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/productPrice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="center">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/np_price"
-                android:layout_marginRight="10dp">
-            </TextView>
-
-            <EditText
-                android:id="@+id/productPriceET"
-                android:layout_width="250dp"
-                android:layout_height="45dp"
-                android:textSize="15sp"
-                android:maxLines="4">
-            </EditText>
-        </LinearLayout>
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/fields">
 
         <Button
-            android:id="@+id/addButton"
-            android:layout_width="wrap_content"
+            android:id="@+id/nextButton"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="50dp"
             android:backgroundTint="@color/main"
-            android:text="@string/np_publish">
-        </Button>
+            android:text="@string/np_next"></Button>
     </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,15 +1,11 @@
-package com.example.tradeit.view
+package com.example.tradeit.controller.main
 
-import android.annotation.SuppressLint
-import android.content.res.ColorStateList
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.example.pruebalayout.FragmentPageAdapter
 import com.example.tradeit.R
-import com.example.tradeit.controller.adapter.ProductAdapter
 import com.example.tradeit.databinding.ActivityStartBinding
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.database.FirebaseDatabase

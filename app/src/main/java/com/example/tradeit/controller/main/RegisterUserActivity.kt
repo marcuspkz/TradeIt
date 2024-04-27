@@ -1,17 +1,11 @@
-package com.example.tradeit.view
+package com.example.tradeit.controller.main
 
-import android.content.ContentValues.TAG
-import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import com.example.tradeit.controller.FirebaseFunctions
 import com.example.tradeit.databinding.ActivityRegisterUserBinding
-import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.auth
-import com.google.firebase.auth.userProfileChangeRequest
 
 
 class RegisterUserActivity : AppCompatActivity() {

@@ -5,12 +5,11 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import android.widget.Toast
-import androidx.core.content.ContextCompat.startActivity
 import com.example.tradeit.controller.adapter.ProductAdapter
 import com.example.tradeit.model.Product
-import com.example.tradeit.view.MainActivity
-import com.example.tradeit.view.RegisterUserActivity
-import com.example.tradeit.view.StartActivity
+import com.example.tradeit.controller.main.MainActivity
+import com.example.tradeit.controller.main.RegisterUserActivity
+import com.example.tradeit.controller.main.StartActivity
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
@@ -22,9 +21,19 @@ import com.google.firebase.database.ValueEventListener
 
 object FirebaseFunctions {
     //añadir producto
-    fun addProduct(product: Product, firebase: FirebaseDatabase) {
+    fun addProduct(product: Product, firebase: FirebaseDatabase): String {
         val databaseReference = firebase.reference
-        databaseReference.child("Products").push().setValue(product)
+        val productRef = databaseReference.child("Products").push()
+        val productId = productRef.key.toString()
+        productRef.setValue(product)
+        return productId
+    }
+
+    //modificar imagen producto
+    fun modifyProductImage(productId: String, image: String, firebase: FirebaseDatabase) {
+        val databaseReference = firebase.reference
+        val productRef = databaseReference.child("Products").child(productId)
+        productRef.child("image").setValue(image)
     }
 
     //obtener display name
@@ -181,6 +190,7 @@ object FirebaseFunctions {
             "Smartphone Samsung Galaxy S21",
             "El último smartphone de Samsung con increíble rendimiento y cámara de alta resolución.",
             "Electrónicos",
+            "Zaragoza",
             999.99f,
             "https://ejemplo.com/imagen1.jpg",
             "Samsung Store"
@@ -190,6 +200,7 @@ object FirebaseFunctions {
             "Portátil HP Pavilion",
             "Potente portátil con procesador Intel Core i7 y pantalla Full HD de 15.6 pulgadas.",
             "Informática",
+            "Zaragoza",
             849.99f,
             "https://ejemplo.com/imagen2.jpg",
             "HP Store"
@@ -199,6 +210,7 @@ object FirebaseFunctions {
             "Zapatillas Nike Air Max",
             "Zapatillas deportivas con tecnología de amortiguación Air Max para mayor comodidad.",
             "Moda",
+            "Zaragoza",
             129.99f,
             "https://ejemplo.com/imagen3.jpg",
             "Nike Store"
@@ -208,6 +220,7 @@ object FirebaseFunctions {
             "Televisor LG OLED 4K",
             "Televisor con tecnología OLED y resolución 4K para una experiencia visual impresionante.",
             "Electrónicos",
+            "Zaragoza",
             1499.99f,
             "https://ejemplo.com/imagen4.jpg",
             "LG Store"

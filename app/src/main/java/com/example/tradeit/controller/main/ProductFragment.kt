@@ -1,4 +1,4 @@
-package com.example.tradeit.view
+package com.example.tradeit.controller.main
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,14 +10,8 @@ import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.tradeit.controller.adapter.ProductAdapter
 import com.example.tradeit.controller.FirebaseFunctions
-import com.example.tradeit.controller.GlobalFunctions
 import com.example.tradeit.databinding.FragmentProductBinding
-import com.example.tradeit.model.Product
-import com.google.firebase.Firebase
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 
 class ProductFragment : Fragment() {
     private lateinit var binding: FragmentProductBinding

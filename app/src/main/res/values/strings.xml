@@ -2,8 +2,8 @@
     <string name="app_name">TradeIt</string>
 
     <!-- mainactivity-->
-    <string name="email">Correo electrónico:</string>
-    <string name="password">Contraseña:</string>
+    <string name="email">Correo electrónico</string>
+    <string name="password">Contraseña</string>
     <string name="login">Iniciar sesión</string>
     <string name="register">Registrarme</string>
 
@@ -20,11 +20,16 @@
 
     <!-- newproduct-->
     <string name="np_title">Publicar producto</string>
-    <string name="np_name">Nombre:</string>
-    <string name="np_description">Descripción:</string>
-    <string name="np_category">Categoría:</string>
-    <string name="np_price">Precio:</string>
-    <string name="np_publish">Publicar</string>
+    <string name="np_smalltitle">\nIntroduce los datos básicos de tu producto.\nMás adelante, podrás subir una imagen.</string>
+    <string name="np_smallimage">\nSelecciona una imagen de tu dispositivo.\nEsta imagen se mostrará en la página de\nvisualización del producto.</string>
+    <string name="np_name">Nombre</string>
+    <string name="np_description">Descripción</string>
+    <string name="np_category">Categoría</string>
+    <string name="np_ubication">Ubicación</string>
+    <string name="np_price">Precio (€)</string>
+    <string name="np_publish">Publicar producto >>></string>
+    <string name="np_next">Siguiente >>></string>
+    <string name="np_imagetitle">Título del producto</string>
 
     <!-- fragmentproduct-->
     <string name="searchproduct">Busca un producto...</string>
