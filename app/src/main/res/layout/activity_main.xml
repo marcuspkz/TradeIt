@@ -52,7 +52,7 @@
 
     <Button
         android:id="@+id/loginButton"
-        android:layout_width="250dp"
+        android:layout_width="320dp"
         android:layout_height="wrap_content"
         android:text="@string/login"
         android:backgroundTint="@color/main"
@@ -65,7 +65,7 @@
 
     <Button
         android:id="@+id/registerButton"
-        android:layout_width="250dp"
+        android:layout_width="320dp"
         android:layout_height="wrap_content"
         android:text="@string/register"
         android:backgroundTint="@color/main"
@@ -73,4 +73,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
     </Button>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/pb_background"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone" />
 </androidx.constraintlayout.widget.ConstraintLayout>

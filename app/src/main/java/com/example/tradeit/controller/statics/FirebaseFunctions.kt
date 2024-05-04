@@ -75,7 +75,8 @@ object FirebaseFunctions {
 
         productRef.removeValue()
             .addOnSuccessListener {
-                Toast.makeText(activity, "Producto borrado correctamente", Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, "Producto borrado correctamente", Toast.LENGTH_SHORT)
+                    .show()
                 val intent = Intent(activity, StartActivity::class.java)
                 activity.startActivity(intent)
                 activity.finish()
@@ -120,9 +121,6 @@ object FirebaseFunctions {
 
     //login usuario
     fun loginUser(email: String, password: String, firebaseAuth: FirebaseAuth, context: Context) {
-        val email = email
-        val password = password
-
         firebaseAuth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(context as MainActivity) { task ->
                 if (task.isSuccessful) {
@@ -148,7 +146,13 @@ object FirebaseFunctions {
     }
 
     //registrar usuario
-    fun registerUser(displayName: String, email: String, password: String, firebaseAuth: FirebaseAuth, context: Context) {
+    fun registerUser(
+        displayName: String,
+        email: String,
+        password: String,
+        firebaseAuth: FirebaseAuth,
+        context: Context
+    ) {
         firebaseAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(context as RegisterUserActivity) { task ->
                 if (task.isSuccessful) {
@@ -165,6 +169,9 @@ object FirebaseFunctions {
                             "¡Registro de usuario $displayName exitoso!",
                             Toast.LENGTH_SHORT,
                         ).show()
+                        val intent = Intent(context, MainActivity::class.java)
+                        context.startActivity(intent)
+                        context.finish()
                     } else {
                         //no se pudo obtener el usuario registrado
                         Toast.makeText(
@@ -250,7 +257,11 @@ object FirebaseFunctions {
     }
 
     //obtener productos por título
-    fun getProductsByTitle(title: String, firebase: FirebaseDatabase, productAdapter: ProductAdapter) {
+    fun getProductsByTitle(
+        title: String,
+        firebase: FirebaseDatabase,
+        productAdapter: ProductAdapter
+    ) {
         val databaseReference = firebase.reference.child("Products")
         var searchTerm = title.lowercase()
 
@@ -261,7 +272,9 @@ object FirebaseFunctions {
                 for (data in snapshot.children) {
                     val product = data.getValue(Product::class.java)
                     product?.let {
-                        if (GlobalFunctions.removeAccents(it.getTitle()).lowercase().contains(searchTerm)) {
+                        if (GlobalFunctions.removeAccents(it.getTitle()).lowercase()
+                                .contains(searchTerm)
+                        ) {
                             productList.add(it)
                         }
                     }
@@ -277,59 +290,59 @@ object FirebaseFunctions {
     }
 
     /*
-    fun generateTestData(firebase: FirebaseDatabase) {
-        val product1 = Product(
-            "",
-            "Smartphone Samsung Galaxy S21",
-            "El último smartphone de Samsung con increíble rendimiento y cámara de alta resolución.",
-            "Electrónicos",
-            "Zaragoza",
-            999.99f,
-            "https://ejemplo.com/imagen1.jpg",
-            "Samsung Store",
-            ""
-        )
+fun generateTestData(firebase: FirebaseDatabase) {
+    val product1 = Product(
+        "",
+        "Smartphone Samsung Galaxy S21",
+        "El último smartphone de Samsung con increíble rendimiento y cámara de alta resolución.",
+        "Electrónicos",
+        "Zaragoza",
+        999.99f,
+        "https://ejemplo.com/imagen1.jpg",
+        "Samsung Store",
+        ""
+    )
 
-        val product2 = Product(
-            "",
-            "Portátil HP Pavilion",
-            "Potente portátil con procesador Intel Core i7 y pantalla Full HD de 15.6 pulgadas.",
-            "Informática",
-            "Zaragoza",
-            849.99f,
-            "https://ejemplo.com/imagen2.jpg",
-            "HP Store",
-            ""
-        )
+    val product2 = Product(
+        "",
+        "Portátil HP Pavilion",
+        "Potente portátil con procesador Intel Core i7 y pantalla Full HD de 15.6 pulgadas.",
+        "Informática",
+        "Zaragoza",
+        849.99f,
+        "https://ejemplo.com/imagen2.jpg",
+        "HP Store",
+        ""
+    )
 
-        val product3 = Product(
-            "",
-            "Zapatillas Nike Air Max",
-            "Zapatillas deportivas con tecnología de amortiguación Air Max para mayor comodidad.",
-            "Moda",
-            "Zaragoza",
-            129.99f,
-            "https://ejemplo.com/imagen3.jpg",
-            "Nike Store",
-            ""
-        )
+    val product3 = Product(
+        "",
+        "Zapatillas Nike Air Max",
+        "Zapatillas deportivas con tecnología de amortiguación Air Max para mayor comodidad.",
+        "Moda",
+        "Zaragoza",
+        129.99f,
+        "https://ejemplo.com/imagen3.jpg",
+        "Nike Store",
+        ""
+    )
 
-        val product4 = Product(
-            "",
-            "Televisor LG OLED 4K",
-            "Televisor con tecnología OLED y resolución 4K para una experiencia visual impresionante.",
-            "Electrónicos",
-            "Zaragoza",
-            1499.99f,
-            "https://ejemplo.com/imagen4.jpg",
-            "LG Store",
-            ""
-        )
+    val product4 = Product(
+        "",
+        "Televisor LG OLED 4K",
+        "Televisor con tecnología OLED y resolución 4K para una experiencia visual impresionante.",
+        "Electrónicos",
+        "Zaragoza",
+        1499.99f,
+        "https://ejemplo.com/imagen4.jpg",
+        "LG Store",
+        ""
+    )
 
-        addProduct(product1, firebase)
-        addProduct(product2, firebase)
-        addProduct(product3, firebase)
-        addProduct(product4, firebase)
-    }
-    */
+    addProduct(product1, firebase)
+    addProduct(product2, firebase)
+    addProduct(product3, firebase)
+    addProduct(product4, firebase)
+}
+*/
 }

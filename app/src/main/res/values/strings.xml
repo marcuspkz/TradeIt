@@ -16,7 +16,7 @@
 
     <!-- registeractivity-->
     <string name="repeatpassword">Repetir contraseña</string>
-    <string name="registeruser">Registrar usuario</string>
+    <string name="registeruser">Registrarme</string>
 
     <!-- newproduct-->
     <string name="np_title">Publicar producto</string>

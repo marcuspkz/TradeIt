@@ -3,6 +3,9 @@ package com.example.tradeit.controller.statics
 import android.app.AlertDialog
 import android.content.Context
 import android.widget.EditText
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 object GlobalFunctions {
     fun removeAccents(text: String): String {
@@ -33,5 +36,11 @@ object GlobalFunctions {
         }
         val dialog = builder.create()
         dialog.show()
+    }
+
+    fun getCurrentDate(): String {
+        val currentDate = Calendar.getInstance().time
+        val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+        return dateFormat.format(currentDate)
     }
 }

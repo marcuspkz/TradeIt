@@ -2,7 +2,7 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="150dp"
+    android:layout_height="140dp"
     android:layout_marginHorizontal="10dp"
     android:layout_marginVertical="5dp"
     app:cardBackgroundColor="@color/main_card"
@@ -12,7 +12,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="match_parent"
         android:orientation="horizontal">
 
         <ImageView
@@ -20,21 +20,23 @@
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:layout_gravity="center"
-            android:layout_marginLeft="15dp">
+            android:layout_marginLeft="12dp">
         </ImageView>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_gravity="left">
 
             <TextView
                 android:id="@+id/tvTitle"
                 android:layout_width="220dp"
                 android:layout_height="45dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginLeft="13dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="12dp"
                 android:text="iPhone14 tremendo excelente maravilloso"
+                android:maxLines="2"
                 android:textStyle="bold"
                 android:textColor="@color/black"
                 android:textSize="18sp">
@@ -45,39 +47,60 @@
                 android:layout_width="220dp"
                 android:layout_height="40dp"
                 android:layout_marginTop="5dp"
-                android:layout_marginLeft="13dp"
+                android:layout_marginLeft="12dp"
                 android:text="El mejor iphone que vas a encontrar en las mejores condiciones absolutamente increibles no se lo va a creer."
+                android:maxLines="3"
                 android:textColor="@color/black"
                 android:textSize="11sp">
             </TextView>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginLeft="3dp">
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="4dp">
                 <TextView
                     android:id="@+id/tvSeller"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:text="Pepito grillo"
-                    android:layout_marginLeft="10dp"
                     android:textColor="@color/black"
-                    android:textSize="15sp">
+                    android:textSize="15sp"
+                    android:textStyle="italic">
                 </TextView>
 
-                <TextView
-                    android:id="@+id/tvPrice"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginLeft="28dp"
-                    android:text="333.33€"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:textSize="22sp">
-                </TextView>
+                    android:orientation="vertical"
+                    android:layout_gravity="right">
+                    <TextView
+                        android:id="@+id/blankSpaces"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="          "
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:textSize="22sp">
+                    </TextView>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_gravity="right">
+                    <TextView
+                        android:id="@+id/tvPrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="333.33€"
+                        android:textStyle="bold"
+                        android:textColor="@color/main_dark"
+                        android:textSize="22sp">
+                    </TextView>
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

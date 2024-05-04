@@ -1,14 +1,18 @@
 package com.example.tradeit.controller.main.publish
 
+import android.app.ProgressDialog
 import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import com.example.tradeit.controller.statics.FirebaseFunctions
 import com.example.tradeit.controller.main.start.StartActivity
+import com.example.tradeit.controller.statics.GlobalFunctions
 import com.example.tradeit.databinding.ActivityImageBinding
 import com.example.tradeit.model.Product
 import com.google.firebase.Firebase
@@ -37,6 +41,12 @@ class ImageActivity : AppCompatActivity() {
         //datos de usuario logueado
         val displayName = FirebaseFunctions.getDisplayName(false)
         val userUID = FirebaseFunctions.getDisplayName(true)
+
+        //fecha
+        val actualDate = GlobalFunctions.getCurrentDate()
+
+        //pantalla de carga
+        val progressBar = binding.progressBar
 
         val imageTitleTV = binding.imageTitle
         imageTitleTV.text = title
@@ -77,38 +87,36 @@ class ImageActivity : AppCompatActivity() {
 
         publishButton.setOnClickListener {
             if (selectedImageUri != null) {
+                //pantalla de carga
+                progressBar.visibility = View.VISIBLE
+
                 //generamos el producto sin la imagen y sin id, y lo subimos
                 //lo del id es sencillo. se inserta, se genera su id de firebase pero luego ese id mi programa también
                 //lo tiene que conocer, dado que si no, es imposible identificarlo posteriormente en el adapter
-                val product = Product("", title, description, category, ubication, price.toFloat(), "", displayName, userUID, "")
+                val product = Product("", title, description, category, ubication, price.toFloat(), "", displayName, userUID, actualDate)
                 val productId = FirebaseFunctions.addProduct(product, firebase)
 
                 //subimos la imagen y obtenemos la URL
                 uploadImage(selectedImageUri!!, productId) {imageUrl ->
                     if (imageUrl == "error") {
-                        Toast.makeText(
-                            baseContext,
-                            "Error al subir la imagen.",
-                            Toast.LENGTH_SHORT,
-                        ).show()
+                        progressBar.visibility = View.GONE
+                        GlobalFunctions.showInfoDialog(this, "Error", "Error al subir la imagen.")
                     } else {
                         FirebaseFunctions.modifyProductImage(productId, imageUrl, firebase)
                         FirebaseFunctions.setProductId(productId, firebase)
-                        Toast.makeText(
-                            baseContext,
-                            "Producto publicado correctamente.",
-                            Toast.LENGTH_SHORT,
-                        ).show()
-                        val intent = Intent(this, StartActivity::class.java)
-                        startActivity(intent)
+                        progressBar.visibility = View.GONE
+                        val builder = AlertDialog.Builder(this)
+                        builder.setMessage("¡Se ha publicado tu producto $title!")
+                            .setPositiveButton("Aceptar") { _, _ ->
+                                val intent = Intent(this, StartActivity::class.java)
+                                startActivity(intent)
+                            }
+                            .create()
+                            .show()
                     }
                 }
             } else {
-                Toast.makeText(
-                    baseContext,
-                    "No hay imagen seleccionada.",
-                    Toast.LENGTH_SHORT,
-                ).show()
+                GlobalFunctions.showInfoDialog(this, "Error", "No hay imagen seleccionada.")
             }
         }
     }

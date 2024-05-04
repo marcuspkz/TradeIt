@@ -52,9 +52,9 @@
             android:id="@+id/imageTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
             android:text="@string/np_imagetitle"
             android:textColor="@color/black"
-            android:layout_marginBottom="10dp"
             android:textSize="16sp"></TextView>
 
         <ImageView
@@ -76,13 +76,25 @@
         android:id="@+id/publishButton"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/main"
-        android:text="@string/np_publish"
         android:layout_marginLeft="150dp"
         android:layout_marginTop="120dp"
-        app:layout_constraintTop_toBottomOf="@id/imageAndButton"
+        android:backgroundTint="@color/main"
+        android:text="@string/np_publish"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"></Button>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imageAndButton"></Button>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/pb_background"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone" />
 </androidx.constraintlayout.widget.ConstraintLayout>

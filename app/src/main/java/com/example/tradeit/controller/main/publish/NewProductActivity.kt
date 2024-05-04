@@ -28,14 +28,19 @@ class NewProductActivity : AppCompatActivity() {
 
         nextButton.setOnClickListener {
             if (GlobalFunctions.allEditTextAreFilled(elementsList)) {
-                //TODO: comprobación de precio float
-                val intent = Intent(this, ImageActivity::class.java)
-                intent.putExtra("title", titleET.text.toString())
-                intent.putExtra("description", descriptionET.text.toString())
-                intent.putExtra("category", categoryET.text.toString())
-                intent.putExtra("price", priceET.text.toString())
-                intent.putExtra("ubication", ubicationET.text.toString())
-                startActivity(intent)
+                val priceText = priceET.text.toString()
+                try {
+                    val price = priceText.toFloat()
+                    val intent = Intent(this, ImageActivity::class.java)
+                    intent.putExtra("title", titleET.text.toString())
+                    intent.putExtra("description", descriptionET.text.toString())
+                    intent.putExtra("category", categoryET.text.toString())
+                    intent.putExtra("price", price.toString())
+                    intent.putExtra("ubication", ubicationET.text.toString())
+                    startActivity(intent)
+                } catch (e: NumberFormatException) {
+                    GlobalFunctions.showInfoDialog(this, "Error", "El precio debe ser un número válido.")
+                }
             } else {
                 GlobalFunctions.showInfoDialog(this, "Error", "Es necesario completar todos los campos para continuar.")
             }

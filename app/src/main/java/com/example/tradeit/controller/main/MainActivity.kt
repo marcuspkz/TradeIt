@@ -3,7 +3,9 @@ package com.example.tradeit.controller.main
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import com.example.tradeit.controller.statics.FirebaseFunctions
+import com.example.tradeit.controller.statics.GlobalFunctions
 import com.example.tradeit.databinding.ActivityMainBinding
 import com.google.firebase.auth.FirebaseAuth
 
@@ -21,9 +23,17 @@ class MainActivity : AppCompatActivity() {
         val passwordET = binding.passwordET
         val loginButton = binding.loginButton
         var registerButton = binding.registerButton
+        val progressBar = binding.progressBar
 
         loginButton.setOnClickListener {
-            FirebaseFunctions.loginUser(emailET.text.toString(), passwordET.text.toString(), firebaseAuth, this)
+            progressBar.visibility = View.VISIBLE
+            if (emailET.text.toString() != "" && passwordET.text.toString() != "") {
+                FirebaseFunctions.loginUser(emailET.text.toString(), passwordET.text.toString(), firebaseAuth, this)
+                progressBar.visibility = View.GONE
+            } else {
+                progressBar.visibility = View.GONE
+                GlobalFunctions.showInfoDialog(this, "Error", "Es necesario introducir correo electrónico y contraseña.")
+            }
         }
 
         registerButton.setOnClickListener {
