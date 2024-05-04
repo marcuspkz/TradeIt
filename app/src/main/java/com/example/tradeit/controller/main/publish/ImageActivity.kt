@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import com.example.tradeit.controller.statics.FirebaseFunctions
@@ -34,8 +35,8 @@ class ImageActivity : AppCompatActivity() {
         val ubication = intent.getStringExtra("ubication").toString()
 
         //datos de usuario logueado
-        val currentUser = FirebaseAuth.getInstance().currentUser
-        val displayName = currentUser?.displayName.toString()
+        val displayName = FirebaseFunctions.getDisplayName(false)
+        val userUID = FirebaseFunctions.getDisplayName(true)
 
         val imageTitleTV = binding.imageTitle
         imageTitleTV.text = title
@@ -45,6 +46,7 @@ class ImageActivity : AppCompatActivity() {
 
         val pickImage = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             uri?.let {
+                imageView.scaleType = ImageView.ScaleType.FIT_XY
                 imageView.setImageURI(it)
                 selectedImageUri = it
             }
@@ -78,7 +80,7 @@ class ImageActivity : AppCompatActivity() {
                 //generamos el producto sin la imagen y sin id, y lo subimos
                 //lo del id es sencillo. se inserta, se genera su id de firebase pero luego ese id mi programa también
                 //lo tiene que conocer, dado que si no, es imposible identificarlo posteriormente en el adapter
-                val product = Product("", title, description, category, ubication, price.toFloat(), "", displayName, "")
+                val product = Product("", title, description, category, ubication, price.toFloat(), "", displayName, userUID, "")
                 val productId = FirebaseFunctions.addProduct(product, firebase)
 
                 //subimos la imagen y obtenemos la URL

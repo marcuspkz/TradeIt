@@ -32,6 +32,6 @@ class MyAccountFragment : Fragment() {
     }
 
     private fun initUI() {
-        binding.displayName.text = FirebaseFunctions.getDisplayName()
+        binding.displayName.text = FirebaseFunctions.getDisplayName(false)
     }
 }

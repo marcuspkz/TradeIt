@@ -1,6 +1,7 @@
 package com.example.tradeit.controller.main.start
 
 import android.os.Bundle
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.viewpager2.widget.ViewPager2
@@ -22,7 +23,13 @@ class StartActivity : AppCompatActivity() {
         binding = ActivityStartBinding.inflate(layoutInflater)
         firebase = FirebaseDatabase.getInstance()
         setContentView(binding.root)
-
+        //evitar que el usuario pueda navegar hacia atrás
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                //no hacer nada
+            }
+        }
+        onBackPressedDispatcher.addCallback(this, callback)
         tabLayout = binding.tabLayout
         viewPager2 = binding.viewPager2
 

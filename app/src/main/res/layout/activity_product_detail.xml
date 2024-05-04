@@ -106,7 +106,7 @@
                         android:orientation="horizontal"
                         android:layout_marginTop="12dp">
                         <ImageView
-                            android:id="@+id/userImage"
+                            android:id="@+id/sellerImage"
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:src="@drawable/iv_border"></ImageView>
@@ -155,5 +155,14 @@
                         android:textSize="15sp"></TextView>
                 </LinearLayout>
             </LinearLayout>
+
+            <Button
+                android:id="@+id/deleteButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#FD6969"
+                android:text="Eliminar producto"
+                android:layout_marginTop="20dp">
+            </Button>
         </LinearLayout>
 </ScrollView>

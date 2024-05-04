@@ -8,10 +8,11 @@ data class Product (
     private val ubication: String,
     private val price: Float,
     private val image: String,
-    private val seller: String,
+    private val seller: String?,
+    private val sellerId: String?,
     private val postingDate: String
 ) {
-    constructor() : this("", "", "", "", "", 0.0f, "", "", "")
+    constructor() : this("", "", "", "", "", 0.0f, "", "", "", "")
 
     //getters para cada campo
     fun getProductId(): String {
@@ -42,8 +43,12 @@ data class Product (
         return image
     }
 
-    fun getSeller(): String {
+    fun getSeller(): String? {
         return seller
+    }
+
+    fun getSellerId(): String? {
+        return sellerId
     }
 
     fun getPostingDate(): String {

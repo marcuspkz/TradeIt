@@ -1,15 +1,18 @@
 package com.example.tradeit.controller.statics
 
+import android.app.Activity
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.util.Log
 import android.widget.Toast
+import androidx.core.content.ContextCompat.startActivity
 import com.example.tradeit.controller.adapter.ProductAdapter
 import com.example.tradeit.model.Product
 import com.example.tradeit.controller.main.MainActivity
 import com.example.tradeit.controller.main.RegisterUserActivity
 import com.example.tradeit.controller.main.start.StartActivity
+import com.example.tradeit.model.User
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
@@ -18,6 +21,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import kotlinx.coroutines.tasks.await
 
 object FirebaseFunctions {
     //añadir producto
@@ -64,14 +68,36 @@ object FirebaseFunctions {
         productRef.child("productId").setValue(productId)
     }
 
-    //obtener display name
-    fun getDisplayName(): String? {
+    //borrar producto
+    fun deleteProductById(productId: String, firebase: FirebaseDatabase, activity: Activity) {
+        val databaseReference = firebase.reference
+        val productRef = databaseReference.child("Products").child(productId)
+
+        productRef.removeValue()
+            .addOnSuccessListener {
+                Toast.makeText(activity, "Producto borrado correctamente", Toast.LENGTH_SHORT).show()
+                val intent = Intent(activity, StartActivity::class.java)
+                activity.startActivity(intent)
+                activity.finish()
+            }
+            .addOnFailureListener { exception ->
+                // Error al intentar eliminar el producto
+                // Aquí puedes manejar el error de alguna manera, como mostrar un mensaje de error al usuario
+            }
+    }
+
+    //obtener display name o uid
+    fun getDisplayName(uid: Boolean): String? {
         val user = Firebase.auth.currentUser
         var name: String?
         name = ""
         user?.let {
             for (profile in it.providerData) {
-                name = profile.displayName
+                if (!uid) {
+                    name = profile.displayName
+                } else {
+                    name = user.uid
+                }
             }
         }
 
@@ -104,7 +130,7 @@ object FirebaseFunctions {
                     val intent = Intent(context, StartActivity::class.java)
                     context.startActivity(intent)
                     context.finish() //cerrar esta actividad para que no se pueda volver atrás
-                    var displayName = getDisplayName()
+                    var displayName = getDisplayName(false)
                     Toast.makeText(
                         context,
                         "¡Bienvenido, $displayName!",
@@ -127,12 +153,26 @@ object FirebaseFunctions {
             .addOnCompleteListener(context as RegisterUserActivity) { task ->
                 if (task.isSuccessful) {
                     //registro exitoso
-                    updateDisplayName(displayName)
-                    Toast.makeText(
-                        context,
-                        "¡Registro de usuario $displayName exitoso!",
-                        Toast.LENGTH_SHORT,
-                    ).show()
+                    val user = task.result?.user
+                    //meter un if de si se pudo o no obtener el usuario
+                    if (user != null) {
+                        val userId = user.uid
+                        val newUser = User(userId, displayName, email)
+                        addUserToDatabase(newUser)
+                        updateDisplayName(displayName)
+                        Toast.makeText(
+                            context,
+                            "¡Registro de usuario $displayName exitoso!",
+                            Toast.LENGTH_SHORT,
+                        ).show()
+                    } else {
+                        //no se pudo obtener el usuario registrado
+                        Toast.makeText(
+                            context,
+                            "Error: No se pudo obtener el usuario registrado.",
+                            Toast.LENGTH_SHORT,
+                        ).show()
+                    }
                 } else {
                     //registro fallido
                     Toast.makeText(
@@ -142,6 +182,12 @@ object FirebaseFunctions {
                     ).show()
                 }
             }
+    }
+
+    private fun addUserToDatabase(user: User) {
+        val databaseReference = FirebaseDatabase.getInstance().reference
+        val usersRef = databaseReference.child("Users")
+        usersRef.child(user.userId).setValue(user)
     }
 
     //actualizar display name
@@ -186,6 +232,23 @@ object FirebaseFunctions {
         })
     }
 
+    fun getUserById(userId: String, firebase: FirebaseDatabase, callback: (User?) -> Unit) {
+        val databaseReference = firebase.reference
+        val usersRef = databaseReference.child("Users").child(userId)
+
+        usersRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val user = snapshot.getValue(User::class.java)
+                callback(user)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Manejar el error si la operación es cancelada
+                callback(null)
+            }
+        })
+    }
+
     //obtener productos por título
     fun getProductsByTitle(title: String, firebase: FirebaseDatabase, productAdapter: ProductAdapter) {
         val databaseReference = firebase.reference.child("Products")
@@ -213,6 +276,7 @@ object FirebaseFunctions {
         })
     }
 
+    /*
     fun generateTestData(firebase: FirebaseDatabase) {
         val product1 = Product(
             "",
@@ -267,4 +331,5 @@ object FirebaseFunctions {
         addProduct(product3, firebase)
         addProduct(product4, firebase)
     }
+    */
 }

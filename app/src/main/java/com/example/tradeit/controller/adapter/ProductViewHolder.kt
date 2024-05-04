@@ -1,6 +1,7 @@
 package com.example.tradeit.controller.adapter
 
 import android.view.View
+import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tradeit.databinding.ItemProductBinding
 import com.example.tradeit.model.Product
@@ -14,6 +15,7 @@ class ProductViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         binding.tvDescription.text = product.getDescription()
         binding.tvSeller.text = product.getSeller()
         binding.tvPrice.text = product.getPrice().toString() + "€"
+        binding.ivImage.scaleType = ImageView.ScaleType.CENTER_CROP
         Picasso.get().load(product.getImage()).into(binding.ivImage)
     }
 }
