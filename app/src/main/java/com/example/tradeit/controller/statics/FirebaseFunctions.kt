@@ -8,10 +8,12 @@ import android.util.Log
 import android.widget.Toast
 import androidx.core.content.ContextCompat.startActivity
 import com.example.tradeit.controller.adapter.ProductAdapter
+import com.example.tradeit.controller.adapter.ReviewAdapter
 import com.example.tradeit.model.Product
 import com.example.tradeit.controller.main.MainActivity
 import com.example.tradeit.controller.main.RegisterUserActivity
 import com.example.tradeit.controller.main.start.StartActivity
+import com.example.tradeit.model.Review
 import com.example.tradeit.model.User
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
@@ -31,6 +33,17 @@ object FirebaseFunctions {
         val productId = productRef.key.toString()
         productRef.setValue(product)
         return productId
+    }
+
+    fun addReview(review: Review, userId: String, firebase: FirebaseDatabase) {
+        val databaseReference = firebase.reference
+        val userRef = databaseReference.child("Users").child(userId)
+        val reviewId = userRef.child("Reviews").push().key
+
+        reviewId?.let {
+            review.reviewId = it
+            userRef.child("Reviews").child(it).setValue(review)
+        }
     }
 
     fun getProduct(productId: String, firebase: FirebaseDatabase, callback: (Product?) -> Unit) {
@@ -231,6 +244,29 @@ object FirebaseFunctions {
                 }
 
                 productAdapter.updateList(productList)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Manejar error de lectura de la base de datos
+            }
+        })
+    }
+
+    fun getAllReviewsForUser(userId: String, firebase: FirebaseDatabase, reviewAdapter: ReviewAdapter) {
+        val databaseReference = firebase.reference.child("Users").child(userId).child("Reviews")
+
+        databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val reviewList = mutableListOf<Review>()
+
+                for (data in snapshot.children) {
+                    val review = data.getValue(Review::class.java)
+                    review?.let {
+                        reviewList.add(it)
+                    }
+                }
+
+                reviewAdapter.updateList(reviewList)
             }
 
             override fun onCancelled(error: DatabaseError) {
