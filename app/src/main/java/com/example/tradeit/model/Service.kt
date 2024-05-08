@@ -5,14 +5,14 @@ class Service (
     var title: String,
     val description: String,
     val category: String,
-    val price: Float,
+    val price: Int,
     val image: String,
     val contact: String,
     val duration: String,
     val location: String,
     val requirements: String
     ) {
-        constructor() : this("", "", "", "", 0.0f, "", "", "", "", "")
+        constructor() : this("", "", "", "", 0, "", "", "", "", "")
 
         public fun setNewTitle(title: String) {
             this.title = title;

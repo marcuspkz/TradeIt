@@ -29,23 +29,39 @@
             android:orientation="vertical"
             android:layout_gravity="left">
 
-            <TextView
-                android:id="@+id/tvTitle"
-                android:layout_width="220dp"
-                android:layout_height="45dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginLeft="12dp"
-                android:text="iPhone14 tremendo excelente maravilloso"
-                android:maxLines="2"
-                android:textStyle="bold"
-                android:textColor="@color/black"
-                android:textSize="18sp">
-            </TextView>
-
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/tvTitle"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginLeft="12dp"
+                    android:text="iPhone14 maravilloso"
+                    android:maxLines="1"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:textSize="16sp">
+                </TextView>
+                <TextView
+                    android:id="@+id/addFavourite"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginLeft="12dp"
+                    android:text=">3"
+                    android:maxLines="1"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:textSize="16sp">
+                </TextView>
+            </LinearLayout>
             <TextView
                 android:id="@+id/tvDescription"
-                android:layout_width="220dp"
-                android:layout_height="40dp"
+                android:layout_width="230dp"
+                android:layout_height="60dp"
                 android:layout_marginTop="2dp"
                 android:layout_marginLeft="12dp"
                 android:text="El mejor iphone que vas a encontrar en las mejores condiciones absolutamente increibles no se lo va a creer."
@@ -59,7 +75,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_marginLeft="12dp"
-                android:layout_marginTop="2dp">
+                android:layout_marginTop="4dp">
                 <TextView
                     android:id="@+id/tvSeller"
                     android:layout_width="wrap_content"

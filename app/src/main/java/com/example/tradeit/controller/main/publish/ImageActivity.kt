@@ -93,7 +93,7 @@ class ImageActivity : AppCompatActivity() {
                 //generamos el producto sin la imagen y sin id, y lo subimos
                 //lo del id es sencillo. se inserta, se genera su id de firebase pero luego ese id mi programa también
                 //lo tiene que conocer, dado que si no, es imposible identificarlo posteriormente en el adapter
-                val product = Product("", title, description, category, ubication, price.toFloat(), "", displayName, userUID, actualDate)
+                val product = Product("", title, description, category, ubication, price.toInt(), "", displayName, userUID, actualDate)
                 val productId = FirebaseFunctions.addProduct(product, firebase)
 
                 //subimos la imagen y obtenemos la URL

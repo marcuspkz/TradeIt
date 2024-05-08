@@ -39,6 +39,7 @@ class ProductDetailActivity : AppCompatActivity() {
 
         deleteButton.visibility = GONE
         reviewButton.visibility = GONE
+        chatButton.visibility = GONE
         var sellerId: String? = ""
 
         var productId: String = intent.getStringExtra("productId").toString()
@@ -62,6 +63,7 @@ class ProductDetailActivity : AppCompatActivity() {
                             deleteButton.visibility = VISIBLE
                         } else {
                             reviewButton.visibility = VISIBLE
+                            chatButton.visibility = VISIBLE
                         }
                     }
                     sellerId?.let {

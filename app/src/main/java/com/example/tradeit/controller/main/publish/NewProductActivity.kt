@@ -30,7 +30,7 @@ class NewProductActivity : AppCompatActivity() {
             if (GlobalFunctions.allEditTextAreFilled(elementsList)) {
                 val priceText = priceET.text.toString()
                 try {
-                    val price = priceText.toFloat()
+                    val price = priceText.toInt()
                     val intent = Intent(this, ImageActivity::class.java)
                     intent.putExtra("title", titleET.text.toString())
                     intent.putExtra("description", descriptionET.text.toString())
