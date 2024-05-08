@@ -7,16 +7,28 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.tradeit.controller.statics.FirebaseFunctions
 import com.example.tradeit.databinding.FragmentMyaccountBinding
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import com.squareup.picasso.Picasso
 
 class MyAccountFragment : Fragment() {
     private lateinit var binding: FragmentMyaccountBinding
     private lateinit var firebase: FirebaseDatabase
+    private lateinit var firebaseAuth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = FragmentMyaccountBinding.inflate(layoutInflater)
         firebase = FirebaseDatabase.getInstance()
+        firebaseAuth = FirebaseAuth.getInstance()
+
+        firebaseAuth.currentUser?.let {
+            FirebaseFunctions.getUserProfilePicture(it.uid) { profilePictureUrl ->
+                profilePictureUrl?.let {
+                    Picasso.get().load(it).into(binding.userImage)
+                }
+            }
+        }
     }
 
     override fun onCreateView(

@@ -13,6 +13,7 @@ import com.example.tradeit.databinding.ActivityProductDetailBinding
 import com.example.tradeit.databinding.ActivityUserDetailBinding
 import com.google.firebase.Firebase
 import com.google.firebase.database.FirebaseDatabase
+import com.squareup.picasso.Picasso
 import kotlinx.coroutines.runBlocking
 
 class UserDetailActivity : AppCompatActivity() {
@@ -25,6 +26,7 @@ class UserDetailActivity : AppCompatActivity() {
         binding = ActivityUserDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
         firebase = FirebaseDatabase.getInstance()
+
 
         reviewAdapter = ReviewAdapter()
         binding.rvReviews.setHasFixedSize(true)
@@ -42,6 +44,12 @@ class UserDetailActivity : AppCompatActivity() {
         }
 
         FirebaseFunctions.getAllReviewsForUser(sellerId, firebase, reviewAdapter)
+        FirebaseFunctions.getUserProfilePicture(sellerId) { profilePictureUrl ->
+            profilePictureUrl?.let {
+                Picasso.get().load(it).into(binding.profilePicture)
+            }
+        }
+
         //meter addbutton para insertar reseña
         /*binding.addButton.setOnClickListener {
 

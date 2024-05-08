@@ -38,7 +38,8 @@ class ProductDetailActivity : AppCompatActivity() {
         val reviewButton = binding.reviewButton
 
         deleteButton.visibility = GONE
-        var sellerId: String? = null
+        reviewButton.visibility = GONE
+        var sellerId: String? = ""
 
         var productId: String = intent.getStringExtra("productId").toString()
         if (!productId.isNullOrEmpty()) {
@@ -59,6 +60,15 @@ class ProductDetailActivity : AppCompatActivity() {
                     if (actualUser != null) {
                         if (sellerId == actualUser.uid) {
                             deleteButton.visibility = VISIBLE
+                        } else {
+                            reviewButton.visibility = VISIBLE
+                        }
+                    }
+                    sellerId?.let {
+                        FirebaseFunctions.getUserProfilePicture(it) { profilePictureUrl ->
+                            profilePictureUrl?.let {
+                                Picasso.get().load(it).into(binding.sellerImage)
+                            }
                         }
                     }
                 }
@@ -80,7 +90,7 @@ class ProductDetailActivity : AppCompatActivity() {
 
             publishButton.setOnClickListener {
                 val review = Review("", rating.selectedItem.toString().toInt(), review.text.toString(), GlobalFunctions.getCurrentDate(), FirebaseFunctions.getDisplayName(true).toString(), sellerId.toString(), productId, null)
-                FirebaseFunctions.addReview(review, "IuUh3LZgSpTAqFBivJ5uiDdrQEO2", firebase)
+                FirebaseFunctions.addReview(review, sellerId.toString(), firebase)
             }
 
             dialog.show()

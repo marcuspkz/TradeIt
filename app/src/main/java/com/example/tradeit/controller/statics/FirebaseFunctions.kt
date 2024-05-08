@@ -23,7 +23,9 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.tasks.await
+import kotlin.random.Random
 
 object FirebaseFunctions {
     //añadir producto
@@ -65,6 +67,26 @@ object FirebaseFunctions {
                 callback(null)
             }
         })
+    }
+
+    fun getRandomImage(storage: FirebaseStorage, callback: (String?) -> Unit) {
+        val storageRef = storage.reference.child("profile_pictures")
+        storageRef.listAll()
+            .addOnSuccessListener { result ->
+                val images = result.items
+                val randomImage = images.randomOrNull()
+                randomImage?.downloadUrl
+                    ?.addOnSuccessListener { uri ->
+                        val imageUrl = uri.toString()
+                        callback(imageUrl)
+                    }
+            }
+    }
+
+    fun modifyUserImage(userId: String, image: String) {
+        val databaseReference = FirebaseDatabase.getInstance().reference
+        val productRef = databaseReference.child("Users").child(userId)
+        productRef.child("profilePicture").setValue(image)
     }
 
     //modificar imagen producto
@@ -159,13 +181,7 @@ object FirebaseFunctions {
     }
 
     //registrar usuario
-    fun registerUser(
-        displayName: String,
-        email: String,
-        password: String,
-        firebaseAuth: FirebaseAuth,
-        context: Context
-    ) {
+    fun registerUser(displayName: String, email: String, password: String, firebaseAuth: FirebaseAuth, firebaseStorage: FirebaseStorage, context: Context) {
         firebaseAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(context as RegisterUserActivity) { task ->
                 if (task.isSuccessful) {
@@ -174,9 +190,16 @@ object FirebaseFunctions {
                     //meter un if de si se pudo o no obtener el usuario
                     if (user != null) {
                         val userId = user.uid
-                        val newUser = User(userId, displayName, email)
+                        val newUser = User(userId, displayName, email, "")
                         addUserToDatabase(newUser)
                         updateDisplayName(displayName)
+                        getRandomImage(firebaseStorage) { imageUrl ->
+                            // Verificar si se obtuvo la URL de la imagen
+                            if (!imageUrl.isNullOrEmpty()) {
+                                // Modificar la imagen del usuario en la base de datos
+                                modifyUserImage(userId, imageUrl)
+                            }
+                        }
                         Toast.makeText(
                             context,
                             "¡Registro de usuario $displayName exitoso!",
@@ -204,6 +227,25 @@ object FirebaseFunctions {
             }
     }
 
+    fun getUserProfilePicture(userId: String, callback: (String?) -> Unit) {
+        val databaseReference = FirebaseDatabase.getInstance().reference
+        val userRef = databaseReference.child("Users").child(userId)
+
+        userRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val user = dataSnapshot.getValue(User::class.java)
+                val profilePictureUrl = user?.profilePicture
+                callback(profilePictureUrl)
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                // Manejar error de lectura de la base de datos
+                callback(null)
+            }
+        })
+    }
+
+
     private fun addUserToDatabase(user: User) {
         val databaseReference = FirebaseDatabase.getInstance().reference
         val usersRef = databaseReference.child("Users")
@@ -213,7 +255,6 @@ object FirebaseFunctions {
     //actualizar display name
     private fun updateDisplayName(name: String) {
         val user = Firebase.auth.currentUser
-
         val profileUpdates = userProfileChangeRequest {
             displayName = name
             //photoUri = Uri.parse("https://example.com/jane-q-user/profile.jpg")   //esto es para ponerle una foto de perfil
