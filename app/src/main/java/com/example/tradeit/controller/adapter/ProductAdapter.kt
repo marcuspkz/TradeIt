@@ -3,10 +3,17 @@ package com.example.tradeit.controller.adapter
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tradeit.R
 import com.example.tradeit.controller.main.detail.ProductDetailActivity
+import com.example.tradeit.controller.statics.FirebaseFunctions
+import com.example.tradeit.controller.statics.GlobalFunctions
+import com.example.tradeit.model.Favourite
 import com.example.tradeit.model.Product
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 
 class ProductAdapter(private var productList: List<Product> = emptyList()) : RecyclerView.Adapter<ProductViewHolder>() {
     fun updateList(list: List<Product>) {
@@ -19,7 +26,38 @@ class ProductAdapter(private var productList: List<Product> = emptyList()) : Rec
         )
     }
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
+        var firebaseAuth: FirebaseAuth
         holder.bind(productList[position])
+        holder.itemView.setOnLongClickListener {
+            firebaseAuth = FirebaseAuth.getInstance()
+            val userId = firebaseAuth.currentUser?.uid.toString()
+            val fav = Favourite(userId, productList[position].getProductId(), true)
+            val context = holder.itemView.context
+            FirebaseFunctions.favouriteExists(productList[position].getProductId()) { exists ->
+                if (exists) {
+                    GlobalFunctions.showInfoDialog(
+                        context,
+                        "Error.",
+                        "El producto ${productList[position].getTitle()} ya está en favoritos."
+                    )
+                } else {
+                    if (FirebaseFunctions.addFavourite(fav) != null) {
+                        GlobalFunctions.showInfoDialog(
+                            context,
+                            "¡Favorito añadido!",
+                            "Se ha añadido el producto ${productList[position].getTitle()} a favoritos."
+                        )
+                    } else {
+                        GlobalFunctions.showInfoDialog(
+                            context,
+                            "Error.",
+                            "Hubo un problema al añadir el producto a favoritos."
+                        )
+                    }
+                }
+            }
+            true
+        }
         holder.itemView.setOnClickListener {
             val intent = Intent(holder.itemView.context, ProductDetailActivity::class.java)
             intent.putExtra("productId", productList[position].getProductId())

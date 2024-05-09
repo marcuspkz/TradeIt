@@ -114,7 +114,7 @@ class ProductDetailActivity : AppCompatActivity() {
             val builder = AlertDialog.Builder(this)
             builder.setMessage("¿Seguro que quieres borrar el producto?")
                 .setPositiveButton("Sí") { _, _ ->
-                    FirebaseFunctions.deleteProductById(productId, firebase, this)
+                    FirebaseFunctions.deleteProductById(productId, this)
                 }
                 .setNegativeButton("No") { dialog, _ ->
                     dialog.dismiss()

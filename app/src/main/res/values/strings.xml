@@ -65,6 +65,26 @@
         <item>5</item>
     </string-array>
 
+    <string name="select_category_prompt">Categoría...</string>
+    <string-array name="category_options">
+        <item>Ropa y accesorios</item>
+        <item>Electrónica</item>
+        <item>Hogar y jardín</item>
+        <item>Deportes</item>
+        <item>Belleza y cuidado personal</item>
+        <item>Libros</item>
+        <item>Arte y manualidades</item>
+        <item>Juegos</item>
+        <item>Instrumentos musicales</item>
+        <item>Automovilismo</item>
+        <item>Electrodomésticos</item>
+        <item>Mascotas</item>
+        <item>Viajes</item>
+        <item>Comida y bebida</item>
+        <item>Informática</item>
+        <item>Salud y bienestar</item>
+    </string-array>
+
     <!-- userfragment -->
 
 </resources>

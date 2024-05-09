@@ -19,12 +19,12 @@ class NewProductActivity : AppCompatActivity() {
 
         val titleET = binding.productTitleET
         val descriptionET = binding.productDescriptionET
-        val categoryET = binding.productCategoryET
+        val category = binding.categorySpinner
         val priceET = binding.productPriceET
         val ubicationET = binding.productUbicationET
         val nextButton = binding.nextButton
 
-        val elementsList = mutableListOf(titleET, descriptionET, categoryET, priceET, ubicationET)
+        val elementsList = mutableListOf(titleET, descriptionET, priceET, ubicationET)
 
         nextButton.setOnClickListener {
             if (GlobalFunctions.allEditTextAreFilled(elementsList)) {
@@ -34,7 +34,7 @@ class NewProductActivity : AppCompatActivity() {
                     val intent = Intent(this, ImageActivity::class.java)
                     intent.putExtra("title", titleET.text.toString())
                     intent.putExtra("description", descriptionET.text.toString())
-                    intent.putExtra("category", categoryET.text.toString())
+                    intent.putExtra("category", category.selectedItem.toString())
                     intent.putExtra("price", price.toString())
                     intent.putExtra("ubication", ubicationET.text.toString())
                     startActivity(intent)

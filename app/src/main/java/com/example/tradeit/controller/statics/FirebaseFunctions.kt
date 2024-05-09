@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import android.widget.Toast
 import androidx.core.content.ContextCompat.startActivity
@@ -13,6 +14,7 @@ import com.example.tradeit.model.Product
 import com.example.tradeit.controller.main.MainActivity
 import com.example.tradeit.controller.main.RegisterUserActivity
 import com.example.tradeit.controller.main.start.StartActivity
+import com.example.tradeit.model.Favourite
 import com.example.tradeit.model.Review
 import com.example.tradeit.model.User
 import com.google.firebase.Firebase
@@ -23,7 +25,9 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.getValue
 import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.storage
 import kotlinx.coroutines.tasks.await
 import kotlin.random.Random
 
@@ -48,6 +52,37 @@ object FirebaseFunctions {
         }
     }
 
+    fun addFavourite(favourite: Favourite): String? {
+        val databaseReference = FirebaseDatabase.getInstance().reference
+        val favRef = databaseReference.child("Favourites").push()
+        val favId = favRef.key.toString()
+        favRef.setValue(favourite)
+        return favId
+    }
+
+    fun favouriteExists(itemId: String, callback: (Boolean) -> Unit) {
+        val databaseReference = FirebaseDatabase.getInstance().reference
+        val favoritesRef = databaseReference.child("Favourites")
+        favoritesRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                var exists = false
+                for (favSnapshot in snapshot.children) {
+                    val favItemId = favSnapshot.child("itemId").getValue(String::class.java)
+                    if (favItemId == itemId) {
+                        exists = true
+                        break
+                    }
+                }
+                callback(exists)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Manejar el error si la lectura de datos falla
+                callback(false) // En caso de error, asumir que el favorito no existe
+            }
+        })
+    }
+
     fun getProduct(productId: String, firebase: FirebaseDatabase, callback: (Product?) -> Unit) {
         val databaseReference = firebase.reference
         val productRef = databaseReference.child("Products").child(productId)
@@ -67,6 +102,25 @@ object FirebaseFunctions {
                 callback(null)
             }
         })
+    }
+
+    fun uploadImage(imageUri: Uri, productId: String, callback: (String) -> Unit): String {
+        val storageRef = Firebase.storage.reference
+        val imageRef = storageRef.child("product_images/$productId/product_image.jpg")
+        var image = ""
+
+        imageRef.putFile(imageUri)
+            .addOnSuccessListener {
+                imageRef.downloadUrl.addOnSuccessListener { uri ->
+                    image = uri.toString()
+                    callback(image)
+                }
+            }
+            .addOnFailureListener { exception ->
+                callback("error")
+            }
+
+        return image
     }
 
     fun getRandomImage(storage: FirebaseStorage, callback: (String?) -> Unit) {
@@ -104,12 +158,23 @@ object FirebaseFunctions {
     }
 
     //borrar producto
-    fun deleteProductById(productId: String, firebase: FirebaseDatabase, activity: Activity) {
-        val databaseReference = firebase.reference
+    fun deleteProductById(productId: String, activity: Activity) {
+        val databaseReference = FirebaseDatabase.getInstance().reference
+        val storageRef = Firebase.storage.reference
         val productRef = databaseReference.child("Products").child(productId)
 
         productRef.removeValue()
             .addOnSuccessListener {
+                //borrado de imagen
+                val imageRef = storageRef.child("product_images/$productId/product_image.jpg")
+                imageRef.delete()
+                    .addOnSuccessListener {
+                        //bien bien
+                    }
+                    .addOnFailureListener {
+                        Log.e("DeleteImageError", "Error al borrar la imagen:")
+                        //manejar error en borrado de imagen
+                    }
                 Toast.makeText(activity, "Producto borrado correctamente", Toast.LENGTH_SHORT)
                     .show()
                 val intent = Intent(activity, StartActivity::class.java)

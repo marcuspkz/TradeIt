@@ -62,24 +62,7 @@ class ImageActivity : AppCompatActivity() {
             }
         }
 
-        fun uploadImage(imageUri: Uri, productId: String, callback: (String) -> Unit): String {
-            val storageRef = Firebase.storage.reference
-            val imageRef = storageRef.child("product_images/$productId/product_image.jpg")
-            var image = ""
 
-            imageRef.putFile(imageUri)
-                .addOnSuccessListener {
-                    imageRef.downloadUrl.addOnSuccessListener { uri ->
-                        image = uri.toString()
-                        callback(image)
-                    }
-                }
-                .addOnFailureListener { exception ->
-                    callback("error")
-                }
-
-            return image
-        }
 
         chooseImgButton.setOnClickListener {
             pickImage.launch("image/*")
@@ -97,7 +80,7 @@ class ImageActivity : AppCompatActivity() {
                 val productId = FirebaseFunctions.addProduct(product, firebase)
 
                 //subimos la imagen y obtenemos la URL
-                uploadImage(selectedImageUri!!, productId) {imageUrl ->
+                FirebaseFunctions.uploadImage(selectedImageUri!!, productId) {imageUrl ->
                     if (imageUrl == "error") {
                         progressBar.visibility = View.GONE
                         GlobalFunctions.showInfoDialog(this, "Error", "Error al subir la imagen.")
