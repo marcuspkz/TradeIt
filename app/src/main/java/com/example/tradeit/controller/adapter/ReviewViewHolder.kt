@@ -18,7 +18,7 @@ class ReviewViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     fun bind(review: Review) {
         firebase = FirebaseDatabase.getInstance()
-        FirebaseFunctions.getUserById(review.publisherId, firebase) { user ->
+        FirebaseFunctions.getUserById(review.publisherId) { user ->
             if (user != null) {
                 binding.userTitle.text = user.displayName
                 //imagen de perfil

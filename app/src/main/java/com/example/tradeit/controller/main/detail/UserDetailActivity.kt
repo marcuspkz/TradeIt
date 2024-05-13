@@ -35,7 +35,7 @@ class UserDetailActivity : AppCompatActivity() {
 
         val displayName = binding.displayName
         var sellerId: String = intent.getStringExtra("sellerId").toString()
-        FirebaseFunctions.getUserById(sellerId, firebase) { user ->
+        FirebaseFunctions.getUserById(sellerId) { user ->
             if (user != null) {
                 displayName.text = user.displayName
             } else {

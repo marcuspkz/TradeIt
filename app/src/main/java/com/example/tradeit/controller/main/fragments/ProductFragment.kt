@@ -23,7 +23,6 @@ class ProductFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = FragmentProductBinding.inflate(layoutInflater)
-        firebase = FirebaseDatabase.getInstance()
     }
 
     //se inicializa el layout
@@ -38,7 +37,7 @@ class ProductFragment : Fragment() {
     //se implementa la funcionalidad
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         initUI()
-        FirebaseFunctions.getAllProducts(firebase, productAdapter)
+        FirebaseFunctions.getAllProducts(productAdapter)
         //FirebaseFunctions.generateTestData(firebase)
     }
 
@@ -46,7 +45,7 @@ class ProductFragment : Fragment() {
         binding.searchViewProducts.setOnQueryTextListener(object: SearchView.OnQueryTextListener
         {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                FirebaseFunctions.getProductsByTitle(query.orEmpty(), firebase, productAdapter)
+                FirebaseFunctions.getProductsByTitle(query.orEmpty(), productAdapter)
                 return false
             }
             override fun onQueryTextChange(newText: String?) = false

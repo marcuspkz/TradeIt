@@ -8,6 +8,7 @@ import android.net.Uri
 import android.util.Log
 import android.widget.Toast
 import androidx.core.content.ContextCompat.startActivity
+import com.example.tradeit.controller.adapter.ChatAdapter
 import com.example.tradeit.controller.adapter.ProductAdapter
 import com.example.tradeit.controller.adapter.ReviewAdapter
 import com.example.tradeit.model.Product
@@ -17,6 +18,8 @@ import com.example.tradeit.controller.main.start.StartActivity
 import com.example.tradeit.model.Favourite
 import com.example.tradeit.model.Review
 import com.example.tradeit.model.User
+import com.example.tradeit.model.chat.Chat
+import com.example.tradeit.model.chat.Message
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
@@ -83,8 +86,8 @@ object FirebaseFunctions {
         })
     }
 
-    fun getProduct(productId: String, firebase: FirebaseDatabase, callback: (Product?) -> Unit) {
-        val databaseReference = firebase.reference
+    fun getProduct(productId: String, callback: (Product?) -> Unit) {
+        val databaseReference = FirebaseDatabase.getInstance().reference
         val productRef = databaseReference.child("Products").child(productId)
 
         productRef.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -335,8 +338,8 @@ object FirebaseFunctions {
     }
 
     //obtener listado completo de productos
-    fun getAllProducts(firebase: FirebaseDatabase, productAdapter: ProductAdapter) {
-        val databaseReference = firebase.reference.child("Products")
+    fun getAllProducts(productAdapter: ProductAdapter) {
+        val databaseReference = FirebaseDatabase.getInstance().reference.child("Products")
 
         databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -381,8 +384,8 @@ object FirebaseFunctions {
         })
     }
 
-    fun getUserById(userId: String, firebase: FirebaseDatabase, callback: (User?) -> Unit) {
-        val databaseReference = firebase.reference
+    fun getUserById(userId: String, callback: (User?) -> Unit) {
+        val databaseReference = FirebaseDatabase.getInstance().reference
         val usersRef = databaseReference.child("Users").child(userId)
 
         usersRef.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -399,12 +402,8 @@ object FirebaseFunctions {
     }
 
     //obtener productos por título
-    fun getProductsByTitle(
-        title: String,
-        firebase: FirebaseDatabase,
-        productAdapter: ProductAdapter
-    ) {
-        val databaseReference = firebase.reference.child("Products")
+    fun getProductsByTitle(title: String, productAdapter: ProductAdapter) {
+        val databaseReference = FirebaseDatabase.getInstance().reference.child("Products")
         var searchTerm = title.lowercase()
 
         databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -430,6 +429,164 @@ object FirebaseFunctions {
             }
         })
     }
+
+    fun getUserChats(userId: String?, chatAdapter: ChatAdapter) {
+        val databaseReference = FirebaseDatabase.getInstance().reference.child("Chats")
+
+        databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val chatList = mutableListOf<Chat>()
+
+                for (data in snapshot.children) {
+                    val chat = data.getValue(Chat::class.java)
+                    chat?.let {
+                        if (chat.fromUser == userId || chat.toUser == userId) {
+                            chatList.add(it)
+                        }
+                    }
+                }
+
+                chatAdapter.updateList(chatList)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Manejar error de lectura de la base de datos
+            }
+        })
+    }
+
+    fun createChat(fromUser: String, toUser: String, relatedProduct: String, callback: (String?) -> Unit) {
+        val databaseReference = FirebaseDatabase.getInstance().reference
+        val chatsRef = databaseReference.child("Chats")
+        val chatId = chatsRef.push().key
+
+        if (chatId != null) {
+            val chatRef = chatsRef.child(chatId)
+            val chat = Chat(chatId, fromUser, toUser, emptyList(), relatedProduct, null)
+
+            chatRef.setValue(chat)
+                .addOnSuccessListener {
+                    callback(chatId)
+                }
+                .addOnFailureListener { exception ->
+                    // Manejar el error al crear el chat
+                    callback(null)
+                }
+        } else {
+            // Manejar el caso en que no se pudo generar el ID del chat
+            println("Error: No se pudo generar el ID del chat.")
+            callback(null)
+        }
+    }
+
+    fun getChatMessages(chatId: String, callback: (List<Message>?) -> Unit) {
+        val databaseReference = FirebaseDatabase.getInstance().reference
+        val chatRef = databaseReference.child("Chats").child(chatId)
+
+        chatRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val messageList = mutableListOf<Message>()
+                for (messageSnapshot in dataSnapshot.children) {
+                    val fromUser = messageSnapshot.child("fromUser").getValue(String::class.java)
+                    val toUser = messageSnapshot.child("toUser").getValue(String::class.java)
+                    val message = messageSnapshot.child("message").getValue(String::class.java)
+                    val sendDate = messageSnapshot.child("sendDate").getValue(Long::class.java)
+                    if (fromUser != null && toUser != null && message != null && sendDate != null) {
+                        val message = Message(fromUser, toUser, message, sendDate)
+                        messageList.add(message)
+                    }
+                }
+                callback(messageList)
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                // Manejar el error de lectura de la base de datos
+                callback(null)
+            }
+        })
+    }
+
+    fun chatExists(fromUser: String, toUser: String, relatedProduct: String, callback: (Boolean) -> Unit) {
+        val databaseReference = FirebaseDatabase.getInstance().reference
+        val chatsRef = databaseReference.child("Chats")
+
+        chatsRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                var chatExists = false
+                for (chatSnapshot in snapshot.children) {
+                    val fromUserId = chatSnapshot.child("fromUser").getValue(String::class.java)
+                    val toUserId = chatSnapshot.child("toUser").getValue(String::class.java)
+                    val relatedProductId = chatSnapshot.child("relatedProduct").getValue(String::class.java)
+
+                    if (fromUserId == fromUser && toUserId == toUser && relatedProductId == relatedProduct) {
+                        chatExists = true
+                        break
+                    }
+                }
+                callback(chatExists)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Manejar error de lectura de la base de datos
+                callback(false)
+            }
+        })
+    }
+
+    fun getLastMessage(chatId: String, firebaseDatabase: FirebaseDatabase, callback: (Message?) -> Unit) {
+        val chatRef = firebaseDatabase.reference.child("Chats").child(chatId)
+
+        chatRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val lastMessageId = dataSnapshot.child("lastMessage").getValue(String::class.java)
+
+                if (lastMessageId != null) {
+                    val messageRef = firebaseDatabase.reference.child("Messages").child(lastMessageId)
+
+                    messageRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onDataChange(messageSnapshot: DataSnapshot) {
+                            val message = messageSnapshot.getValue(Message::class.java)
+                            callback(message)
+                        }
+
+                        override fun onCancelled(databaseError: DatabaseError) {
+                            // Manejar el error si la operación es cancelada
+                            callback(null)
+                        }
+                    })
+                } else {
+                    // No hay un último mensaje registrado en el nodo Chat
+                    callback(null)
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                // Manejar el error si la operación es cancelada
+                callback(null)
+            }
+        })
+    }
+
+    fun sendMessage(chatId: String, message: Message) {
+        val databaseReference = FirebaseDatabase.getInstance().reference
+        var messagesRef = databaseReference.child("Chats").child(chatId).child("Messages")
+        val messageId = messagesRef.push().key
+
+        messageId?.let {
+            val messageRef = messagesRef.child(messageId)
+            messageRef.setValue(message)
+                .addOnSuccessListener {
+                    //mensaje enviado, añadir como último msg al chat
+                    messagesRef = databaseReference.child("Chats").child(chatId).child("lastMessage")
+                    messageRef.setValue(message)
+                    //TODO: comprobación?
+                }
+                .addOnFailureListener {
+                    //mensaje no enviado
+                }
+        }
+    }
+
 
     /*
 fun generateTestData(firebase: FirebaseDatabase) {

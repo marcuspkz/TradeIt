@@ -13,6 +13,7 @@ import android.widget.RadioGroup
 import android.widget.Spinner
 import androidx.appcompat.app.AlertDialog
 import com.example.tradeit.R
+import com.example.tradeit.controller.main.chat.ChatActivity
 import com.example.tradeit.controller.statics.FirebaseFunctions
 import com.example.tradeit.controller.statics.GlobalFunctions
 import com.example.tradeit.databinding.ActivityProductDetailBinding
@@ -24,6 +25,7 @@ import com.squareup.picasso.Picasso
 
 class ProductDetailActivity : AppCompatActivity() {
     private lateinit var firebase: FirebaseDatabase
+    private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var binding: ActivityProductDetailBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,6 +33,7 @@ class ProductDetailActivity : AppCompatActivity() {
         binding = ActivityProductDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
         firebase = FirebaseDatabase.getInstance()
+        firebaseAuth = FirebaseAuth.getInstance()
         val sellerName = binding.userName
         val sellerImage = binding.sellerImage
         val deleteButton = binding.deleteButton
@@ -44,7 +47,7 @@ class ProductDetailActivity : AppCompatActivity() {
 
         var productId: String = intent.getStringExtra("productId").toString()
         if (!productId.isNullOrEmpty()) {
-            FirebaseFunctions.getProduct(productId, firebase) { product ->
+            FirebaseFunctions.getProduct(productId) { product ->
                 if (product != null) {
                     binding.title.text = product.getTitle()
                     binding.image.adjustViewBounds = true
@@ -91,7 +94,16 @@ class ProductDetailActivity : AppCompatActivity() {
             }
 
             publishButton.setOnClickListener {
-                val review = Review("", rating.selectedItem.toString().toInt(), review.text.toString(), GlobalFunctions.getCurrentDate(), FirebaseFunctions.getDisplayName(true).toString(), sellerId.toString(), productId, null)
+                val review = Review(
+                    "",
+                    rating.selectedItem.toString().toInt(),
+                    review.text.toString(),
+                    GlobalFunctions.getCurrentDate(),
+                    FirebaseFunctions.getDisplayName(true).toString(),
+                    sellerId.toString(),
+                    productId,
+                    null
+                )
                 FirebaseFunctions.addReview(review, sellerId.toString(), firebase)
             }
 
@@ -124,11 +136,44 @@ class ProductDetailActivity : AppCompatActivity() {
         }
 
         chatButton.setOnClickListener {
+            firebaseAuth.currentUser?.let { it1 ->
+                FirebaseFunctions.chatExists(
+                    it1.uid,
+                    sellerId.toString(),
+                    productId
+                ) { chatExists ->
+                    if (!chatExists) {
+                        //crear nuevo chat
+                        firebaseAuth.currentUser?.let { currentUser ->
+                            FirebaseFunctions.createChat(
+                                currentUser.uid,
+                                sellerId.toString(),
+                                productId
+                            ) { chatId ->
+                                if (chatId != null) {
+                                    //chat creado
+                                    val intent = Intent(this, ChatActivity::class.java)
+                                    intent.putExtra("chatId", chatId)
+                                    intent.putExtra("toUser", sellerId)
+                                    intent.putExtra("fromUser", currentUser.uid)
+                                    intent.putExtra("relatedProduct", productId)
+                                    startActivity(intent)
+                                } else {
+                                    // Ocurrió un error al crear el chat
+                                }
+                            }
+                        }
+                    } else {
+                        //TODO: gestionar recuperación de mensajes, se hace en la otra activity
+                        //el chat ya existe
+                        GlobalFunctions.showInfoDialog(this, "Error", "El chat ya existe.")
+                    }
+                }
+            }
 
-        }
-
-        reviewButton.setOnClickListener {
-            showReviewDialog()
+            reviewButton.setOnClickListener {
+                showReviewDialog()
+            }
         }
     }
 }
