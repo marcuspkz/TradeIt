@@ -7,6 +7,7 @@ import com.example.tradeit.databinding.ItemChatBinding
 import com.example.tradeit.databinding.ItemReviewBinding
 import com.example.tradeit.model.Review
 import com.example.tradeit.model.chat.Chat
+import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.squareup.picasso.Picasso
@@ -49,6 +50,15 @@ class ChatViewHolder(view: View) : RecyclerView.ViewHolder(view) {
                 }
             }
         }
-        //TODO: establecer último mensaje recibido
+
+        FirebaseFunctions.getLastMessage(chat.chatId) { lastMessage ->
+            if (lastMessage != null) {
+                // Aquí puedes hacer lo que necesites con el último mensaje obtenido
+                binding.lastMessage.text = lastMessage.message
+            } else {
+                //no hay last message
+                binding.lastMessage.text = "¡Inicia una conversación!"
+            }
+        }
     }
 }

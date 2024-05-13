@@ -12,6 +12,7 @@ import com.example.tradeit.controller.adapter.ProductAdapter
 import com.example.tradeit.controller.statics.FirebaseFunctions
 import com.example.tradeit.controller.main.publish.NewProductActivity
 import com.example.tradeit.databinding.FragmentProductBinding
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 
 class ProductFragment : Fragment() {
@@ -39,6 +40,11 @@ class ProductFragment : Fragment() {
         initUI()
         FirebaseFunctions.getAllProducts(productAdapter)
         //FirebaseFunctions.generateTestData(firebase)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        FirebaseFunctions.getAllProducts(productAdapter)
     }
 
     private fun initUI() {

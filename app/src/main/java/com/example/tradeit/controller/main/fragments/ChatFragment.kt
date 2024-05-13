@@ -40,6 +40,12 @@ class ChatFragment : Fragment() {
         FirebaseFunctions.getUserChats(userId, chatAdapter)
     }
 
+    override fun onResume() {
+        super.onResume()
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
+        FirebaseFunctions.getUserChats(userId, chatAdapter)
+    }
+
     private fun initUI() {
         binding.searchViewChats.setOnQueryTextListener(object: SearchView.OnQueryTextListener
         {

@@ -533,31 +533,14 @@ object FirebaseFunctions {
         })
     }
 
-    fun getLastMessage(chatId: String, firebaseDatabase: FirebaseDatabase, callback: (Message?) -> Unit) {
+    fun getLastMessage(chatId: String, callback: (Message?) -> Unit) {
+        val firebaseDatabase = FirebaseDatabase.getInstance()
         val chatRef = firebaseDatabase.reference.child("Chats").child(chatId)
 
         chatRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                val lastMessageId = dataSnapshot.child("lastMessage").getValue(String::class.java)
-
-                if (lastMessageId != null) {
-                    val messageRef = firebaseDatabase.reference.child("Messages").child(lastMessageId)
-
-                    messageRef.addListenerForSingleValueEvent(object : ValueEventListener {
-                        override fun onDataChange(messageSnapshot: DataSnapshot) {
-                            val message = messageSnapshot.getValue(Message::class.java)
-                            callback(message)
-                        }
-
-                        override fun onCancelled(databaseError: DatabaseError) {
-                            // Manejar el error si la operación es cancelada
-                            callback(null)
-                        }
-                    })
-                } else {
-                    // No hay un último mensaje registrado en el nodo Chat
-                    callback(null)
-                }
+                val lastMessage = dataSnapshot.child("lastMessage").getValue(Message::class.java)
+                callback(lastMessage)
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
@@ -577,8 +560,8 @@ object FirebaseFunctions {
             messageRef.setValue(message)
                 .addOnSuccessListener {
                     //mensaje enviado, añadir como último msg al chat
-                    messagesRef = databaseReference.child("Chats").child(chatId).child("lastMessage")
-                    messageRef.setValue(message)
+                    val lastMessageRef = databaseReference.child("Chats").child(chatId).child("lastMessage")
+                    lastMessageRef.setValue(message)
                     //TODO: comprobación?
                 }
                 .addOnFailureListener {
