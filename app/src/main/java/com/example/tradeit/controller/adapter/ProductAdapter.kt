@@ -31,21 +31,21 @@ class ProductAdapter(private var productList: List<Product> = emptyList()) : Rec
         holder.itemView.setOnLongClickListener {
             firebaseAuth = FirebaseAuth.getInstance()
             val userId = firebaseAuth.currentUser?.uid.toString()
-            val fav = Favourite(userId, productList[position].getProductId(), true)
+            val fav = Favourite("", userId, productList[position].productId, true)
             val context = holder.itemView.context
-            FirebaseFunctions.favouriteExists(productList[position].getProductId()) { exists ->
+            FirebaseFunctions.favouriteExists(productList[position].productId) { exists ->
                 if (exists) {
                     GlobalFunctions.showInfoDialog(
                         context,
                         "Error.",
-                        "El producto ${productList[position].getTitle()} ya está en favoritos."
+                        "El producto ${productList[position].title} ya está en favoritos."
                     )
                 } else {
                     if (FirebaseFunctions.addFavourite(fav) != null) {
                         GlobalFunctions.showInfoDialog(
                             context,
                             "¡Favorito añadido!",
-                            "Se ha añadido el producto ${productList[position].getTitle()} a favoritos."
+                            "Se ha añadido el producto ${productList[position].title} a favoritos."
                         )
                     } else {
                         GlobalFunctions.showInfoDialog(
@@ -60,7 +60,7 @@ class ProductAdapter(private var productList: List<Product> = emptyList()) : Rec
         }
         holder.itemView.setOnClickListener {
             val intent = Intent(holder.itemView.context, ProductDetailActivity::class.java)
-            intent.putExtra("productId", productList[position].getProductId())
+            intent.putExtra("productId", productList[position].productId)
             holder.itemView.context.startActivity(intent)
         }
     }

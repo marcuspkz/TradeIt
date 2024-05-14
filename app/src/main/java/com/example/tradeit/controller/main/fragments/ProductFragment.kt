@@ -18,7 +18,6 @@ import com.google.firebase.database.FirebaseDatabase
 class ProductFragment : Fragment() {
     private lateinit var binding: FragmentProductBinding
     private lateinit var productAdapter: ProductAdapter
-    private lateinit var firebase: FirebaseDatabase
 
     //se inicializan variables globales
     override fun onCreate(savedInstanceState: Bundle?) {

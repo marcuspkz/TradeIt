@@ -41,7 +41,7 @@ class ChatActivity : AppCompatActivity() {
         }
         FirebaseFunctions.getProduct(productId) { product ->
             if (product != null) {
-                toUserProduct.text = product.getTitle()
+                toUserProduct.text = product.title
             }
         }
         FirebaseFunctions.getUserById(sellerId) { user ->

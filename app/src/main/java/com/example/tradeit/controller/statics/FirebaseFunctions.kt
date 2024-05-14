@@ -9,6 +9,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.core.content.ContextCompat.startActivity
 import com.example.tradeit.controller.adapter.ChatAdapter
+import com.example.tradeit.controller.adapter.FavouriteAdapter
 import com.example.tradeit.controller.adapter.ProductAdapter
 import com.example.tradeit.controller.adapter.ReviewAdapter
 import com.example.tradeit.model.Product
@@ -58,9 +59,10 @@ object FirebaseFunctions {
     fun addFavourite(favourite: Favourite): String? {
         val databaseReference = FirebaseDatabase.getInstance().reference
         val favRef = databaseReference.child("Favourites").push()
-        val favId = favRef.key.toString()
+        val favouriteId = favRef.key.toString()
+        favourite.favId = favouriteId
         favRef.setValue(favourite)
-        return favId
+        return favouriteId
     }
 
     fun favouriteExists(itemId: String, callback: (Boolean) -> Unit) {
@@ -71,7 +73,8 @@ object FirebaseFunctions {
                 var exists = false
                 for (favSnapshot in snapshot.children) {
                     val favItemId = favSnapshot.child("itemId").getValue(String::class.java)
-                    if (favItemId == itemId) {
+                    val favUserId = favSnapshot.child("userId").getValue(String::class.java)
+                    if (favItemId == itemId && favUserId == FirebaseAuth.getInstance().currentUser?.uid) {
                         exists = true
                         break
                     }
@@ -361,6 +364,41 @@ object FirebaseFunctions {
         })
     }
 
+    fun getFavourites(userId: String?, favouriteAdapter: FavouriteAdapter) {
+        val databaseReference = FirebaseDatabase.getInstance().reference.child("Favourites")
+
+        databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val favouriteList = mutableListOf<Favourite>()
+
+                for (data in snapshot.children) {
+                    val favourite = data.getValue(Favourite::class.java)
+                    if (favourite != null && favourite.userId == userId) {
+                        favouriteList.add(favourite)
+                    }
+                }
+
+                favouriteAdapter.updateList(favouriteList)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Manejar error de lectura de la base de datos
+            }
+        })
+    }
+
+    fun deleteFavourite(favouriteId: String, callback: (Boolean) -> Unit) {
+        val databaseReference = FirebaseDatabase.getInstance().reference.child("Favourites").child(favouriteId)
+
+        databaseReference.removeValue()
+            .addOnSuccessListener {
+                callback(true)
+            }
+            .addOnFailureListener {
+                callback(false)
+            }
+    }
+
     fun getAllReviewsForUser(userId: String, firebase: FirebaseDatabase, reviewAdapter: ReviewAdapter) {
         val databaseReference = firebase.reference.child("Users").child(userId).child("Reviews")
 
@@ -401,6 +439,23 @@ object FirebaseFunctions {
         })
     }
 
+    fun getProductById(productId: String, callback: (Product?) -> Unit) {
+        val databaseReference = FirebaseDatabase.getInstance().reference
+        val usersRef = databaseReference.child("Products").child(productId)
+
+        usersRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val product = snapshot.getValue(Product::class.java)
+                callback(product)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Manejar el error si la operación es cancelada
+                callback(null)
+            }
+        })
+    }
+
     //obtener productos por título
     fun getProductsByTitle(title: String, productAdapter: ProductAdapter) {
         val databaseReference = FirebaseDatabase.getInstance().reference.child("Products")
@@ -413,7 +468,7 @@ object FirebaseFunctions {
                 for (data in snapshot.children) {
                     val product = data.getValue(Product::class.java)
                     product?.let {
-                        if (GlobalFunctions.removeAccents(it.getTitle()).lowercase()
+                        if (GlobalFunctions.removeAccents(it.title).lowercase()
                                 .contains(searchTerm)
                         ) {
                             productList.add(it)

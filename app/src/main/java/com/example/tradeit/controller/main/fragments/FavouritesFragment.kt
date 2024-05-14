@@ -5,19 +5,22 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.tradeit.controller.adapter.FavouriteAdapter
+import com.example.tradeit.controller.adapter.ProductAdapter
 import com.example.tradeit.controller.statics.FirebaseFunctions
 import com.example.tradeit.databinding.FragmentFavouritesBinding
 import com.example.tradeit.databinding.FragmentMyaccountBinding
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 
 class FavouritesFragment : Fragment() {
     private lateinit var binding: FragmentFavouritesBinding
-    private lateinit var firebase: FirebaseDatabase
+    private lateinit var favouriteAdapter: FavouriteAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = FragmentFavouritesBinding.inflate(layoutInflater)
-        firebase = FirebaseDatabase.getInstance()
     }
 
     override fun onCreateView(
@@ -30,9 +33,18 @@ class FavouritesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         initUI()
+        FirebaseFunctions.getFavourites(FirebaseAuth.getInstance().currentUser?.uid, favouriteAdapter)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        FirebaseFunctions.getFavourites(FirebaseAuth.getInstance().currentUser?.uid, favouriteAdapter)
     }
 
     private fun initUI() {
-
+        favouriteAdapter = FavouriteAdapter(mutableListOf())
+        binding.rvFavourites.setHasFixedSize(true)
+        binding.rvFavourites.layoutManager = LinearLayoutManager(context)
+        binding.rvFavourites.adapter = favouriteAdapter
     }
 }

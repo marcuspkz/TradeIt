@@ -49,17 +49,17 @@ class ProductDetailActivity : AppCompatActivity() {
         if (!productId.isNullOrEmpty()) {
             FirebaseFunctions.getProduct(productId) { product ->
                 if (product != null) {
-                    binding.title.text = product.getTitle()
+                    binding.title.text = product.title
                     binding.image.adjustViewBounds = true
                     binding.image.scaleType = ImageView.ScaleType.FIT_XY
-                    Picasso.get().load(product.getImage()).into(binding.image)
-                    binding.price.text = "${product.getPrice()}€"
-                    binding.description.text = product.getDescription()
-                    binding.userName.text = product.getSeller()
-                    binding.postingDate.text = "Publicado el ${product.getPostingDate()}"
-                    binding.ubication.text = "Ubicación: ${product.getUbication()}"
-                    binding.category.text = "Categoría: ${product.getCategory()}"
-                    sellerId = product.getSellerId()
+                    Picasso.get().load(product.image).into(binding.image)
+                    binding.price.text = "${product.price}€"
+                    binding.description.text = product.description
+                    binding.userName.text = product.seller
+                    binding.postingDate.text = "Publicado el ${product.postingDate}"
+                    binding.ubication.text = "Ubicación: ${product.ubication}"
+                    binding.category.text = "Categoría: ${product.category}"
+                    sellerId = product.sellerId
                     val actualUser = FirebaseAuth.getInstance().currentUser
                     if (actualUser != null) {
                         if (sellerId == actualUser.uid) {
