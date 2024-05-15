@@ -26,6 +26,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.auth.userProfileChangeRequest
+import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -535,56 +536,34 @@ object FirebaseFunctions {
         }
     }
 
-    fun getChatMessages(chatId: String, messageAdapter: MessageAdapter) {
-        val databaseReference = FirebaseDatabase.getInstance().reference.child("Chats").child(chatId).child("Messages")
+    fun getChatMessages(chatId: String, messageAdapter: MessageAdapter, messageNo: (Int) -> Unit) {
+        val databaseReference =
+            FirebaseDatabase.getInstance().reference.child("Chats").child(chatId).child("Messages")
 
-        databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val messageList = mutableListOf<Message>()
-
-                for (data in snapshot.children) {
-                    val message = data.getValue(Message::class.java)
-                    message?.let {
-                        messageList.add(it)
-                    }
+        val childEventListener = object : ChildEventListener {
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                val message = snapshot.getValue(Message::class.java)
+                message?.let {
+                    messageAdapter.addMessage(it)
                 }
+                messageNo(messageAdapter.itemCount)
+            }
 
-                messageAdapter.updateList(messageList)
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                // Manejar error de lectura de la base de datos
             }
-        })
+
+            override fun onChildRemoved(snapshot: DataSnapshot) {
+            }
+
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+            }
+        }
+
+        databaseReference.addChildEventListener(childEventListener)
     }
-
-    /*
-    fun getChatMessages(chatId: String, callback: (List<Message>?) -> Unit) {
-        val databaseReference = FirebaseDatabase.getInstance().reference
-        val chatRef = databaseReference.child("Chats").child(chatId)
-
-        chatRef.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                val messageList = mutableListOf<Message>()
-                for (messageSnapshot in dataSnapshot.children) {
-                    val fromUser = messageSnapshot.child("fromUser").getValue(String::class.java)
-                    val toUser = messageSnapshot.child("toUser").getValue(String::class.java)
-                    val message = messageSnapshot.child("message").getValue(String::class.java)
-                    val sendDate = messageSnapshot.child("sendDate").getValue(Long::class.java)
-                    if (fromUser != null && toUser != null && message != null && sendDate != null) {
-                        val message = Message(fromUser, toUser, message, sendDate)
-                        messageList.add(message)
-                    }
-                }
-                callback(messageList)
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                // Manejar el error de lectura de la base de datos
-                callback(null)
-            }
-        })
-    }*/
 
     fun chatExists(fromUser: String, toUser: String, relatedProduct: String, callback: (Boolean) -> Unit) {
         val databaseReference = FirebaseDatabase.getInstance().reference
@@ -649,7 +628,6 @@ object FirebaseFunctions {
                 }
         }
     }
-
 
     /*
 fun generateTestData(firebase: FirebaseDatabase) {

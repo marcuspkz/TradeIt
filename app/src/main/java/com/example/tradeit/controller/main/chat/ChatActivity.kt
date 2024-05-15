@@ -8,7 +8,6 @@ import com.example.tradeit.controller.adapter.MessageAdapter
 import com.example.tradeit.controller.statics.FirebaseFunctions
 import com.example.tradeit.controller.statics.GlobalFunctions
 import com.example.tradeit.databinding.ActivityChatBinding
-import com.example.tradeit.databinding.ActivityProductDetailBinding
 import com.example.tradeit.model.chat.Message
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
@@ -42,7 +41,9 @@ class ChatActivity : AppCompatActivity() {
         binding.rvChat.layoutManager = LinearLayoutManager(this)
         binding.rvChat.adapter = messageAdapter
 
-        FirebaseFunctions.getChatMessages(chatId, messageAdapter)
+        FirebaseFunctions.getChatMessages(chatId, messageAdapter) { messagesNo ->
+            binding.rvChat.scrollToPosition(messagesNo - 1)
+        }
 
         FirebaseFunctions.getUserProfilePicture(sellerId) { profilePictureUrl ->
             profilePictureUrl?.let {
@@ -64,13 +65,16 @@ class ChatActivity : AppCompatActivity() {
         }
 
         sendButton.setOnClickListener {
-            val message = Message(
-                FirebaseAuth.getInstance().currentUser?.uid,
-                toUserId, binding.message.text.toString(),
-                System.currentTimeMillis()
-            )
-            if (chatId != null) {
-                FirebaseFunctions.sendMessage(chatId, message)
+            if (binding.message.toString() != "") {
+                val message = Message(
+                    FirebaseAuth.getInstance().currentUser?.uid,
+                    toUserId, binding.message.text.toString(),
+                    System.currentTimeMillis()
+                )
+                if (chatId != null) {
+                    FirebaseFunctions.sendMessage(chatId, message)
+                    binding.message.setText("")
+                }
             }
         }
     }

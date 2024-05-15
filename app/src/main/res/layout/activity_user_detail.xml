@@ -4,62 +4,69 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:id="@+id/titleLL"
-        android:layout_width="wrap_content"
+        android:id="@+id/parentLL"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:layout_marginTop="12dp"
-        android:layout_marginEnd="100dp"
-        android:gravity="left"
-        android:orientation="vertical"
+        android:layout_marginLeft="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/rvReviews">
-
-        <TextView
-            android:id="@+id/newProductTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Perfil de usuario"
-            android:textColor="@color/black"
-            android:textSize="25sp"
-            android:textStyle="bold"></TextView>
-
         <LinearLayout
+            android:id="@+id/titleLL"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:orientation="horizontal">
+            android:layout_marginEnd="100dp"
+            android:gravity="left"
+            android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/profilePicture"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:src="@drawable/iv_border"></ImageView>
+            <TextView
+                android:id="@+id/newProductTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Perfil de usuario"
+                android:textColor="@color/black"
+                android:textSize="25sp"
+                android:textStyle="bold"></TextView>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/displayName"
+                <ImageView
+                    android:id="@+id/profilePicture"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:src="@drawable/iv_border"></ImageView>
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:text="@string/mc_testname"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
-                    android:textStyle="bold"></TextView>
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/rating"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:text="@string/mc_rating"
-                    android:textColor="@color/black"
-                    android:textSize="14sp"></TextView>
+                    <TextView
+                        android:id="@+id/displayName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:text="@string/mc_testname"
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        android:textStyle="bold"></TextView>
+
+                    <TextView
+                        android:id="@+id/rating"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:text="@string/mc_rating"
+                        android:textColor="@color/black"
+                        android:textSize="14sp"></TextView>
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
@@ -72,5 +79,5 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginTop="20dp"
-        app:layout_constraintTop_toBottomOf="@id/titleLL"/>
+        app:layout_constraintTop_toBottomOf="@id/parentLL"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

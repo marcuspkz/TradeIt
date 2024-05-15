@@ -7,9 +7,9 @@ import com.example.tradeit.R
 import com.example.tradeit.model.chat.Message
 
 class MessageAdapter(private var messageList: MutableList<Message>) : RecyclerView.Adapter<MessageViewHolder>() {
-    fun updateList(list: MutableList<Message>) {
-        messageList = list
-        notifyDataSetChanged()
+    fun addMessage(message: Message) {
+        messageList.add(message)
+        notifyItemInserted(messageList.size - 1)
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
         return MessageViewHolder(
