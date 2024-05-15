@@ -9,6 +9,7 @@ import com.example.tradeit.controller.adapter.ProductAdapter
 import com.example.tradeit.controller.adapter.ReviewAdapter
 import com.example.tradeit.controller.main.publish.NewProductActivity
 import com.example.tradeit.controller.statics.FirebaseFunctions
+import com.example.tradeit.controller.statics.GlobalFunctions
 import com.example.tradeit.databinding.ActivityProductDetailBinding
 import com.example.tradeit.databinding.ActivityUserDetailBinding
 import com.google.firebase.Firebase
@@ -25,8 +26,6 @@ class UserDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityUserDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        firebase = FirebaseDatabase.getInstance()
-
 
         reviewAdapter = ReviewAdapter()
         binding.rvReviews.setHasFixedSize(true)
@@ -39,20 +38,23 @@ class UserDetailActivity : AppCompatActivity() {
             if (user != null) {
                 displayName.text = user.displayName
             } else {
-                // Manejar el caso donde no se pudo obtener el usuario
+                GlobalFunctions.showInfoDialog(this, "Error", "No se pudo obtener el usuario.")
             }
         }
 
-        FirebaseFunctions.getAllReviewsForUser(sellerId, firebase, reviewAdapter)
+        FirebaseFunctions.averageRating(sellerId) { avgRating ->
+            if (avgRating != 0.0) {
+                binding.rating.text = "Valoración media: ${avgRating}"
+            } else {
+                binding.rating.text = "Este usuario no tiene valoraciones."
+            }
+        }
+
+        FirebaseFunctions.getAllReviewsForUser(sellerId, reviewAdapter)
         FirebaseFunctions.getUserProfilePicture(sellerId) { profilePictureUrl ->
             profilePictureUrl?.let {
                 Picasso.get().load(it).into(binding.profilePicture)
             }
         }
-
-        //meter addbutton para insertar reseña
-        /*binding.addButton.setOnClickListener {
-
-        }*/
     }
 }

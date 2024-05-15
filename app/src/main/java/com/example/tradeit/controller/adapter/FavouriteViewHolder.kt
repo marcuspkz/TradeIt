@@ -29,7 +29,7 @@ class FavouriteViewHolder(view: View) : RecyclerView.ViewHolder(view) {
                     binding.favPrice.text = "${product.price}€"
                     Picasso.get().load(product.image).into(binding.ivImage)
                 } else {
-                    // Manejar el caso donde no se pudo obtener el producto
+                    //no se obtuvo producto
                 }
             }
         }

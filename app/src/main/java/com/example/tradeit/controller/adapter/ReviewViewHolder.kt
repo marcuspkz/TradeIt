@@ -28,7 +28,7 @@ class ReviewViewHolder(view: View) : RecyclerView.ViewHolder(view) {
                     }
                 }
             } else {
-                // Manejar el caso donde no se pudo obtener el usuario
+                //no se obtuvo usuario
             }
         }
         binding.review.text = review.comment

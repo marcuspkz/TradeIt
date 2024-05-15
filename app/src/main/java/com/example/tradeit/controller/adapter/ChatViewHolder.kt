@@ -2,6 +2,7 @@ package com.example.tradeit.controller.adapter
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
+import com.example.tradeit.controller.statics.AESCrypt
 import com.example.tradeit.controller.statics.FirebaseFunctions
 import com.example.tradeit.databinding.ItemChatBinding
 import com.example.tradeit.databinding.ItemReviewBinding
@@ -14,6 +15,7 @@ import com.squareup.picasso.Picasso
 
 class ChatViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     private val binding = ItemChatBinding.bind(view)
+    private val key = "aaaaaaaaaaaaaaaa"
     private lateinit var firebase: FirebaseDatabase
     private lateinit var firebaseAuth: FirebaseAuth
 
@@ -32,7 +34,7 @@ class ChatViewHolder(view: View) : RecyclerView.ViewHolder(view) {
                         }
                     }
                 } else {
-                    // Manejar el caso donde no se pudo obtener el usuario
+                    //error usuario
                 }
             }
         } else if (chat.toUser == firebaseAuth.currentUser?.uid) {
@@ -46,15 +48,14 @@ class ChatViewHolder(view: View) : RecyclerView.ViewHolder(view) {
                         }
                     }
                 } else {
-                    // Manejar el caso donde no se pudo obtener el usuario
+                    //error usuario
                 }
             }
         }
 
         FirebaseFunctions.getLastMessage(chat.chatId) { lastMessage ->
             if (lastMessage != null) {
-                // Aquí puedes hacer lo que necesites con el último mensaje obtenido
-                binding.lastMessage.text = lastMessage.message
+                binding.lastMessage.text = AESCrypt.decrypt(lastMessage.message, key)
             } else {
                 //no hay last message
                 binding.lastMessage.text = "¡Inicia una conversación!"

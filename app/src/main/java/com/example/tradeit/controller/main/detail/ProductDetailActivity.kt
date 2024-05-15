@@ -17,6 +17,7 @@ import com.example.tradeit.controller.main.chat.ChatActivity
 import com.example.tradeit.controller.statics.FirebaseFunctions
 import com.example.tradeit.controller.statics.GlobalFunctions
 import com.example.tradeit.databinding.ActivityProductDetailBinding
+import com.example.tradeit.model.Favourite
 import com.example.tradeit.model.Review
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
@@ -105,6 +106,7 @@ class ProductDetailActivity : AppCompatActivity() {
                     null
                 )
                 FirebaseFunctions.addReview(review, sellerId.toString(), firebase)
+                dialog.dismiss()
             }
 
             dialog.show()
@@ -159,7 +161,7 @@ class ProductDetailActivity : AppCompatActivity() {
                                     intent.putExtra("relatedProduct", productId)
                                     startActivity(intent)
                                 } else {
-                                    // Ocurrió un error al crear el chat
+                                    //error al crear chat
                                 }
                             }
                         }
@@ -170,10 +172,40 @@ class ProductDetailActivity : AppCompatActivity() {
                     }
                 }
             }
+        }
 
-            reviewButton.setOnClickListener {
-                showReviewDialog()
+        reviewButton.setOnClickListener {
+            showReviewDialog()
+        }
+
+        binding.favButton.setOnClickListener {
+            firebaseAuth = FirebaseAuth.getInstance()
+            val userId = firebaseAuth.currentUser?.uid.toString()
+            val fav = Favourite("", userId, productId, true)
+            FirebaseFunctions.favouriteExists(productId) { exists ->
+                if (exists) {
+                    GlobalFunctions.showInfoDialog(
+                        this,
+                        "Error.",
+                        "El producto ya está en favoritos."
+                    )
+                } else {
+                    if (FirebaseFunctions.addFavourite(fav) != null) {
+                        GlobalFunctions.showInfoDialog(
+                            this,
+                            "¡Favorito añadido!",
+                            "Se ha añadido el producto a favoritos."
+                        )
+                    } else {
+                        GlobalFunctions.showInfoDialog(
+                            this,
+                            "Error.",
+                            "Hubo un problema al añadir el producto a favoritos."
+                        )
+                    }
+                }
             }
+            true
         }
     }
 }

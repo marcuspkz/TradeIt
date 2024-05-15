@@ -38,7 +38,6 @@ import kotlinx.coroutines.tasks.await
 import kotlin.random.Random
 
 object FirebaseFunctions {
-    //añadir producto
     fun addProduct(product: Product, firebase: FirebaseDatabase): String {
         val databaseReference = firebase.reference
         val productRef = databaseReference.child("Products").push()
@@ -85,8 +84,66 @@ object FirebaseFunctions {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                // Manejar el error si la lectura de datos falla
-                callback(false) // En caso de error, asumir que el favorito no existe
+                callback(false) //en caso de error, asumir que el favorito no existe
+            }
+        })
+    }
+
+    fun favouritesNo(callback: (Int) -> Unit) {
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        if (currentUser != null) {
+            val userId = currentUser.uid
+            val databaseReference = FirebaseDatabase.getInstance().reference
+            val favoritesReference = databaseReference.child("Favourites")
+
+            favoritesReference.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    var count = 0
+                    for (snapshot in dataSnapshot.children) {
+                        val userIdFromSnapshot = snapshot.child("userId").getValue(String::class.java)
+                        if (userIdFromSnapshot == userId) {
+                            count++
+                        }
+                    }
+                    callback(count)
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {
+                    callback(-1)
+                }
+            })
+        } else {
+            //error
+            callback(-1)
+        }
+    }
+
+    fun averageRating(userId: String, callback: (Double) -> Unit) {
+        val databaseReference = FirebaseDatabase.getInstance().reference.child("Users").child(userId).child("Reviews")
+
+        databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                var totalRating = 0
+                var reviewCount = 0
+
+                for (data in snapshot.children) {
+                    val rating = data.child("rating").getValue(Int::class.java)
+                    rating?.let {
+                        totalRating += it
+                        reviewCount++
+                    }
+                }
+
+                val averageRating = if (reviewCount > 0) {
+                    totalRating.toDouble() / reviewCount
+                } else {
+                    0.0
+                }
+                callback(averageRating)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                callback(0.0) //0 en caso de error
             }
         })
     }
@@ -106,8 +163,7 @@ object FirebaseFunctions {
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
-                //maneja el error aquí si es necesario
-                callback(null)
+                callback(null) //nulo en caso de error
             }
         })
     }
@@ -131,7 +187,7 @@ object FirebaseFunctions {
         return image
     }
 
-    fun getRandomImage(storage: FirebaseStorage, callback: (String?) -> Unit) {
+    private fun getRandomImage(storage: FirebaseStorage, callback: (String?) -> Unit) {
         val storageRef = storage.reference.child("profile_pictures")
         storageRef.listAll()
             .addOnSuccessListener { result ->
@@ -145,27 +201,24 @@ object FirebaseFunctions {
             }
     }
 
-    fun modifyUserImage(userId: String, image: String) {
+    private fun modifyUserImage(userId: String, image: String) {
         val databaseReference = FirebaseDatabase.getInstance().reference
         val productRef = databaseReference.child("Users").child(userId)
         productRef.child("profilePicture").setValue(image)
     }
 
-    //modificar imagen producto
     fun modifyProductImage(productId: String, image: String, firebase: FirebaseDatabase) {
         val databaseReference = firebase.reference
         val productRef = databaseReference.child("Products").child(productId)
         productRef.child("image").setValue(image)
     }
 
-    //establecer id dentro del propio producto
     fun setProductId(productId: String, firebase: FirebaseDatabase) {
         val databaseReference = firebase.reference
         val productRef = databaseReference.child("Products").child(productId)
         productRef.child("productId").setValue(productId)
     }
 
-    //borrar producto
     fun deleteProductById(productId: String, activity: Activity) {
         val databaseReference = FirebaseDatabase.getInstance().reference
         val storageRef = Firebase.storage.reference
@@ -177,11 +230,10 @@ object FirebaseFunctions {
                 val imageRef = storageRef.child("product_images/$productId/product_image.jpg")
                 imageRef.delete()
                     .addOnSuccessListener {
-                        //bien bien
+                        //éxito
                     }
                     .addOnFailureListener {
-                        Log.e("DeleteImageError", "Error al borrar la imagen:")
-                        //manejar error en borrado de imagen
+                        //error en borrado de imagen
                     }
                 Toast.makeText(activity, "Producto borrado correctamente", Toast.LENGTH_SHORT)
                     .show()
@@ -190,12 +242,11 @@ object FirebaseFunctions {
                 activity.finish()
             }
             .addOnFailureListener { exception ->
-                // Error al intentar eliminar el producto
-                // Aquí puedes manejar el error de alguna manera, como mostrar un mensaje de error al usuario
+                Toast.makeText(activity, "Error al borrar el producto.", Toast.LENGTH_SHORT)
+                    .show()
             }
     }
 
-    //obtener display name o uid
     fun getDisplayName(uid: Boolean): String? {
         val user = Firebase.auth.currentUser
         var name: String?
@@ -213,21 +264,6 @@ object FirebaseFunctions {
         return name
     }
 
-    //obtener email
-    fun getEmail(): String? {
-        val user = Firebase.auth.currentUser
-        var name: String?
-        name = ""
-        user?.let {
-            for (profile in it.providerData) {
-                name = profile.email
-            }
-        }
-
-        return name
-    }
-
-    //login usuario
     fun loginUser(email: String, password: String, firebaseAuth: FirebaseAuth, context: Context) {
         firebaseAuth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(context as MainActivity) { task ->
@@ -253,7 +289,6 @@ object FirebaseFunctions {
             }
     }
 
-    //registrar usuario
     fun registerUser(displayName: String, email: String, password: String, firebaseAuth: FirebaseAuth, firebaseStorage: FirebaseStorage, context: Context) {
         firebaseAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(context as RegisterUserActivity) { task ->
@@ -267,9 +302,7 @@ object FirebaseFunctions {
                         addUserToDatabase(newUser)
                         updateDisplayName(displayName)
                         getRandomImage(firebaseStorage) { imageUrl ->
-                            // Verificar si se obtuvo la URL de la imagen
                             if (!imageUrl.isNullOrEmpty()) {
-                                // Modificar la imagen del usuario en la base de datos
                                 modifyUserImage(userId, imageUrl)
                             }
                         }
@@ -282,7 +315,6 @@ object FirebaseFunctions {
                         context.startActivity(intent)
                         context.finish()
                     } else {
-                        //no se pudo obtener el usuario registrado
                         Toast.makeText(
                             context,
                             "Error: No se pudo obtener el usuario registrado.",
@@ -290,7 +322,6 @@ object FirebaseFunctions {
                         ).show()
                     }
                 } else {
-                    //registro fallido
                     Toast.makeText(
                         context,
                         "La autenticación ha fallado.",
@@ -312,12 +343,11 @@ object FirebaseFunctions {
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
-                // Manejar error de lectura de la base de datos
+                //error de lectura de la base de datos
                 callback(null)
             }
         })
     }
-
 
     private fun addUserToDatabase(user: User) {
         val databaseReference = FirebaseDatabase.getInstance().reference
@@ -325,24 +355,20 @@ object FirebaseFunctions {
         usersRef.child(user.userId).setValue(user)
     }
 
-    //actualizar display name
     private fun updateDisplayName(name: String) {
         val user = Firebase.auth.currentUser
         val profileUpdates = userProfileChangeRequest {
             displayName = name
-            //photoUri = Uri.parse("https://example.com/jane-q-user/profile.jpg")   //esto es para ponerle una foto de perfil
         }
 
         user!!.updateProfile(profileUpdates)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     //actualización exitosa
-                    Log.d(ContentValues.TAG, "User profile updated.")
                 }
             }
     }
 
-    //obtener listado completo de productos
     fun getAllProducts(productAdapter: ProductAdapter) {
         val databaseReference = FirebaseDatabase.getInstance().reference.child("Products")
 
@@ -361,7 +387,7 @@ object FirebaseFunctions {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                // Manejar error de lectura de la base de datos
+                //error de lectura
             }
         })
     }
@@ -384,7 +410,7 @@ object FirebaseFunctions {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                // Manejar error de lectura de la base de datos
+                //error de lectura
             }
         })
     }
@@ -401,8 +427,8 @@ object FirebaseFunctions {
             }
     }
 
-    fun getAllReviewsForUser(userId: String, firebase: FirebaseDatabase, reviewAdapter: ReviewAdapter) {
-        val databaseReference = firebase.reference.child("Users").child(userId).child("Reviews")
+    fun getAllReviewsForUser(userId: String, reviewAdapter: ReviewAdapter) {
+        val databaseReference = FirebaseDatabase.getInstance().reference.child("Users").child(userId).child("Reviews")
 
         databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -419,7 +445,7 @@ object FirebaseFunctions {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                // Manejar error de lectura de la base de datos
+                //error de lectura
             }
         })
     }
@@ -435,7 +461,7 @@ object FirebaseFunctions {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                // Manejar el error si la operación es cancelada
+                //operación cancelada
                 callback(null)
             }
         })
@@ -452,13 +478,12 @@ object FirebaseFunctions {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                // Manejar el error si la operación es cancelada
+                //operación cancelada
                 callback(null)
             }
         })
     }
 
-    //obtener productos por título
     fun getProductsByTitle(title: String, productAdapter: ProductAdapter) {
         val databaseReference = FirebaseDatabase.getInstance().reference.child("Products")
         var searchTerm = title.lowercase()
@@ -482,7 +507,7 @@ object FirebaseFunctions {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                // Manejar error de lectura de la base de datos
+                //error de lectura
             }
         })
     }
@@ -507,7 +532,7 @@ object FirebaseFunctions {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                // Manejar error de lectura de la base de datos
+                //error de lectura
             }
         })
     }
@@ -526,12 +551,11 @@ object FirebaseFunctions {
                     callback(chatId)
                 }
                 .addOnFailureListener { exception ->
-                    // Manejar el error al crear el chat
+                    //error de creación de chat
                     callback(null)
                 }
         } else {
-            // Manejar el caso en que no se pudo generar el ID del chat
-            println("Error: No se pudo generar el ID del chat.")
+            //error nulidad
             callback(null)
         }
     }
@@ -586,7 +610,7 @@ object FirebaseFunctions {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                // Manejar error de lectura de la base de datos
+                //error de lectura
                 callback(false)
             }
         })
@@ -603,7 +627,7 @@ object FirebaseFunctions {
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
-                // Manejar el error si la operación es cancelada
+                //error de cancelación
                 callback(null)
             }
         })
@@ -621,68 +645,10 @@ object FirebaseFunctions {
                     //mensaje enviado, añadir como último msg al chat
                     val lastMessageRef = databaseReference.child("Chats").child(chatId).child("lastMessage")
                     lastMessageRef.setValue(message)
-                    //TODO: comprobación?
                 }
                 .addOnFailureListener {
                     //mensaje no enviado
                 }
         }
     }
-
-    /*
-fun generateTestData(firebase: FirebaseDatabase) {
-    val product1 = Product(
-        "",
-        "Smartphone Samsung Galaxy S21",
-        "El último smartphone de Samsung con increíble rendimiento y cámara de alta resolución.",
-        "Electrónicos",
-        "Zaragoza",
-        999.99f,
-        "https://ejemplo.com/imagen1.jpg",
-        "Samsung Store",
-        ""
-    )
-
-    val product2 = Product(
-        "",
-        "Portátil HP Pavilion",
-        "Potente portátil con procesador Intel Core i7 y pantalla Full HD de 15.6 pulgadas.",
-        "Informática",
-        "Zaragoza",
-        849.99f,
-        "https://ejemplo.com/imagen2.jpg",
-        "HP Store",
-        ""
-    )
-
-    val product3 = Product(
-        "",
-        "Zapatillas Nike Air Max",
-        "Zapatillas deportivas con tecnología de amortiguación Air Max para mayor comodidad.",
-        "Moda",
-        "Zaragoza",
-        129.99f,
-        "https://ejemplo.com/imagen3.jpg",
-        "Nike Store",
-        ""
-    )
-
-    val product4 = Product(
-        "",
-        "Televisor LG OLED 4K",
-        "Televisor con tecnología OLED y resolución 4K para una experiencia visual impresionante.",
-        "Electrónicos",
-        "Zaragoza",
-        1499.99f,
-        "https://ejemplo.com/imagen4.jpg",
-        "LG Store",
-        ""
-    )
-
-    addProduct(product1, firebase)
-    addProduct(product2, firebase)
-    addProduct(product3, firebase)
-    addProduct(product4, firebase)
-}
-*/
 }

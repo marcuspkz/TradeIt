@@ -47,16 +47,6 @@ class ChatFragment : Fragment() {
     }
 
     private fun initUI() {
-        binding.searchViewChats.setOnQueryTextListener(object: SearchView.OnQueryTextListener
-        {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                //TODO: implementar búsqueda de chats
-                //FirebaseFunctions.getProductsByTitle(query.orEmpty(), productAdapter)
-                return false
-            }
-            override fun onQueryTextChange(newText: String?) = false
-        })
-
         chatAdapter = ChatAdapter()
         binding.rvChats.setHasFixedSize(true)
         binding.rvChats.layoutManager = LinearLayoutManager(context)

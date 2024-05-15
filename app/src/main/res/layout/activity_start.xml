@@ -10,7 +10,7 @@
         android:id="@+id/tabLayout"
         android:layout_width="409dp"
         android:layout_height="wrap_content"
-        app:tabMode="scrollable"
+        app:tabMode="auto"
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
         app:tabIndicatorColor="@color/main"
@@ -26,11 +26,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/products" />
-
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/services" />
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"

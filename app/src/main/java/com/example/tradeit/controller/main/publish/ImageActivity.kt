@@ -62,8 +62,6 @@ class ImageActivity : AppCompatActivity() {
             }
         }
 
-
-
         chooseImgButton.setOnClickListener {
             pickImage.launch("image/*")
         }

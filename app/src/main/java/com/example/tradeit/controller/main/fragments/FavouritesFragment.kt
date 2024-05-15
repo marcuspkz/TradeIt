@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.tradeit.controller.adapter.FavouriteAdapter
@@ -39,9 +41,21 @@ class FavouritesFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         FirebaseFunctions.getFavourites(FirebaseAuth.getInstance().currentUser?.uid, favouriteAdapter)
+        FirebaseAuth.getInstance().currentUser?.let {
+            FirebaseFunctions.favouritesNo() {favsNo ->
+                if (favsNo == 0) {
+                    binding.infoFavText.visibility = VISIBLE
+                } else {
+                    binding.infoFavText.visibility = GONE
+                }
+            }
+        }
+
+
     }
 
     private fun initUI() {
+        binding.infoFavText.visibility = GONE
         favouriteAdapter = FavouriteAdapter(mutableListOf())
         binding.rvFavourites.setHasFixedSize(true)
         binding.rvFavourites.layoutManager = LinearLayoutManager(context)

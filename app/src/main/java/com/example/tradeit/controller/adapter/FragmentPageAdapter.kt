@@ -15,16 +15,16 @@ class FragmentPageAdapter (
     lifecycle: Lifecycle
 ) : FragmentStateAdapter(fragmentManager, lifecycle) {
     override fun getItemCount(): Int {
-        return 5
+        return 4
     }
 
     override fun createFragment(position: Int): Fragment {
         return when (position) {
             0 -> ProductFragment()
-            1 -> ServiceFragment()
-            2 -> FavouritesFragment()
-            3 -> ChatFragment()
-            4 -> MyAccountFragment()
+            //1 -> ServiceFragment()
+            1 -> FavouritesFragment()
+            2 -> ChatFragment()
+            3 -> MyAccountFragment()
             else -> throw IllegalArgumentException("Posición no válida: $position")
         }
     }

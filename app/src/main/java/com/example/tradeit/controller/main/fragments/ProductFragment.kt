@@ -19,13 +19,11 @@ class ProductFragment : Fragment() {
     private lateinit var binding: FragmentProductBinding
     private lateinit var productAdapter: ProductAdapter
 
-    //se inicializan variables globales
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = FragmentProductBinding.inflate(layoutInflater)
     }
 
-    //se inicializa el layout
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -34,11 +32,9 @@ class ProductFragment : Fragment() {
         return binding.root
     }
 
-    //se implementa la funcionalidad
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         initUI()
         FirebaseFunctions.getAllProducts(productAdapter)
-        //FirebaseFunctions.generateTestData(firebase)
     }
 
     override fun onResume() {

@@ -65,12 +65,27 @@
                     android:orientation="horizontal"
                     android:layout_marginTop="5dp"
                     android:gravity="right">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <Button
+                            android:id="@+id/favButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:backgroundTint="@color/main"
+                            android:text="+ Favorito"
+                            android:layout_marginTop="5dp">
+                        </Button>
+                    </LinearLayout>
+
                     <TextView
                         android:id="@+id/price"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
                         android:text="@string/pd_testprice"
+                        android:gravity="right"
                         android:textColor="@color/black"
                         android:textSize="28sp"
                         android:textStyle="bold"></TextView>
