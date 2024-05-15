@@ -45,17 +45,28 @@ class ChatActivity : AppCompatActivity() {
             binding.rvChat.scrollToPosition(messagesNo - 1)
         }
 
-        FirebaseFunctions.getUserProfilePicture(sellerId) { profilePictureUrl ->
+        /*esto es para determinar qué cabecera sale en el chat
+        * si no se pone, si te abren chat, saldrá la del otro usuario
+        * a partir de aqui, obtainDataId tiene al usuario de enfrente*/
+        var obtainDataId = ""
+        if (sellerId == FirebaseAuth.getInstance().currentUser?.uid) {
+            obtainDataId = fromUserId
+        } else {
+            obtainDataId = sellerId
+        }
+
+        FirebaseFunctions.getUserProfilePicture(obtainDataId) { profilePictureUrl ->
             profilePictureUrl?.let {
                 Picasso.get().load(it).into(toUserImage)
             }
         }
+
         FirebaseFunctions.getProduct(productId) { product ->
             if (product != null) {
                 toUserProduct.text = product.title
             }
         }
-        FirebaseFunctions.getUserById(sellerId) { user ->
+        FirebaseFunctions.getUserById(obtainDataId) { user ->
             if (user != null) {
                 toUserId = user.userId
                 toUserName.text = user.displayName

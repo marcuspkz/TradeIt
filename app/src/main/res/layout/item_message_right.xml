@@ -11,9 +11,9 @@
     <androidx.cardview.widget.CardView
         android:layout_width="275dp"
         android:layout_height="wrap_content"
-        app:cardBackgroundColor="#3F51B5"
+        app:cardBackgroundColor="@color/main_dark"
         app:cardElevation="4dp"
-        android:layout_gravity="end">
+        android:layout_gravity="start">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
