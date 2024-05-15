@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat.startActivity
 import com.example.tradeit.controller.adapter.ChatAdapter
 import com.example.tradeit.controller.adapter.FavouriteAdapter
+import com.example.tradeit.controller.adapter.MessageAdapter
 import com.example.tradeit.controller.adapter.ProductAdapter
 import com.example.tradeit.controller.adapter.ReviewAdapter
 import com.example.tradeit.model.Product
@@ -534,6 +535,30 @@ object FirebaseFunctions {
         }
     }
 
+    fun getChatMessages(chatId: String, messageAdapter: MessageAdapter) {
+        val databaseReference = FirebaseDatabase.getInstance().reference.child("Chats").child(chatId).child("Messages")
+
+        databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val messageList = mutableListOf<Message>()
+
+                for (data in snapshot.children) {
+                    val message = data.getValue(Message::class.java)
+                    message?.let {
+                        messageList.add(it)
+                    }
+                }
+
+                messageAdapter.updateList(messageList)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Manejar error de lectura de la base de datos
+            }
+        })
+    }
+
+    /*
     fun getChatMessages(chatId: String, callback: (List<Message>?) -> Unit) {
         val databaseReference = FirebaseDatabase.getInstance().reference
         val chatRef = databaseReference.child("Chats").child(chatId)
@@ -559,7 +584,7 @@ object FirebaseFunctions {
                 callback(null)
             }
         })
-    }
+    }*/
 
     fun chatExists(fromUser: String, toUser: String, relatedProduct: String, callback: (Boolean) -> Unit) {
         val databaseReference = FirebaseDatabase.getInstance().reference

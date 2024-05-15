@@ -2,7 +2,9 @@ package com.example.tradeit.controller.main.chat
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.tradeit.R
+import com.example.tradeit.controller.adapter.MessageAdapter
 import com.example.tradeit.controller.statics.FirebaseFunctions
 import com.example.tradeit.controller.statics.GlobalFunctions
 import com.example.tradeit.databinding.ActivityChatBinding
@@ -16,6 +18,7 @@ import com.squareup.picasso.Picasso
 class ChatActivity : AppCompatActivity() {
     private lateinit var firebase: FirebaseDatabase
     private lateinit var binding: ActivityChatBinding
+    private lateinit var messageAdapter: MessageAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,7 +27,7 @@ class ChatActivity : AppCompatActivity() {
         firebase = FirebaseDatabase.getInstance()
 
         var toUserId = ""
-        val chatId = intent.getStringExtra("chatId")
+        val chatId = intent.getStringExtra("chatId").toString()
         val sellerId = intent.getStringExtra("toUser").toString()
         val productId = intent.getStringExtra("relatedProduct").toString()
         val fromUserId = intent.getStringExtra("fromUser").toString()
@@ -33,6 +36,13 @@ class ChatActivity : AppCompatActivity() {
         val toUserImage = binding.toUserImage
         val toUserProduct = binding.toUserProduct
         val sendButton = binding.sendButton
+
+        messageAdapter = MessageAdapter(mutableListOf())
+        binding.rvChat.setHasFixedSize(true)
+        binding.rvChat.layoutManager = LinearLayoutManager(this)
+        binding.rvChat.adapter = messageAdapter
+
+        FirebaseFunctions.getChatMessages(chatId, messageAdapter)
 
         FirebaseFunctions.getUserProfilePicture(sellerId) { profilePictureUrl ->
             profilePictureUrl?.let {
@@ -50,21 +60,6 @@ class ChatActivity : AppCompatActivity() {
                 toUserName.text = user.displayName
             } else {
                 // Manejar el caso donde no se pudo obtener el usuario
-            }
-        }
-
-        FirebaseFunctions.getChatMessages("chatId") { messageList ->
-            if (messageList != null) {
-                for (message in messageList) {
-                    if (testChat.text != "") {
-                        val addMessage = "${testChat.text}" + "${message.message}\n"
-                        testChat.text = addMessage
-                    } else {
-                        testChat.text = "${message.fromUser}\n"
-                    }
-                }
-            } else {
-                // Hubo un error al obtener los mensajes del chat
             }
         }
 
