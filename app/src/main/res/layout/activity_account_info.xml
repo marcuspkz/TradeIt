@@ -41,6 +41,15 @@
                 android:text="Información básica de tu cuenta de usuario."
                 android:textColor="@color/black"
                 android:textSize="16sp"></TextView>
+
+            <TextView
+                android:id="@+id/infoDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Nombre: Nombre\nCorreo electrónico: correo@mail.com"
+                android:textColor="@color/black"
+                android:textSize="16sp"></TextView>
         </LinearLayout>
     </LinearLayout>
 
@@ -49,25 +58,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/parentLL">
-        <Button
-            android:id="@+id/updatePasswordButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/main"
-            android:text="Actualizar contraseña">
-        </Button>
 
         <LinearLayout
             android:id="@+id/field1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:layout_marginTop="10dp"
             android:orientation="horizontal">
 
             <EditText
@@ -115,12 +116,19 @@
             </Button>
         </LinearLayout>
         <Button
-            android:id="@+id/deleteButton"
+            android:id="@+id/updatePasswordButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/main"
+            android:layout_marginTop="400dp"
+            android:text="Actualizar contraseña">
+        </Button>
+        <Button
+            android:id="@+id/deleteAccountButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="#FD6969"
-            android:text="Eliminar cuenta"
-            android:layout_marginTop="450dp">
+            android:text="Eliminar cuenta">
         </Button>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -743,4 +743,32 @@ object FirebaseFunctions {
                 }
         }
     }
+
+    fun deleteAccount(callback: (Boolean) -> Unit) {
+        val user = FirebaseAuth.getInstance().currentUser
+        val userId = user?.uid
+
+        if (userId != null) {
+            val databaseReference = FirebaseDatabase.getInstance().reference
+            val userRef = databaseReference.child("Users").child(userId)
+
+            userRef.removeValue()
+                .addOnCompleteListener { dbTask ->
+                    if (dbTask.isSuccessful) {
+                        user.delete()
+                            .addOnCompleteListener { authTask ->
+                                if (authTask.isSuccessful) {
+                                    callback(true)
+                                } else {
+                                    callback(false)
+                                }
+                            }
+                    } else {
+                        callback(false)
+                    }
+                }
+        } else {
+            callback(false)
+        }
+    }
 }
