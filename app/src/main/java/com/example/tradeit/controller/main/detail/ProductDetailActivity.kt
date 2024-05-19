@@ -11,6 +11,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.RadioGroup
 import android.widget.Spinner
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.example.tradeit.R
 import com.example.tradeit.controller.main.chat.ChatActivity
@@ -105,7 +106,14 @@ class ProductDetailActivity : AppCompatActivity() {
                     productId,
                     null
                 )
-                FirebaseFunctions.addReview(review, sellerId.toString(), firebase)
+                FirebaseFunctions.addReview(review, sellerId.toString()) { success ->
+                    if (success) {
+                        Toast.makeText(this, "Reseña publicada correctamente.", Toast.LENGTH_SHORT).show()
+                        dialog.dismiss()
+                    } else {
+                        Toast.makeText(this, "Ya se ha publicado una reseña para este usuario.", Toast.LENGTH_SHORT).show()
+                    }
+                }
                 dialog.dismiss()
             }
 
@@ -166,7 +174,6 @@ class ProductDetailActivity : AppCompatActivity() {
                             }
                         }
                     } else {
-                        //TODO: gestionar recuperación de mensajes, se hace en la otra activity
                         //el chat ya existe
                         GlobalFunctions.showInfoDialog(this, "Error", "El chat ya existe.")
                     }

@@ -48,6 +48,16 @@
                 android:hint="@string/password"
                 android:background="@drawable/tb_background">
             </EditText>
+
+            <TextView
+                android:id="@+id/recoverPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/main_dark"
+                android:text="¿Has olvidado tu contraseña?">
+            </TextView>
     </LinearLayout>
 
     <Button

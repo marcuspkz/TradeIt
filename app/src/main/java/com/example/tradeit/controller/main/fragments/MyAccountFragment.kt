@@ -1,5 +1,6 @@
 package com.example.tradeit.controller.main.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -7,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.tradeit.controller.adapter.ReviewAdapter
+import com.example.tradeit.controller.main.AccountInfoActivity
 import com.example.tradeit.controller.statics.FirebaseFunctions
 import com.example.tradeit.databinding.FragmentMyaccountBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -64,5 +66,10 @@ class MyAccountFragment : Fragment() {
         }
 
         FirebaseAuth.getInstance().currentUser?.let { FirebaseFunctions.getAllReviewsForUser(it.uid, reviewAdapter) }
+
+        binding.infoButton.setOnClickListener {
+            val intent = Intent(requireContext(), AccountInfoActivity::class.java)
+            startActivity(intent)
+        }
     }
 }

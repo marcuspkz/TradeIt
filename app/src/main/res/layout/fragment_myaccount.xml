@@ -81,7 +81,7 @@
 
     <LinearLayout
         android:id="@+id/buttons"
-        android:layout_width="wrap_content"
+        android:layout_width="360dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_marginTop="25dp"
@@ -89,6 +89,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent">
+        <Button
+            android:id="@+id/infoButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/main"
+            android:text="Información de la cuenta">
+        </Button>
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView

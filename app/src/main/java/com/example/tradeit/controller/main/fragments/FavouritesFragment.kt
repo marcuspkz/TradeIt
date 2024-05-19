@@ -50,8 +50,6 @@ class FavouritesFragment : Fragment() {
                 }
             }
         }
-
-
     }
 
     private fun initUI() {

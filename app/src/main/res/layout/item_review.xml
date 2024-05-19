@@ -2,7 +2,7 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="170dp"
+    android:layout_height="wrap_content"
     android:layout_marginHorizontal="8dp"
     android:layout_marginVertical="5dp"
     app:cardBackgroundColor="@color/white"
@@ -12,7 +12,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <LinearLayout
@@ -21,8 +21,8 @@
             android:orientation="vertical">
             <ImageView
                 android:id="@+id/ivImage"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
                 android:layout_gravity="top"
                 android:layout_marginTop="12dp"
                 android:layout_marginLeft="12dp">
@@ -33,6 +33,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
                 android:layout_marginLeft="18dp"
+                android:layout_marginBottom="10dp"
                 android:text="dd/mm/aaa"
                 android:maxLines="6"
                 android:maxLength="500"
@@ -43,7 +44,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_gravity="left">
 
@@ -64,10 +65,10 @@
             <TextView
                 android:id="@+id/review"
                 android:layout_width="260dp"
-                android:layout_height="90dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
                 android:layout_marginLeft="12dp"
-                android:text="El mejor iphone que vas a encontrar en las mejores condiciones absolutamente increibles no se lo va a creer."
+                android:text="El mejor iphone."
                 android:maxLines="6"
                 android:maxLength="500"
                 android:textColor="@color/black"
@@ -79,7 +80,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_marginLeft="12dp"
-                android:layout_marginTop="2dp">
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="10dp">
                 <TextView
                     android:id="@+id/rating"
                     android:layout_width="wrap_content"

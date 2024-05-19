@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".controller.main.AccountInfoActivity">
+
+    <LinearLayout
+        android:id="@+id/parentLL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:id="@+id/titleLL"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="22dp"
+            android:layout_marginTop="16dp"
+            android:gravity="left"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/newProductTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Información de la cuenta"
+                android:textColor="@color/black"
+                android:textSize="25sp"
+                android:textStyle="bold"></TextView>
+
+            <TextView
+                android:id="@+id/newProductSmallTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Información básica de tu cuenta de usuario."
+                android:textColor="@color/black"
+                android:textSize="16sp"></TextView>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/fields"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/parentLL">
+        <Button
+            android:id="@+id/updatePasswordButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/main"
+            android:text="Actualizar contraseña">
+        </Button>
+
+        <LinearLayout
+            android:id="@+id/field1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/updateEmail"
+                android:layout_width="230dp"
+                android:layout_height="35dp"
+                android:background="@drawable/tb_background"
+                android:hint="@string/email"
+                android:maxLines="1"
+                android:maxLength="30"
+                android:textSize="15sp"></EditText>
+            <Button
+                android:id="@+id/updateEmailButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/main"
+                android:layout_marginLeft="10dp"
+                android:text="Actualizar">
+            </Button>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/field2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/displayName"
+                android:layout_width="230dp"
+                android:layout_height="35dp"
+                android:background="@drawable/tb_background"
+                android:hint="@string/np_name"
+                android:maxLines="1"
+                android:maxLength="30"
+                android:textSize="15sp"></EditText>
+            <Button
+                android:id="@+id/updateNameButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/main"
+                android:layout_marginLeft="10dp"
+                android:text="Actualizar">
+            </Button>
+        </LinearLayout>
+        <Button
+            android:id="@+id/deleteButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#FD6969"
+            android:text="Eliminar cuenta"
+            android:layout_marginTop="450dp">
+        </Button>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

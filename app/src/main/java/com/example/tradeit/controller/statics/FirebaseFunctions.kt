@@ -46,14 +46,38 @@ object FirebaseFunctions {
         return productId
     }
 
-    fun addReview(review: Review, userId: String, firebase: FirebaseDatabase) {
-        val databaseReference = firebase.reference
-        val userRef = databaseReference.child("Users").child(userId)
-        val reviewId = userRef.child("Reviews").push().key
+    fun addReview(review: Review, userId: String, callback: (Boolean) -> Unit) {
+        val databaseReference = FirebaseDatabase.getInstance().reference
+        val userRef = databaseReference.child("Users").child(userId).child("Reviews")
 
-        reviewId?.let {
-            review.reviewId = it
-            userRef.child("Reviews").child(it).setValue(review)
+        val currentUser = FirebaseAuth.getInstance().currentUser?.uid
+        if (currentUser != null) {
+            userRef.orderByChild("publisherId").equalTo(currentUser)
+                .addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            // El usuario ya ha publicado una reseña
+                            callback(false)
+                        } else {
+                            // El usuario no ha publicado una reseña, proceder a agregarla
+                            val reviewId = userRef.push().key
+                            reviewId?.let {
+                                review.reviewId = it
+                                userRef.child(it).setValue(review).addOnCompleteListener { task ->
+                                    callback(task.isSuccessful)
+                                }
+                            }
+                        }
+                    }
+
+                    override fun onCancelled(databaseError: DatabaseError) {
+                        // En caso de error, no se puede agregar la reseña
+                        callback(false)
+                    }
+                })
+        } else {
+            // No se puede obtener el usuario actual, devolver false
+            callback(false)
         }
     }
 
@@ -268,67 +292,135 @@ object FirebaseFunctions {
         firebaseAuth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(context as MainActivity) { task ->
                 if (task.isSuccessful) {
-                    //autenticación exitosa
-                    val intent = Intent(context, StartActivity::class.java)
-                    context.startActivity(intent)
-                    context.finish() //cerrar esta actividad para que no se pueda volver atrás
-                    var displayName = getDisplayName(false)
-                    Toast.makeText(
-                        context,
-                        "¡Bienvenido, $displayName!",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    val user = firebaseAuth.currentUser
+                    if (user != null && user.isEmailVerified) {
+                        val intent = Intent(context, StartActivity::class.java)
+                        context.startActivity(intent)
+                        context.finish()
+                    } else {
+                        firebaseAuth.signOut()
+                        GlobalFunctions.showInfoDialog(context, "Error", "Por favor, verifica tu correo electrónico antes de iniciar sesión.")
+                    }
                 } else {
-                    //autenticación fallida
-                    Toast.makeText(
-                        context,
-                        "Credenciales incorrectas. Revisa los datos e inténtalo de nuevo.",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    GlobalFunctions.showInfoDialog(context, "Error", "La autenticación ha fallado. Revisa las credenciales.")
                 }
             }
     }
+
 
     fun registerUser(displayName: String, email: String, password: String, firebaseAuth: FirebaseAuth, firebaseStorage: FirebaseStorage, context: Context) {
         firebaseAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(context as RegisterUserActivity) { task ->
                 if (task.isSuccessful) {
-                    //registro exitoso
                     val user = task.result?.user
-                    //meter un if de si se pudo o no obtener el usuario
                     if (user != null) {
-                        val userId = user.uid
-                        val newUser = User(userId, displayName, email, "")
-                        addUserToDatabase(newUser)
-                        updateDisplayName(displayName)
-                        getRandomImage(firebaseStorage) { imageUrl ->
-                            if (!imageUrl.isNullOrEmpty()) {
-                                modifyUserImage(userId, imageUrl)
+                        user.sendEmailVerification()
+                            .addOnCompleteListener { verificationTask ->
+                                if (verificationTask.isSuccessful) {
+                                    val userId = user.uid
+                                    val newUser = User(userId, displayName, email, "")
+                                    addUserToDatabase(newUser)
+                                    updateDisplayName(displayName)
+                                    getRandomImage(firebaseStorage) { imageUrl ->
+                                        if (!imageUrl.isNullOrEmpty()) {
+                                            modifyUserImage(userId, imageUrl)
+                                        }
+                                    }
+                                    Toast.makeText(
+                                        context,
+                                        "¡Registro de usuario $displayName exitoso! Por favor, verifica tu correo electrónico.",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                    firebaseAuth.signOut()
+                                    val intent = Intent(context, MainActivity::class.java)
+                                    context.startActivity(intent)
+                                    context.finish()
+                                } else {
+                                    GlobalFunctions.showInfoDialog(context, "Error", "Error al enviar el correo electrónico de confirmación.")
+                                }
                             }
-                        }
-                        Toast.makeText(
-                            context,
-                            "¡Registro de usuario $displayName exitoso!",
-                            Toast.LENGTH_SHORT,
-                        ).show()
-                        val intent = Intent(context, MainActivity::class.java)
-                        context.startActivity(intent)
-                        context.finish()
                     } else {
-                        Toast.makeText(
-                            context,
-                            "Error: No se pudo obtener el usuario registrado.",
-                            Toast.LENGTH_SHORT,
-                        ).show()
+                        GlobalFunctions.showInfoDialog(context, "Error", "No se pudo obtener el usuario registrado.")
                     }
                 } else {
-                    Toast.makeText(
-                        context,
-                        "La autenticación ha fallado.",
-                        Toast.LENGTH_SHORT,
-                    ).show()
+                    GlobalFunctions.showInfoDialog(context, "Error", "La autenticación ha fallado.")
                 }
             }
+    }
+
+    fun sendEmailVerification(newEmail: String, context: Context, callback: (Boolean) -> Unit) {
+        val user = FirebaseAuth.getInstance().currentUser
+        val firebaseAuth = FirebaseAuth.getInstance()
+        val firebaseDatabase = FirebaseDatabase.getInstance()
+
+        user?.verifyBeforeUpdateEmail(newEmail)
+            ?.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    // Agregar un listener para detectar cambios en el estado de autenticación
+                    firebaseAuth.addAuthStateListener(object : FirebaseAuth.AuthStateListener {
+                        override fun onAuthStateChanged(auth: FirebaseAuth) {
+                            val updatedUser = auth.currentUser
+                            if (updatedUser != null && updatedUser.isEmailVerified) {
+                                val userId = updatedUser.uid
+                                val userRef = firebaseDatabase.reference.child("Users").child(userId)
+                                userRef.child("email").setValue(newEmail)
+                                    .addOnCompleteListener { dbTask ->
+                                        if (dbTask.isSuccessful) {
+                                            callback(true)
+                                        } else {
+                                            Toast.makeText(context, "Error al actualizar el correo en la base de datos.", Toast.LENGTH_LONG).show()
+                                            callback(false)
+                                        }
+                                        // Eliminar el listener después de la actualización
+                                        firebaseAuth.removeAuthStateListener(this)
+                                    }
+                            }
+                        }
+                    })
+                } else {
+                    Toast.makeText(context, "Error al enviar el formulario de cambio de correo.", Toast.LENGTH_LONG).show()
+                    callback(false)
+                }
+            }
+    }
+
+    fun sendPasswordResetEmail(email: String, callback: (Boolean) -> Unit) {
+        FirebaseAuth.getInstance().sendPasswordResetEmail(email)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    callback(true)
+                } else {
+                    callback(false)
+                }
+            }
+    }
+
+    fun updateDisplayName(newDisplayName: String, callback: (Boolean) -> Unit) {
+        val user = FirebaseAuth.getInstance().currentUser
+        if (user != null) {
+            val profileUpdates = userProfileChangeRequest {
+                displayName = newDisplayName
+            }
+
+            user.updateProfile(profileUpdates).addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val userId = user.uid
+                    val userRef = FirebaseDatabase.getInstance().reference.child("Users").child(userId)
+                    userRef.child("displayName").setValue(newDisplayName)
+                        .addOnCompleteListener { dbTask ->
+                            if (dbTask.isSuccessful) {
+                                callback(true)
+                            } else {
+                                callback(false)
+                            }
+                        }
+                } else {
+                    callback(false)
+                }
+            }
+        } else {
+            callback(false)
+        }
     }
 
     fun getUserProfilePicture(userId: String, callback: (String?) -> Unit) {
