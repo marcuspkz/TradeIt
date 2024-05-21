@@ -33,6 +33,11 @@
                     android:textColor="@color/black"
                     android:textSize="16sp"></TextView>
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@android:color/darker_gray"/>
             </LinearLayout>
 
             <LinearLayout
@@ -105,21 +110,17 @@
                         android:textColor="@color/black"
                         android:textSize="16sp"></TextView>
 
-                    <TextView
-                        android:id="@+id/aditionalInfo"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="30dp"
-                        android:text="Más información sobre este anuncio"
-                        android:textColor="@color/black"
-                        android:textSize="14sp"
-                        android:textStyle="italic"></TextView>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="20dp"
+                        android:background="@android:color/darker_gray"/>
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:layout_marginTop="12dp">
+                        android:layout_marginTop="20dp">
                         <ImageView
                             android:id="@+id/sellerImage"
                             android:layout_width="40dp"

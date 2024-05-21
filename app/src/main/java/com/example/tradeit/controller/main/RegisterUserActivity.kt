@@ -20,8 +20,7 @@ class RegisterUserActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityRegisterUserBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        firebaseAuth = FirebaseAuth.getInstance()
-        firebaseStorage = FirebaseStorage.getInstance()
+
 
         val emailET = binding.emailET
         val displayNameET = binding.displayNameET
@@ -35,7 +34,7 @@ class RegisterUserActivity : AppCompatActivity() {
             val elementsList = mutableListOf(emailET, displayNameET, passwordET, password2ET)
             if (GlobalFunctions.allEditTextAreFilled(elementsList)) {
                 if (passwordET.text.toString() == password2ET.text.toString()) {
-                    FirebaseFunctions.registerUser(displayNameET.text.toString(), emailET.text.toString(), passwordET.text.toString(), firebaseAuth, firebaseStorage, this)
+                    FirebaseFunctions.registerUser(displayNameET.text.toString(), emailET.text.toString(), passwordET.text.toString(), this)
                     progressBar.visibility = View.GONE
                 } else {
                     progressBar.visibility = View.GONE

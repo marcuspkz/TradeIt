@@ -11,7 +11,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:layout_marginRight="45dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -22,16 +21,16 @@
             android:id="@+id/newProductTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/np_title"
+            android:text="Publicar servicio"
             android:textColor="@color/black"
             android:textSize="25sp"
             android:textStyle="bold"></TextView>
 
         <TextView
             android:id="@+id/newProductSmallTitle"
-            android:layout_width="wrap_content"
+            android:layout_width="350dp"
             android:layout_height="wrap_content"
-            android:text="@string/np_smalltitle"
+            android:text="@string/sv_smalltitle"
             android:textColor="@color/black"
             android:textSize="16sp"></TextView>
 
@@ -46,7 +45,7 @@
         android:id="@+id/fields"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="85dp"
+        android:layout_marginTop="20dp"
         android:gravity="right"
         android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="@id/next"
@@ -68,7 +67,7 @@
             android:id="@+id/productDescriptionET"
             android:layout_width="320dp"
             android:layout_height="120dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="16dp"
             android:background="@drawable/tb_background"
             android:gravity="top|left"
             android:hint="@string/np_description"
@@ -77,11 +76,67 @@
             android:paddingTop="10dp"
             android:textSize="15sp"></EditText>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <EditText
+                android:id="@+id/productPriceET"
+                android:layout_width="120dp"
+                android:layout_height="35dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/tb_background"
+                android:hint="@string/np_price"
+                android:maxLines="1"
+                android:maxLength="8"
+                android:textSize="15sp"></EditText>
+            <Spinner
+                android:id="@+id/priceSpinner"
+                android:layout_width="200dp"
+                android:layout_height="35dp"
+                android:layout_marginTop="16dp"
+                android:entries="@array/category_options_service"
+                android:gravity="end"
+                android:prompt="@string/select_rating_prompt"/>
+        </LinearLayout>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/changeHeight"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="#50B8AE"
+            app:cardCornerRadius="12dp"
+            android:layout_marginTop="16dp">
+
+            <TextView
+                android:id="@+id/textRS"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="1 hora(s)"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="25sp"
+                android:textStyle="bold"></TextView>
+
+            <com.google.android.material.slider.RangeSlider
+                android:id="@+id/durationRS"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="15dp"
+                android:layout_marginTop="40dp"
+                android:stepSize="1"
+                android:valueFrom="1"
+                android:valueTo="12"
+                app:thumbColor="@color/main_clear">
+            </com.google.android.material.slider.RangeSlider>
+        </androidx.cardview.widget.CardView>
+
         <Spinner
             android:id="@+id/categorySpinner"
             android:layout_width="320dp"
             android:layout_height="35dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="16dp"
             android:entries="@array/category_options"
             android:prompt="@string/select_rating_prompt"/>
 
@@ -89,7 +144,7 @@
             android:id="@+id/productUbicationET"
             android:layout_width="320dp"
             android:layout_height="35dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="16dp"
             android:background="@drawable/tb_background"
             android:hint="@string/np_ubication"
             android:maxLines="1"
@@ -97,14 +152,16 @@
             android:textSize="15sp"></EditText>
 
         <EditText
-            android:id="@+id/productPriceET"
-            android:layout_width="120dp"
-            android:layout_height="35dp"
-            android:layout_marginTop="20dp"
+            android:id="@+id/requirements"
+            android:layout_width="320dp"
+            android:layout_height="80dp"
+            android:layout_marginTop="16dp"
             android:background="@drawable/tb_background"
-            android:hint="@string/np_price"
-            android:maxLines="1"
-            android:maxLength="8"
+            android:gravity="top|left"
+            android:hint="Requisitos adicionales"
+            android:maxLines="8"
+            android:maxLength="500"
+            android:paddingTop="10dp"
             android:textSize="15sp"></EditText>
     </LinearLayout>
 
@@ -114,7 +171,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="vertical"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"

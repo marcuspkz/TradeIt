@@ -21,6 +21,7 @@
     <!-- newproduct-->
     <string name="np_title">Publicar producto</string>
     <string name="np_smalltitle">\nIntroduce los datos básicos de tu producto.\nMás adelante, podrás subir una imagen.</string>
+    <string name="sv_smalltitle">\nIntroduce los datos básicos del servicio que quieres ofrecer. Más adelante, podrás subir una imagen.</string>
     <string name="np_smallimage">\nSelecciona una imagen de tu dispositivo.\nEsta imagen se mostrará en la página de\nvisualización del producto.</string>
     <string name="np_name">Nombre</string>
     <string name="np_description">Descripción</string>
@@ -83,6 +84,11 @@
         <item>Comida y bebida</item>
         <item>Informática</item>
         <item>Salud y bienestar</item>
+    </string-array>
+
+    <string-array name="category_options_service">
+        <item>Precio fijo</item>
+        <item>Precio por hora</item>
     </string-array>
 
     <!-- userfragment -->

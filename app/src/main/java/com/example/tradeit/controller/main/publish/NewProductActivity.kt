@@ -30,13 +30,14 @@ class NewProductActivity : AppCompatActivity() {
             if (GlobalFunctions.allEditTextAreFilled(elementsList)) {
                 val priceText = priceET.text.toString()
                 try {
-                    val price = priceText.toInt()
+                    priceText.toInt()
                     val intent = Intent(this, ImageActivity::class.java)
                     intent.putExtra("title", titleET.text.toString())
                     intent.putExtra("description", descriptionET.text.toString())
                     intent.putExtra("category", category.selectedItem.toString())
-                    intent.putExtra("price", price.toString())
+                    intent.putExtra("price", priceText)
                     intent.putExtra("ubication", ubicationET.text.toString())
+                    intent.putExtra("isProduct", "true")
                     startActivity(intent)
                 } catch (e: NumberFormatException) {
                     GlobalFunctions.showInfoDialog(this, "Error", "El precio debe ser un número válido.")

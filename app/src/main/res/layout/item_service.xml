@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="8dp"
     android:layout_marginVertical="5dp"
-    app:cardBackgroundColor="@color/main_card"
+    app:cardBackgroundColor="@color/blue_clear"
     app:cardCornerRadius="10dp"
     app:cardElevation="4dp"
     app:strokeColor="#C1C1C1">
@@ -35,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_marginLeft="12dp"
-                android:text="Prueba de producto"
+                android:text="Prueba de servicio"
                 android:maxLines="2"
                 android:maxLength="35"
                 android:textStyle="bold"
@@ -78,7 +78,7 @@
                     android:textStyle="bold"
                     android:gravity="right"
                     android:layout_marginRight="14dp"
-                    android:textColor="@color/main_dark"
+                    android:textColor="#075D9E"
                     android:textSize="22sp">
                 </TextView>
             </LinearLayout>

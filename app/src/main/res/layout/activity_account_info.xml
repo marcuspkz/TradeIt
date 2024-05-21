@@ -41,6 +41,11 @@
                 android:text="Información básica de tu cuenta de usuario."
                 android:textColor="@color/black"
                 android:textSize="16sp"></TextView>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="20dp"
+                android:background="@android:color/darker_gray"/>
 
             <TextView
                 android:id="@+id/infoDescription"

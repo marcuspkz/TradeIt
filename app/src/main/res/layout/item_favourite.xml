@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cardView"
     android:layout_width="match_parent"
     android:layout_height="110dp"
     android:layout_marginHorizontal="8dp"
@@ -8,7 +9,7 @@
     app:cardBackgroundColor="#F3F3F3"
     app:cardCornerRadius="10dp"
     app:cardElevation="4dp"
-    app:strokeColor="@color/black">
+    app:strokeColor="#C1C1C1">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -86,7 +87,7 @@
                         android:text="333.33€"
                         android:layout_marginRight="14dp"
                         android:textStyle="bold"
-                        android:textColor="#208863"
+                        android:textColor="#000000"
                         android:textSize="22sp">
                     </TextView>
                 </LinearLayout>

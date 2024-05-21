@@ -1,20 +1,18 @@
 package com.example.tradeit.model
 
 class Service (
-    var id_service: String,
+    var serviceId: String,
     var title: String,
     val description: String,
     val category: String,
-    val price: Int,
+    val price: String,
     val image: String,
-    val contact: String,
-    val duration: String,
+    val contact: String?,
+    val contactId: String?,
+    val duration: Int,
     val location: String,
-    val requirements: String
+    val requirements: String,
+    val postingDate: String
     ) {
-        constructor() : this("", "", "", "", 0, "", "", "", "", "")
-
-        public fun setNewTitle(title: String) {
-            this.title = title;
-        }
+        constructor() : this("", "", "", "", "", "", "", "", 0, "", "", "")
 }

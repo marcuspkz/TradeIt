@@ -13,12 +13,14 @@ import com.example.tradeit.controller.adapter.FavouriteAdapter
 import com.example.tradeit.controller.adapter.MessageAdapter
 import com.example.tradeit.controller.adapter.ProductAdapter
 import com.example.tradeit.controller.adapter.ReviewAdapter
+import com.example.tradeit.controller.adapter.ServiceAdapter
 import com.example.tradeit.model.Product
 import com.example.tradeit.controller.main.MainActivity
 import com.example.tradeit.controller.main.RegisterUserActivity
 import com.example.tradeit.controller.main.start.StartActivity
 import com.example.tradeit.model.Favourite
 import com.example.tradeit.model.Review
+import com.example.tradeit.model.Service
 import com.example.tradeit.model.User
 import com.example.tradeit.model.chat.Chat
 import com.example.tradeit.model.chat.Message
@@ -38,12 +40,340 @@ import kotlinx.coroutines.tasks.await
 import kotlin.random.Random
 
 object FirebaseFunctions {
-    fun addProduct(product: Product, firebase: FirebaseDatabase): String {
-        val databaseReference = firebase.reference
+    //PRODUCTOS
+    fun addProduct(product: Product): String {
+        val databaseReference = FirebaseDatabase.getInstance().reference
         val productRef = databaseReference.child("Products").push()
         val productId = productRef.key.toString()
         productRef.setValue(product)
         return productId
+    }
+
+    fun getAllProducts(productAdapter: ProductAdapter) {
+        val databaseReference = FirebaseDatabase.getInstance().reference.child("Products")
+
+        databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val productList = mutableListOf<Product>()
+
+                for (data in snapshot.children) {
+                    val product = data.getValue(Product::class.java)
+                    product?.let {
+                        productList.add(it)
+                    }
+                }
+
+                productAdapter.updateList(productList)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                //error de lectura
+            }
+        })
+    }
+
+    fun getProduct(productId: String, callback: (Product?) -> Unit) {
+        val databaseReference = FirebaseDatabase.getInstance().reference
+        val productRef = databaseReference.child("Products").child(productId)
+
+        productRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    val product = dataSnapshot.getValue(Product::class.java)
+                    callback(product)
+                } else {
+                    callback(null)
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                callback(null) //nulo en caso de error
+            }
+        })
+    }
+
+    fun getProductById(productId: String, callback: (Product?) -> Unit) {
+        val databaseReference = FirebaseDatabase.getInstance().reference
+        val usersRef = databaseReference.child("Products").child(productId)
+
+        usersRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val product = snapshot.getValue(Product::class.java)
+                callback(product)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                //operación cancelada
+                callback(null)
+            }
+        })
+    }
+
+    fun getProductsByTitle(title: String, productAdapter: ProductAdapter) {
+        val databaseReference = FirebaseDatabase.getInstance().reference.child("Products")
+        var searchTerm = title.lowercase()
+
+        databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val productList = mutableListOf<Product>()
+
+                for (data in snapshot.children) {
+                    val product = data.getValue(Product::class.java)
+                    product?.let {
+                        if (GlobalFunctions.removeAccents(it.title).lowercase()
+                                .contains(searchTerm)
+                        ) {
+                            productList.add(it)
+                        }
+                    }
+                }
+
+                productAdapter.updateList(productList)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                //error de lectura
+            }
+        })
+    }
+
+    fun modifyProductImage(productId: String, image: String) {
+        val databaseReference = FirebaseDatabase.getInstance().reference
+        val productRef = databaseReference.child("Products").child(productId)
+        productRef.child("image").setValue(image)
+    }
+
+    fun setProductId(productId: String) {
+        val databaseReference = FirebaseDatabase.getInstance().reference
+        val productRef = databaseReference.child("Products").child(productId)
+        productRef.child("productId").setValue(productId)
+    }
+
+    fun deleteProductById(productId: String, activity: Activity) {
+        val databaseReference = FirebaseDatabase.getInstance().reference
+        val storageRef = Firebase.storage.reference
+        val productRef = databaseReference.child("Products").child(productId)
+
+        productRef.removeValue()
+            .addOnSuccessListener {
+                //borrado de imagen
+                val imageRef = storageRef.child("product_images/$productId/product_image.jpg")
+                imageRef.delete()
+                    .addOnSuccessListener {
+                        //éxito
+                    }
+                    .addOnFailureListener {
+                        //error en borrado de imagen
+                    }
+                Toast.makeText(activity, "Producto borrado correctamente", Toast.LENGTH_SHORT)
+                    .show()
+                val intent = Intent(activity, StartActivity::class.java)
+                activity.startActivity(intent)
+                activity.finish()
+            }
+            .addOnFailureListener { exception ->
+                Toast.makeText(activity, "Error al borrar el producto.", Toast.LENGTH_SHORT)
+                    .show()
+            }
+    }
+
+    fun uploadImage(imageUri: Uri, productId: String, callback: (String) -> Unit): String {
+        val storageRef = Firebase.storage.reference
+        val imageRef = storageRef.child("product_images/$productId/product_image.jpg")
+        var image = ""
+
+        imageRef.putFile(imageUri)
+            .addOnSuccessListener {
+                imageRef.downloadUrl.addOnSuccessListener { uri ->
+                    image = uri.toString()
+                    callback(image)
+                }
+            }
+            .addOnFailureListener { exception ->
+                callback("error")
+            }
+
+        return image
+    }
+
+    //SERVICIOS
+    fun addService(service: Service): String {
+        val databaseReference = FirebaseDatabase.getInstance().reference
+        val serviceRef = databaseReference.child("Services").push()
+        val serviceId = serviceRef.key.toString()
+        serviceRef.setValue(service)
+        return serviceId
+    }
+
+    fun getAllServices(serviceAdapter: ServiceAdapter) {
+        val databaseReference = FirebaseDatabase.getInstance().reference.child("Services")
+
+        databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val serviceList = mutableListOf<Service>()
+
+                for (data in snapshot.children) {
+                    val service = data.getValue(Service::class.java)
+                    service?.let {
+                        serviceList.add(it)
+                    }
+                }
+
+                serviceAdapter.updateList(serviceList)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                //error de lectura
+            }
+        })
+    }
+
+    fun getService(serviceId: String, callback: (Service?) -> Unit) {
+        val databaseReference = FirebaseDatabase.getInstance().reference
+        val serviceRef = databaseReference.child("Services").child(serviceId)
+
+        serviceRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    val service = dataSnapshot.getValue(Service::class.java)
+                    callback(service)
+                } else {
+                    callback(null)
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                callback(null)
+            }
+        })
+    }
+
+    fun getServiceById(serviceId: String, callback: (Service?) -> Unit) {
+        val databaseReference = FirebaseDatabase.getInstance().reference
+        val usersRef = databaseReference.child("Services").child(serviceId)
+
+        usersRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val service = snapshot.getValue(Service::class.java)
+                callback(service)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                //operación cancelada
+                callback(null)
+            }
+        })
+    }
+
+    fun getServiceByTitle(title: String, serviceAdapter: ServiceAdapter) {
+        val databaseReference = FirebaseDatabase.getInstance().reference.child("Services")
+        var searchTerm = title.lowercase()
+
+        databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val serviceList = mutableListOf<Service>()
+
+                for (data in snapshot.children) {
+                    val service = data.getValue(Service::class.java)
+                    service?.let {
+                        if (GlobalFunctions.removeAccents(it.title).lowercase()
+                                .contains(searchTerm)
+                        ) {
+                            serviceList.add(it)
+                        }
+                    }
+                }
+
+                serviceAdapter.updateList(serviceList)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                //error de lectura
+            }
+        })
+    }
+
+    fun modifyServiceImage(serviceId: String, image: String) {
+        val databaseReference = FirebaseDatabase.getInstance().reference
+        val serviceRef = databaseReference.child("Services").child(serviceId)
+        serviceRef.child("image").setValue(image)
+    }
+
+    fun setServiceId(serviceId: String) {
+        val databaseReference = FirebaseDatabase.getInstance().reference
+        val serviceRef = databaseReference.child("Services").child(serviceId)
+        serviceRef.child("serviceId").setValue(serviceId)
+    }
+
+    fun deleteServiceById(serviceId: String, activity: Activity) {
+        val databaseReference = FirebaseDatabase.getInstance().reference
+        val storageRef = Firebase.storage.reference
+        val serviceRef = databaseReference.child("Services").child(serviceId)
+
+        serviceRef.removeValue()
+            .addOnSuccessListener {
+                //borrado de imagen
+                val imageRef = storageRef.child("service_images/$serviceId/service_image.jpg")
+                imageRef.delete()
+                    .addOnSuccessListener {
+                        //éxito
+                    }
+                    .addOnFailureListener {
+                        //error en borrado de imagen
+                    }
+                Toast.makeText(activity, "Servicio borrado correctamente", Toast.LENGTH_SHORT)
+                    .show()
+                val intent = Intent(activity, StartActivity::class.java)
+                activity.startActivity(intent)
+                activity.finish()
+            }
+            .addOnFailureListener { exception ->
+                Toast.makeText(activity, "Error al borrar el servicio.", Toast.LENGTH_SHORT)
+                    .show()
+            }
+    }
+
+    fun uploadServiceImage(imageUri: Uri, serviceId: String, callback: (String) -> Unit): String {
+        val storageRef = Firebase.storage.reference
+        val imageRef = storageRef.child("service_images/$serviceId/service_image.jpg")
+        var image = ""
+
+        imageRef.putFile(imageUri)
+            .addOnSuccessListener {
+                imageRef.downloadUrl.addOnSuccessListener { uri ->
+                    image = uri.toString()
+                    callback(image)
+                }
+            }
+            .addOnFailureListener { exception ->
+                callback("error")
+            }
+
+        return image
+    }
+
+    //RESEÑAS
+    fun getAllReviewsForUser(userId: String, reviewAdapter: ReviewAdapter) {
+        val databaseReference = FirebaseDatabase.getInstance().reference.child("Users").child(userId).child("Reviews")
+
+        databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val reviewList = mutableListOf<Review>()
+
+                for (data in snapshot.children) {
+                    val review = data.getValue(Review::class.java)
+                    review?.let {
+                        reviewList.add(it)
+                    }
+                }
+
+                reviewAdapter.updateList(reviewList)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                //error de lectura
+            }
+        })
     }
 
     fun addReview(review: Review, userId: String, callback: (Boolean) -> Unit) {
@@ -81,6 +411,7 @@ object FirebaseFunctions {
         }
     }
 
+    //FAVORITOS
     fun addFavourite(favourite: Favourite): String? {
         val databaseReference = FirebaseDatabase.getInstance().reference
         val favRef = databaseReference.child("Favourites").push()
@@ -142,6 +473,79 @@ object FirebaseFunctions {
         }
     }
 
+    fun getFavourites(userId: String?, favouriteAdapter: FavouriteAdapter) {
+        val databaseReference = FirebaseDatabase.getInstance().reference.child("Favourites")
+
+        databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val favouriteList = mutableListOf<Favourite>()
+
+                for (data in snapshot.children) {
+                    val favourite = data.getValue(Favourite::class.java)
+                    if (favourite != null && favourite.userId == userId) {
+                        favouriteList.add(favourite)
+                    }
+                }
+
+                favouriteAdapter.updateList(favouriteList)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                //error de lectura
+            }
+        })
+    }
+
+    fun deleteFavourite(favouriteId: String, callback: (Boolean) -> Unit) {
+        val databaseReference = FirebaseDatabase.getInstance().reference.child("Favourites").child(favouriteId)
+
+        databaseReference.removeValue()
+            .addOnSuccessListener {
+                callback(true)
+            }
+            .addOnFailureListener {
+                callback(false)
+            }
+    }
+
+    //USUARIOS
+    private fun getRandomImage(storage: FirebaseStorage, callback: (String?) -> Unit) {
+        val storageRef = storage.reference.child("profile_pictures")
+        storageRef.listAll()
+            .addOnSuccessListener { result ->
+                val images = result.items
+                val randomImage = images.randomOrNull()
+                randomImage?.downloadUrl
+                    ?.addOnSuccessListener { uri ->
+                        val imageUrl = uri.toString()
+                        callback(imageUrl)
+                    }
+            }
+    }
+
+    private fun modifyUserImage(userId: String, image: String) {
+        val databaseReference = FirebaseDatabase.getInstance().reference
+        val productRef = databaseReference.child("Users").child(userId)
+        productRef.child("profilePicture").setValue(image)
+    }
+
+    fun getDisplayName(uid: Boolean): String? {
+        val user = Firebase.auth.currentUser
+        var name: String?
+        name = ""
+        user?.let {
+            for (profile in it.providerData) {
+                if (!uid) {
+                    name = profile.displayName
+                } else {
+                    name = user.uid
+                }
+            }
+        }
+
+        return name
+    }
+
     fun averageRating(userId: String, callback: (Double) -> Unit) {
         val databaseReference = FirebaseDatabase.getInstance().reference.child("Users").child(userId).child("Reviews")
 
@@ -172,122 +576,6 @@ object FirebaseFunctions {
         })
     }
 
-    fun getProduct(productId: String, callback: (Product?) -> Unit) {
-        val databaseReference = FirebaseDatabase.getInstance().reference
-        val productRef = databaseReference.child("Products").child(productId)
-
-        productRef.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    val product = dataSnapshot.getValue(Product::class.java)
-                    callback(product)
-                } else {
-                    callback(null)
-                }
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                callback(null) //nulo en caso de error
-            }
-        })
-    }
-
-    fun uploadImage(imageUri: Uri, productId: String, callback: (String) -> Unit): String {
-        val storageRef = Firebase.storage.reference
-        val imageRef = storageRef.child("product_images/$productId/product_image.jpg")
-        var image = ""
-
-        imageRef.putFile(imageUri)
-            .addOnSuccessListener {
-                imageRef.downloadUrl.addOnSuccessListener { uri ->
-                    image = uri.toString()
-                    callback(image)
-                }
-            }
-            .addOnFailureListener { exception ->
-                callback("error")
-            }
-
-        return image
-    }
-
-    private fun getRandomImage(storage: FirebaseStorage, callback: (String?) -> Unit) {
-        val storageRef = storage.reference.child("profile_pictures")
-        storageRef.listAll()
-            .addOnSuccessListener { result ->
-                val images = result.items
-                val randomImage = images.randomOrNull()
-                randomImage?.downloadUrl
-                    ?.addOnSuccessListener { uri ->
-                        val imageUrl = uri.toString()
-                        callback(imageUrl)
-                    }
-            }
-    }
-
-    private fun modifyUserImage(userId: String, image: String) {
-        val databaseReference = FirebaseDatabase.getInstance().reference
-        val productRef = databaseReference.child("Users").child(userId)
-        productRef.child("profilePicture").setValue(image)
-    }
-
-    fun modifyProductImage(productId: String, image: String, firebase: FirebaseDatabase) {
-        val databaseReference = firebase.reference
-        val productRef = databaseReference.child("Products").child(productId)
-        productRef.child("image").setValue(image)
-    }
-
-    fun setProductId(productId: String, firebase: FirebaseDatabase) {
-        val databaseReference = firebase.reference
-        val productRef = databaseReference.child("Products").child(productId)
-        productRef.child("productId").setValue(productId)
-    }
-
-    fun deleteProductById(productId: String, activity: Activity) {
-        val databaseReference = FirebaseDatabase.getInstance().reference
-        val storageRef = Firebase.storage.reference
-        val productRef = databaseReference.child("Products").child(productId)
-
-        productRef.removeValue()
-            .addOnSuccessListener {
-                //borrado de imagen
-                val imageRef = storageRef.child("product_images/$productId/product_image.jpg")
-                imageRef.delete()
-                    .addOnSuccessListener {
-                        //éxito
-                    }
-                    .addOnFailureListener {
-                        //error en borrado de imagen
-                    }
-                Toast.makeText(activity, "Producto borrado correctamente", Toast.LENGTH_SHORT)
-                    .show()
-                val intent = Intent(activity, StartActivity::class.java)
-                activity.startActivity(intent)
-                activity.finish()
-            }
-            .addOnFailureListener { exception ->
-                Toast.makeText(activity, "Error al borrar el producto.", Toast.LENGTH_SHORT)
-                    .show()
-            }
-    }
-
-    fun getDisplayName(uid: Boolean): String? {
-        val user = Firebase.auth.currentUser
-        var name: String?
-        name = ""
-        user?.let {
-            for (profile in it.providerData) {
-                if (!uid) {
-                    name = profile.displayName
-                } else {
-                    name = user.uid
-                }
-            }
-        }
-
-        return name
-    }
-
     fun loginUser(email: String, password: String, firebaseAuth: FirebaseAuth, context: Context) {
         firebaseAuth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(context as MainActivity) { task ->
@@ -307,8 +595,9 @@ object FirebaseFunctions {
             }
     }
 
-
-    fun registerUser(displayName: String, email: String, password: String, firebaseAuth: FirebaseAuth, firebaseStorage: FirebaseStorage, context: Context) {
+    fun registerUser(displayName: String, email: String, password: String, context: Context) {
+        val firebaseAuth = FirebaseAuth.getInstance()
+        val firebaseStorage = FirebaseStorage.getInstance()
         firebaseAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(context as RegisterUserActivity) { task ->
                 if (task.isSuccessful) {
@@ -395,6 +684,20 @@ object FirebaseFunctions {
             }
     }
 
+    private fun updateDisplayName(newDisplayName: String) {
+        val user = Firebase.auth.currentUser
+        val profileUpdates = userProfileChangeRequest {
+            displayName = newDisplayName
+        }
+
+        user!!.updateProfile(profileUpdates)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    //actualización exitosa
+                }
+            }
+    }
+
     fun updateDisplayName(newDisplayName: String, callback: (Boolean) -> Unit) {
         val user = FirebaseAuth.getInstance().currentUser
         if (user != null) {
@@ -447,101 +750,6 @@ object FirebaseFunctions {
         usersRef.child(user.userId).setValue(user)
     }
 
-    private fun updateDisplayName(name: String) {
-        val user = Firebase.auth.currentUser
-        val profileUpdates = userProfileChangeRequest {
-            displayName = name
-        }
-
-        user!!.updateProfile(profileUpdates)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    //actualización exitosa
-                }
-            }
-    }
-
-    fun getAllProducts(productAdapter: ProductAdapter) {
-        val databaseReference = FirebaseDatabase.getInstance().reference.child("Products")
-
-        databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val productList = mutableListOf<Product>()
-
-                for (data in snapshot.children) {
-                    val product = data.getValue(Product::class.java)
-                    product?.let {
-                        productList.add(it)
-                    }
-                }
-
-                productAdapter.updateList(productList)
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                //error de lectura
-            }
-        })
-    }
-
-    fun getFavourites(userId: String?, favouriteAdapter: FavouriteAdapter) {
-        val databaseReference = FirebaseDatabase.getInstance().reference.child("Favourites")
-
-        databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val favouriteList = mutableListOf<Favourite>()
-
-                for (data in snapshot.children) {
-                    val favourite = data.getValue(Favourite::class.java)
-                    if (favourite != null && favourite.userId == userId) {
-                        favouriteList.add(favourite)
-                    }
-                }
-
-                favouriteAdapter.updateList(favouriteList)
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                //error de lectura
-            }
-        })
-    }
-
-    fun deleteFavourite(favouriteId: String, callback: (Boolean) -> Unit) {
-        val databaseReference = FirebaseDatabase.getInstance().reference.child("Favourites").child(favouriteId)
-
-        databaseReference.removeValue()
-            .addOnSuccessListener {
-                callback(true)
-            }
-            .addOnFailureListener {
-                callback(false)
-            }
-    }
-
-    fun getAllReviewsForUser(userId: String, reviewAdapter: ReviewAdapter) {
-        val databaseReference = FirebaseDatabase.getInstance().reference.child("Users").child(userId).child("Reviews")
-
-        databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val reviewList = mutableListOf<Review>()
-
-                for (data in snapshot.children) {
-                    val review = data.getValue(Review::class.java)
-                    review?.let {
-                        reviewList.add(it)
-                    }
-                }
-
-                reviewAdapter.updateList(reviewList)
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                //error de lectura
-            }
-        })
-    }
-
     fun getUserById(userId: String, callback: (User?) -> Unit) {
         val databaseReference = FirebaseDatabase.getInstance().reference
         val usersRef = databaseReference.child("Users").child(userId)
@@ -559,51 +767,35 @@ object FirebaseFunctions {
         })
     }
 
-    fun getProductById(productId: String, callback: (Product?) -> Unit) {
-        val databaseReference = FirebaseDatabase.getInstance().reference
-        val usersRef = databaseReference.child("Products").child(productId)
+    fun deleteAccount(callback: (Boolean) -> Unit) {
+        val user = FirebaseAuth.getInstance().currentUser
+        val userId = user?.uid
 
-        usersRef.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val product = snapshot.getValue(Product::class.java)
-                callback(product)
-            }
+        if (userId != null) {
+            val databaseReference = FirebaseDatabase.getInstance().reference
+            val userRef = databaseReference.child("Users").child(userId)
 
-            override fun onCancelled(error: DatabaseError) {
-                //operación cancelada
-                callback(null)
-            }
-        })
-    }
-
-    fun getProductsByTitle(title: String, productAdapter: ProductAdapter) {
-        val databaseReference = FirebaseDatabase.getInstance().reference.child("Products")
-        var searchTerm = title.lowercase()
-
-        databaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val productList = mutableListOf<Product>()
-
-                for (data in snapshot.children) {
-                    val product = data.getValue(Product::class.java)
-                    product?.let {
-                        if (GlobalFunctions.removeAccents(it.title).lowercase()
-                                .contains(searchTerm)
-                        ) {
-                            productList.add(it)
-                        }
+            userRef.removeValue()
+                .addOnCompleteListener { dbTask ->
+                    if (dbTask.isSuccessful) {
+                        user.delete()
+                            .addOnCompleteListener { authTask ->
+                                if (authTask.isSuccessful) {
+                                    callback(true)
+                                } else {
+                                    callback(false)
+                                }
+                            }
+                    } else {
+                        callback(false)
                     }
                 }
-
-                productAdapter.updateList(productList)
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                //error de lectura
-            }
-        })
+        } else {
+            callback(false)
+        }
     }
 
+    //CHATS
     fun getUserChats(userId: String?, chatAdapter: ChatAdapter) {
         val databaseReference = FirebaseDatabase.getInstance().reference.child("Chats")
 
@@ -741,34 +933,6 @@ object FirebaseFunctions {
                 .addOnFailureListener {
                     //mensaje no enviado
                 }
-        }
-    }
-
-    fun deleteAccount(callback: (Boolean) -> Unit) {
-        val user = FirebaseAuth.getInstance().currentUser
-        val userId = user?.uid
-
-        if (userId != null) {
-            val databaseReference = FirebaseDatabase.getInstance().reference
-            val userRef = databaseReference.child("Users").child(userId)
-
-            userRef.removeValue()
-                .addOnCompleteListener { dbTask ->
-                    if (dbTask.isSuccessful) {
-                        user.delete()
-                            .addOnCompleteListener { authTask ->
-                                if (authTask.isSuccessful) {
-                                    callback(true)
-                                } else {
-                                    callback(false)
-                                }
-                            }
-                    } else {
-                        callback(false)
-                    }
-                }
-        } else {
-            callback(false)
         }
     }
 }
