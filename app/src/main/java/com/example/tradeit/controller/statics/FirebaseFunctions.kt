@@ -411,6 +411,35 @@ object FirebaseFunctions {
         }
     }
 
+    fun deleteReviewById(reviewId: String, userId: String, callback: (Boolean, String) -> Unit) {
+        val reviewsRef = FirebaseDatabase.getInstance().reference.child("Users").child(userId).child("Reviews").child(reviewId)
+        val currentUser = FirebaseAuth.getInstance().currentUser
+
+        reviewsRef.get().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val snapshot = task.result
+                if (snapshot.exists()) {
+                    val publisherId = snapshot.child("publisherId").getValue(String::class.java)
+                    if (publisherId == currentUser?.uid) {
+                        reviewsRef.removeValue().addOnSuccessListener {
+                            callback(true, "Reseña borrada correctamente.")
+                        }.addOnFailureListener {
+                            callback(false, "No se pudo borrar la reseña. Inténtelo de nuevo.")
+                        }
+                    } else {
+                        callback(false, "No puedes borrar reseñas de otros usuarios.")
+                    }
+                } else {
+                    callback(false, "Reseña no encontrada.")
+                }
+            } else {
+                callback(false, "No se pudo obtener la reseña. Inténtelo de nuevo.")
+            }
+        }.addOnFailureListener {
+            callback(false, "No se pudo obtener la reseña. Inténtelo de nuevo.")
+        }
+    }
+
     //FAVORITOS
     fun addFavourite(favourite: Favourite): String? {
         val databaseReference = FirebaseDatabase.getInstance().reference
@@ -584,6 +613,7 @@ object FirebaseFunctions {
                     if (user != null && user.isEmailVerified) {
                         val intent = Intent(context, StartActivity::class.java)
                         context.startActivity(intent)
+                        Toast.makeText(context, "¡Bienvenido, ${firebaseAuth.currentUser?.displayName}!", Toast.LENGTH_SHORT).show()
                         context.finish()
                     } else {
                         firebaseAuth.signOut()

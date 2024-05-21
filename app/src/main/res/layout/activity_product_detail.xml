@@ -61,7 +61,7 @@
                 <ImageView
                     android:id="@+id/image"
                     android:layout_width="360dp"
-                    android:layout_height="250dp"
+                    android:layout_height="220dp"
                     android:src="@drawable/iv_border"></ImageView>
 
                 <LinearLayout

@@ -27,7 +27,7 @@ class UserDetailActivity : AppCompatActivity() {
         binding = ActivityUserDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        reviewAdapter = ReviewAdapter()
+        reviewAdapter = ReviewAdapter(mutableListOf())
         binding.rvReviews.setHasFixedSize(true)
         binding.rvReviews.layoutManager = LinearLayoutManager(this)
         binding.rvReviews.adapter = reviewAdapter

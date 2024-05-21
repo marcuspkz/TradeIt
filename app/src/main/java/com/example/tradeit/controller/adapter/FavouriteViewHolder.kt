@@ -30,6 +30,7 @@ class FavouriteViewHolder(view: View) : RecyclerView.ViewHolder(view) {
                         binding.favSeller.text = product.seller
                         binding.favPrice.text = "${product.price}"
                         Picasso.get().load(product.image).into(binding.ivImage)
+                        binding.ivImage.scaleType = ImageView.ScaleType.CENTER_CROP
                         binding.cardView.setCardBackgroundColor(Color.parseColor("#D1FFDE"))
                     } else {
                         //no se obtuvo producto
@@ -45,6 +46,7 @@ class FavouriteViewHolder(view: View) : RecyclerView.ViewHolder(view) {
                         binding.favSeller.text = service.contact
                         binding.favPrice.text = "${service.price}"
                         Picasso.get().load(service.image).into(binding.ivImage)
+                        binding.ivImage.scaleType = ImageView.ScaleType.CENTER_CROP
                         binding.cardView.setCardBackgroundColor(Color.parseColor("#CCEEFF"))
                     } else {
                         //no se obtuvo servicio
@@ -52,7 +54,5 @@ class FavouriteViewHolder(view: View) : RecyclerView.ViewHolder(view) {
                 }
             }
         }
-
-        //TODO: obtención de servicios
     }
 }

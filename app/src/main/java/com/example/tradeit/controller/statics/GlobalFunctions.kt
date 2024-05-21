@@ -5,6 +5,7 @@ import android.content.Context
 import android.widget.EditText
 import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
 import java.util.Locale
 
 object GlobalFunctions {
@@ -42,5 +43,11 @@ object GlobalFunctions {
         val currentDate = Calendar.getInstance().time
         val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
         return dateFormat.format(currentDate)
+    }
+
+    fun formatDate(milliseconds: Long): String {
+        val date = Date(milliseconds)
+        val formatter = SimpleDateFormat("dd/MM/yy - HH:mm")
+        return formatter.format(date)
     }
 }

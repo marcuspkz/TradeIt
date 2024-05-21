@@ -50,13 +50,13 @@
 
             <TextView
                 android:id="@+id/userTitle"
-                android:layout_width="wrap_content"
+                android:layout_width="260dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:layout_marginLeft="12dp"
                 android:text="Usuario por defecto"
-                android:maxLines="1"
-                android:maxLength="20"
+                android:maxLines="2"
+                android:maxLength="50"
                 android:textStyle="bold"
                 android:textColor="@color/black"
                 android:textSize="18sp">
@@ -68,9 +68,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
                 android:layout_marginLeft="12dp"
-                android:text="El mejor iphone."
+                android:text="Texto de reseña por defecto."
                 android:maxLines="6"
-                android:maxLength="500"
+                android:maxLength="300"
                 android:textColor="@color/black"
                 android:textSize="14sp">
             </TextView>
@@ -86,8 +86,8 @@
                     android:id="@+id/rating"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:text="Valoración: "
+                    android:layout_marginTop="20dp"
+                    android:text="Valoración: 0"
                     android:textColor="@color/black"
                     android:textSize="15sp"
                     android:textStyle="italic">

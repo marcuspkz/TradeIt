@@ -4,6 +4,7 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tradeit.controller.statics.AESCrypt
 import com.example.tradeit.controller.statics.FirebaseFunctions
+import com.example.tradeit.controller.statics.GlobalFunctions
 import com.example.tradeit.databinding.ItemChatBinding
 import com.example.tradeit.databinding.ItemReviewBinding
 import com.example.tradeit.model.Review
@@ -55,7 +56,12 @@ class ChatViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         FirebaseFunctions.getLastMessage(chat.chatId) { lastMessage ->
             if (lastMessage != null) {
-                binding.lastMessage.text = AESCrypt.decrypt(lastMessage.message, key)
+                if (lastMessage.fromUser == firebaseAuth.currentUser?.uid) {
+                    binding.lastMessage.text = "Tú: " + AESCrypt.decrypt(lastMessage.message, key)
+                } else {
+                    binding.lastMessage.text = AESCrypt.decrypt(lastMessage.message, key)
+                }
+                binding.lastDate.text = GlobalFunctions.formatDate(lastMessage.sendDate)
             } else {
                 //no hay last message
                 binding.lastMessage.text = "¡Inicia una conversación!"

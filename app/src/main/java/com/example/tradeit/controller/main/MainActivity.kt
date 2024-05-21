@@ -29,15 +29,11 @@ class MainActivity : AppCompatActivity() {
         val passwordET = binding.passwordET
         val loginButton = binding.loginButton
         var registerButton = binding.registerButton
-        val progressBar = binding.progressBar
 
         loginButton.setOnClickListener {
-            progressBar.visibility = View.VISIBLE
             if (emailET.text.toString() != "" && passwordET.text.toString() != "") {
                 FirebaseFunctions.loginUser(emailET.text.toString(), passwordET.text.toString(), firebaseAuth, this)
-                progressBar.visibility = View.GONE
             } else {
-                progressBar.visibility = View.GONE
                 GlobalFunctions.showInfoDialog(this, "Error", "Es necesario introducir correo electrónico y contraseña.")
             }
         }
@@ -49,7 +45,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.recoverPassword.setOnClickListener {
             val builder = AlertDialog.Builder(this)
-            builder.setTitle("Recuperar Contraseña")
+            builder.setTitle("Recuperar contraseña")
             builder.setMessage("Introduce el correo electrónico asociado a tu cuenta")
 
             val input = EditText(this)
@@ -79,11 +75,8 @@ class MainActivity : AppCompatActivity() {
             }
 
             builder.setNegativeButton("Cancelar") { dialog, _ -> dialog.cancel() }
-
             val dialog = builder.create()
             dialog.show()
-
-            // Ajusta el margen del mensaje del diálogo para que no toque el borde
             val messageView = dialog.findViewById<TextView>(android.R.id.message)
             messageView?.setPadding(48, 0, 48, 0)
         }

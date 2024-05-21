@@ -16,6 +16,7 @@ class ServiceViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         binding.tvTitle.text = service.title
         binding.tvDescription.text = service.description
         binding.tvPrice.text = service.price
+        binding.tvSeller.text = service.contact
         binding.ivImage.scaleType = ImageView.ScaleType.CENTER_CROP
         Picasso.get().load(service.image).into(binding.ivImage)
     }

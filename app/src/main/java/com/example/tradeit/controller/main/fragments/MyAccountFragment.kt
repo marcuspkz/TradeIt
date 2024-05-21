@@ -6,9 +6,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.tradeit.controller.adapter.ReviewAdapter
 import com.example.tradeit.controller.main.AccountInfoActivity
+import com.example.tradeit.controller.main.MainActivity
 import com.example.tradeit.controller.statics.FirebaseFunctions
 import com.example.tradeit.databinding.FragmentMyaccountBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -49,7 +51,7 @@ class MyAccountFragment : Fragment() {
     }
 
     private fun initUI() {
-        reviewAdapter = ReviewAdapter()
+        reviewAdapter = ReviewAdapter(mutableListOf())
         binding.rvUserProducts.setHasFixedSize(true)
         binding.rvUserProducts.layoutManager = LinearLayoutManager(context)
         binding.rvUserProducts.adapter = reviewAdapter
@@ -70,6 +72,13 @@ class MyAccountFragment : Fragment() {
         binding.infoButton.setOnClickListener {
             val intent = Intent(requireContext(), AccountInfoActivity::class.java)
             startActivity(intent)
+        }
+
+        binding.signOutButton.setOnClickListener {
+            firebaseAuth.signOut()
+            val intent = Intent(requireContext(), MainActivity::class.java)
+            startActivity(intent)
+            Toast.makeText(requireContext(), "¡Hasta la próxima!", Toast.LENGTH_SHORT).show()
         }
     }
 }

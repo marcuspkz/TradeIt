@@ -102,6 +102,7 @@ class ImageActivity : AppCompatActivity() {
                                 .setPositiveButton("Aceptar") { _, _ ->
                                     val intent = Intent(this, StartActivity::class.java)
                                     startActivity(intent)
+                                    finish()
                                 }
                                 .create()
                                 .show()
@@ -117,7 +118,7 @@ class ImageActivity : AppCompatActivity() {
                     val serviceId = FirebaseFunctions.addService(service)
 
                     //subimos la imagen y obtenemos la URL
-                    FirebaseFunctions.uploadImage(selectedImageUri!!, serviceId) {imageUrl ->
+                    FirebaseFunctions.uploadServiceImage(selectedImageUri!!, serviceId) {imageUrl ->
                         if (imageUrl == "error") {
                             progressBar.visibility = View.GONE
                             GlobalFunctions.showInfoDialog(this, "Error", "Error al subir la imagen.")
