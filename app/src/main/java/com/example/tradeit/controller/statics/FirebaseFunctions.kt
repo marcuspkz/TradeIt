@@ -67,7 +67,6 @@ object FirebaseFunctions {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                //error de lectura
             }
         })
     }
@@ -87,7 +86,7 @@ object FirebaseFunctions {
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
-                callback(null) //nulo en caso de error
+                callback(null)
             }
         })
     }
@@ -103,7 +102,6 @@ object FirebaseFunctions {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                //operación cancelada
                 callback(null)
             }
         })
@@ -132,7 +130,6 @@ object FirebaseFunctions {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                //error de lectura
             }
         })
     }
@@ -156,14 +153,11 @@ object FirebaseFunctions {
 
         productRef.removeValue()
             .addOnSuccessListener {
-                //borrado de imagen
                 val imageRef = storageRef.child("product_images/$productId/product_image.jpg")
                 imageRef.delete()
                     .addOnSuccessListener {
-                        //éxito
                     }
                     .addOnFailureListener {
-                        //error en borrado de imagen
                     }
                 Toast.makeText(activity, "Producto borrado correctamente", Toast.LENGTH_SHORT)
                     .show()
@@ -223,7 +217,6 @@ object FirebaseFunctions {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                //error de lectura
             }
         })
     }
@@ -259,7 +252,6 @@ object FirebaseFunctions {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                //operación cancelada
                 callback(null)
             }
         })
@@ -288,7 +280,6 @@ object FirebaseFunctions {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                //error de lectura
             }
         })
     }
@@ -312,14 +303,11 @@ object FirebaseFunctions {
 
         serviceRef.removeValue()
             .addOnSuccessListener {
-                //borrado de imagen
                 val imageRef = storageRef.child("service_images/$serviceId/service_image.jpg")
                 imageRef.delete()
                     .addOnSuccessListener {
-                        //éxito
                     }
                     .addOnFailureListener {
-                        //error en borrado de imagen
                     }
                 Toast.makeText(activity, "Servicio borrado correctamente", Toast.LENGTH_SHORT)
                     .show()
@@ -371,7 +359,6 @@ object FirebaseFunctions {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                //error de lectura
             }
         })
     }
@@ -386,10 +373,8 @@ object FirebaseFunctions {
                 .addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
                         if (dataSnapshot.exists()) {
-                            // El usuario ya ha publicado una reseña
                             callback(false)
                         } else {
-                            // El usuario no ha publicado una reseña, proceder a agregarla
                             val reviewId = userRef.push().key
                             reviewId?.let {
                                 review.reviewId = it
@@ -401,12 +386,10 @@ object FirebaseFunctions {
                     }
 
                     override fun onCancelled(databaseError: DatabaseError) {
-                        // En caso de error, no se puede agregar la reseña
                         callback(false)
                     }
                 })
         } else {
-            // No se puede obtener el usuario actual, devolver false
             callback(false)
         }
     }
@@ -493,7 +476,7 @@ object FirebaseFunctions {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                callback(false) //en caso de error, asumir que el favorito no existe
+                callback(false)
             }
         })
     }
@@ -522,7 +505,6 @@ object FirebaseFunctions {
                 }
             })
         } else {
-            //error
             callback(-1)
         }
     }
@@ -545,7 +527,6 @@ object FirebaseFunctions {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                //error de lectura
             }
         })
     }
@@ -625,7 +606,7 @@ object FirebaseFunctions {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                callback(0.0) //0 en caso de error
+                callback(0.0)
             }
         })
     }
@@ -700,7 +681,6 @@ object FirebaseFunctions {
         user?.verifyBeforeUpdateEmail(newEmail)
             ?.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    // Agregar un listener para detectar cambios en el estado de autenticación
                     firebaseAuth.addAuthStateListener(object : FirebaseAuth.AuthStateListener {
                         override fun onAuthStateChanged(auth: FirebaseAuth) {
                             val updatedUser = auth.currentUser
@@ -715,7 +695,6 @@ object FirebaseFunctions {
                                             Toast.makeText(context, "Error al actualizar el correo en la base de datos.", Toast.LENGTH_LONG).show()
                                             callback(false)
                                         }
-                                        // Eliminar el listener después de la actualización
                                         firebaseAuth.removeAuthStateListener(this)
                                     }
                             }
@@ -748,7 +727,6 @@ object FirebaseFunctions {
         user!!.updateProfile(profileUpdates)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    //actualización exitosa
                 }
             }
     }
@@ -793,7 +771,6 @@ object FirebaseFunctions {
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
-                //error de lectura de la base de datos
                 callback(null)
             }
         })
@@ -816,7 +793,6 @@ object FirebaseFunctions {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                //operación cancelada
                 callback(null)
             }
         })

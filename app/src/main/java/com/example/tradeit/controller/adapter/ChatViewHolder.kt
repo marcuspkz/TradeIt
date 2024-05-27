@@ -30,28 +30,22 @@ class ChatViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             FirebaseFunctions.getUserById(chat.toUser) { user ->
                 if (user != null) {
                     binding.userTitle.text = user.displayName
-                    //imagen de perfil
                     FirebaseFunctions.getUserProfilePicture(user.userId) { profilePictureUrl ->
                         profilePictureUrl?.let {
                             Picasso.get().load(it).into(binding.ivImage)
                         }
                     }
-                } else {
-                    //error usuario
                 }
             }
         } else if (chat.toUser == firebaseAuth.currentUser?.uid) {
             FirebaseFunctions.getUserById(chat.fromUser) { user ->
                 if (user != null) {
                     binding.userTitle.text = user.displayName
-                    //imagen de perfil
                     FirebaseFunctions.getUserProfilePicture(user.userId) { profilePictureUrl ->
                         profilePictureUrl?.let {
                             Picasso.get().load(it).into(binding.ivImage)
                         }
                     }
-                } else {
-                    //error usuario
                 }
             }
         }
@@ -65,7 +59,6 @@ class ChatViewHolder(view: View) : RecyclerView.ViewHolder(view) {
                 }
                 binding.lastDate.text = GlobalFunctions.formatDate(lastMessage.sendDate)
             } else {
-                //no hay last message
                 binding.lastMessage.text = "¡Inicia una conversación!"
             }
         }

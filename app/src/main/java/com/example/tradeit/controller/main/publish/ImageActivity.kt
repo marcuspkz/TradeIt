@@ -32,7 +32,6 @@ class ImageActivity : AppCompatActivity() {
         setContentView(binding.root)
         firebase = FirebaseDatabase.getInstance()
 
-        //recuperar los datos de la otra pantalla
         val title = intent.getStringExtra("title").toString()
         val description = intent.getStringExtra("description").toString()
         val category = intent.getStringExtra("category").toString()
@@ -40,18 +39,13 @@ class ImageActivity : AppCompatActivity() {
         val ubication = intent.getStringExtra("ubication").toString()
         val isProduct = intent.getStringExtra("isProduct").toString()
 
-        //servicios
         val duration = intent.getStringExtra("duration").toString()
         val requirements = intent.getStringExtra("requirements").toString()
 
-        //datos de usuario logueado
         val displayName = FirebaseFunctions.getDisplayName(false)
         val userUID = FirebaseFunctions.getDisplayName(true)
 
-        //fecha
         val actualDate = GlobalFunctions.getCurrentDate()
-
-        //pantalla de carga
         val progressBar = binding.progressBar
 
         val imageTitleTV = binding.imageTitle
@@ -79,16 +73,11 @@ class ImageActivity : AppCompatActivity() {
         publishButton.setOnClickListener {
             if (isProduct == "true") {
                 if (selectedImageUri != null) {
-                    //pantalla de carga
                     progressBar.visibility = View.VISIBLE
 
-                    //generamos el producto sin la imagen y sin id, y lo subimos
-                    //lo del id es sencillo. se inserta, se genera su id de firebase pero luego ese id mi programa también
-                    //lo tiene que conocer, dado que si no, es imposible identificarlo posteriormente en el adapter
                     val product = Product("", title, description, category, ubication, price.toInt(), "", displayName, userUID, actualDate)
                     val productId = FirebaseFunctions.addProduct(product)
 
-                    //subimos la imagen y obtenemos la URL
                     FirebaseFunctions.uploadImage(selectedImageUri!!, productId) {imageUrl ->
                         if (imageUrl == "error") {
                             progressBar.visibility = View.GONE
@@ -117,7 +106,6 @@ class ImageActivity : AppCompatActivity() {
                     val service = Service("", title, description, category, price, "", displayName, userUID, duration.toInt(), ubication, requirements, actualDate)
                     val serviceId = FirebaseFunctions.addService(service)
 
-                    //subimos la imagen y obtenemos la URL
                     FirebaseFunctions.uploadServiceImage(selectedImageUri!!, serviceId) {imageUrl ->
                         if (imageUrl == "error") {
                             progressBar.visibility = View.GONE

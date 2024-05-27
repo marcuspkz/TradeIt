@@ -21,14 +21,11 @@ class ReviewViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         FirebaseFunctions.getUserById(review.publisherId) { user ->
             if (user != null) {
                 binding.userTitle.text = user.displayName
-                //imagen de perfil
                 FirebaseFunctions.getUserProfilePicture(user.userId) { profilePictureUrl ->
                     profilePictureUrl?.let {
                         Picasso.get().load(it).into(binding.ivImage)
                     }
                 }
-            } else {
-                //no se obtuvo usuario
             }
         }
         binding.review.text = review.comment

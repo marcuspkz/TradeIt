@@ -14,7 +14,6 @@ import com.example.tradeit.controller.statics.GlobalFunctions
 import com.example.tradeit.databinding.ActivityMainBinding
 import com.google.firebase.auth.FirebaseAuth
 
-//tradeit v1.0.24051901
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var firebaseAuth: FirebaseAuth
@@ -53,7 +52,7 @@ class MainActivity : AppCompatActivity() {
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             )
-            layoutParams.setMargins(48, 0, 48, 0) // Márgenes a izquierda y derecha
+            layoutParams.setMargins(48, 0, 48, 0)
             input.layoutParams = layoutParams
             input.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
 

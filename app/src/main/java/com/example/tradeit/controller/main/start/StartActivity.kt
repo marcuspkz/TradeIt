@@ -23,10 +23,8 @@ class StartActivity : AppCompatActivity() {
         binding = ActivityStartBinding.inflate(layoutInflater)
         firebase = FirebaseDatabase.getInstance()
         setContentView(binding.root)
-        //evitar que el usuario pueda navegar hacia atrás
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                //no hacer nada
             }
         }
         onBackPressedDispatcher.addCallback(this, callback)

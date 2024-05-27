@@ -153,7 +153,6 @@ class ProductDetailActivity : AppCompatActivity() {
                     productId
                 ) { chatExists ->
                     if (!chatExists) {
-                        //crear nuevo chat
                         firebaseAuth.currentUser?.let { currentUser ->
                             FirebaseFunctions.createChat(
                                 currentUser.uid,
@@ -161,20 +160,16 @@ class ProductDetailActivity : AppCompatActivity() {
                                 productId
                             ) { chatId ->
                                 if (chatId != null) {
-                                    //chat creado
                                     val intent = Intent(this, ChatActivity::class.java)
                                     intent.putExtra("chatId", chatId)
                                     intent.putExtra("toUser", sellerId)
                                     intent.putExtra("fromUser", currentUser.uid)
                                     intent.putExtra("relatedProduct", productId)
                                     startActivity(intent)
-                                } else {
-                                    //error al crear chat
                                 }
                             }
                         }
                     } else {
-                        //el chat ya existe
                         GlobalFunctions.showInfoDialog(this, "Error", "El chat ya existe.")
                     }
                 }

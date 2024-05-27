@@ -50,10 +50,8 @@ class ReviewAdapter(private var reviewList: MutableList<Review>) : RecyclerView.
             val userId = reviewList[position].profileId
 
             if (userId != null) {
-                // Verificar permisos primero
                 FirebaseFunctions.checkReviewDeletionPermission(reviewId, userId) { canDelete, message ->
                     if (canDelete) {
-                        // Mostrar diálogo de confirmación
                         AlertDialog.Builder(context)
                             .setTitle("Confirmación")
                             .setMessage("¿Seguro que quieres eliminar esta reseña?")
@@ -75,7 +73,6 @@ class ReviewAdapter(private var reviewList: MutableList<Review>) : RecyclerView.
                             .create()
                             .show()
                     } else {
-                        // Mostrar mensaje de error si no puede eliminar la reseña
                         GlobalFunctions.showInfoDialog(context, "Error", message)
                     }
                 }
