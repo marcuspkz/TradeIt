@@ -65,6 +65,7 @@ class ChatActivity : AppCompatActivity() {
                 toUserProduct.text = product.title
             }
         }
+
         FirebaseFunctions.getUserById(obtainDataId) { user ->
             if (user != null) {
                 toUserId = user.userId

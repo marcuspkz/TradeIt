@@ -5,8 +5,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tradeit.R
+import com.example.tradeit.controller.main.detail.UserDetailActivity
 import com.example.tradeit.controller.statics.FirebaseFunctions
 import com.example.tradeit.controller.statics.GlobalFunctions
 import com.example.tradeit.model.Review
@@ -24,6 +26,24 @@ class ReviewAdapter(private var reviewList: MutableList<Review>) : RecyclerView.
     }
     override fun onBindViewHolder(holder: ReviewViewHolder, position: Int) {
         holder.bind(reviewList[position])
+        holder.itemView.setOnClickListener {
+            val context = it.context
+            AlertDialog.Builder(context)
+                .setTitle("Confirmación")
+                .setMessage("¿Visitar el perfil del usuario?")
+                .setPositiveButton("Sí") { dialog, _ ->
+                    val intent = Intent(context, UserDetailActivity::class.java)
+                    intent.putExtra("sellerId", reviewList[position].publisherId)
+                    context.startActivity(intent)
+                    dialog.dismiss()
+                }
+                .setNegativeButton("No") { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .create()
+                .show()
+        }
+
         holder.itemView.setOnLongClickListener {
             val context = it.context
             val reviewId = reviewList[position].reviewId

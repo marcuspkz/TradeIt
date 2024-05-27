@@ -1,7 +1,9 @@
 package com.example.tradeit.controller.adapter
 
+import android.content.Intent
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
+import com.example.tradeit.controller.main.detail.UserDetailActivity
 import com.example.tradeit.controller.statics.AESCrypt
 import com.example.tradeit.controller.statics.FirebaseFunctions
 import com.example.tradeit.controller.statics.GlobalFunctions

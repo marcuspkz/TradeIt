@@ -11,6 +11,7 @@ import com.example.tradeit.databinding.ItemReviewBinding
 import com.example.tradeit.model.Favourite
 import com.example.tradeit.model.Product
 import com.example.tradeit.model.Review
+import com.google.firebase.Firebase
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.squareup.picasso.Picasso
@@ -25,10 +26,14 @@ class FavouriteViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             favourite.itemId?.let {
                 FirebaseFunctions.getProductById(it) { product ->
                     if (product != null) {
+                        FirebaseFunctions.getUserById(product.sellerId!!) {user ->
+                            if (user != null) {
+                                binding.favSeller.text = user.displayName
+                            }
+                        }
                         binding.favTitle.text = product.title
                         binding.favDescription.text = product.description
-                        binding.favSeller.text = product.seller
-                        binding.favPrice.text = "${product.price}"
+                        binding.favPrice.text = "${product.price}€"
                         Picasso.get().load(product.image).into(binding.ivImage)
                         binding.ivImage.scaleType = ImageView.ScaleType.CENTER_CROP
                         binding.cardView.setCardBackgroundColor(Color.parseColor("#D1FFDE"))
@@ -41,6 +46,11 @@ class FavouriteViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             favourite.itemId?.let {
                 FirebaseFunctions.getServiceById(it) { service ->
                     if (service != null) {
+                        FirebaseFunctions.getUserById(service.contactId!!) {user ->
+                            if (user != null) {
+                                binding.favSeller.text = user.displayName
+                            }
+                        }
                         binding.favTitle.text = service.title
                         binding.favDescription.text = service.description
                         binding.favSeller.text = service.contact

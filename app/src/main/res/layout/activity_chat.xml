@@ -44,7 +44,7 @@
                         android:id="@+id/toUserName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Xavier Fernández"
+                        android:text="Usuario"
                         android:textColor="@color/black"
                         android:textSize="24sp"
                         android:textStyle="bold"></TextView>
