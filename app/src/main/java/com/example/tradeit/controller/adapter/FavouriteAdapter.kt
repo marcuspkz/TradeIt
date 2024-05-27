@@ -3,6 +3,7 @@ package com.example.tradeit.controller.adapter
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tradeit.R
 import com.example.tradeit.controller.main.detail.ProductDetailActivity
@@ -25,7 +26,6 @@ class FavouriteAdapter(private var favouriteList: MutableList<Favourite>) : Recy
     }
     override fun onBindViewHolder(holder: FavouriteViewHolder, position: Int) {
         holder.bind(favouriteList[position])
-        val context = holder.itemView.context
         if (favouriteList[position].isProduct) {
             holder.itemView.setOnClickListener {
                 val intent = Intent(holder.itemView.context, ProductDetailActivity::class.java)
@@ -41,23 +41,37 @@ class FavouriteAdapter(private var favouriteList: MutableList<Favourite>) : Recy
         }
 
         holder.itemView.setOnLongClickListener {
-            FirebaseFunctions.deleteFavourite(favouriteList[position].favId ?: "") { success ->
-                if (success) {
-                    GlobalFunctions.showInfoDialog(
-                        context,
-                        "¡Favorito eliminado!",
-                        "Se ha eliminado el elemento de favoritos."
-                    )
-                    favouriteList.removeAt(position)
-                    notifyItemRemoved(position)
-                } else {
-                    GlobalFunctions.showInfoDialog(
-                        context,
-                        "Error.",
-                        "No se ha podido eliminar el elemento de favoritos."
-                    )
+            val context = it.context
+            AlertDialog.Builder(context)
+                .setTitle("Confirmación")
+                .setMessage("¿Seguro que deseas eliminar este favorito?")
+                .setPositiveButton("Sí") { dialog, _ ->
+                    holder.itemView.isEnabled = false
+                    FirebaseFunctions.deleteFavourite(favouriteList[position].favId) { success ->
+                        if (success) {
+                            GlobalFunctions.showInfoDialog(
+                                context,
+                                "¡Favorito eliminado!",
+                                "Se ha eliminado el elemento de favoritos."
+                            )
+                            favouriteList.removeAt(position)
+                            notifyDataSetChanged()
+                        } else {
+                            GlobalFunctions.showInfoDialog(
+                                context,
+                                "Error.",
+                                "No se ha podido eliminar el elemento de favoritos."
+                            )
+                        }
+                        holder.itemView.isEnabled = true
+                    }
+                    dialog.dismiss()
                 }
-            }
+                .setNegativeButton("No") { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .create()
+                .show()
             true
         }
     }

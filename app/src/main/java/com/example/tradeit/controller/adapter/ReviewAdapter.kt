@@ -4,6 +4,7 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tradeit.R
 import com.example.tradeit.controller.statics.FirebaseFunctions
@@ -22,25 +23,44 @@ class ReviewAdapter(private var reviewList: MutableList<Review>) : RecyclerView.
         )
     }
     override fun onBindViewHolder(holder: ReviewViewHolder, position: Int) {
-        var firebaseAuth: FirebaseAuth
         holder.bind(reviewList[position])
         holder.itemView.setOnLongClickListener {
-            firebaseAuth = FirebaseAuth.getInstance()
+            val context = it.context
             val reviewId = reviewList[position].reviewId
             val userId = reviewList[position].profileId
 
             if (userId != null) {
-                FirebaseFunctions.deleteReviewById(reviewId, userId) { success, message ->
-                    if (success) {
-                        Toast.makeText(holder.itemView.context, message, Toast.LENGTH_SHORT).show()
-                        reviewList.removeAt(position)
-                        notifyItemRemoved(position)
+                // Verificar permisos primero
+                FirebaseFunctions.checkReviewDeletionPermission(reviewId, userId) { canDelete, message ->
+                    if (canDelete) {
+                        // Mostrar diálogo de confirmación
+                        AlertDialog.Builder(context)
+                            .setTitle("Confirmación")
+                            .setMessage("¿Seguro que quieres eliminar esta reseña?")
+                            .setPositiveButton("Sí") { dialog, _ ->
+                                FirebaseFunctions.deleteReviewById(reviewId, userId) { success, deleteMessage ->
+                                    if (success) {
+                                        Toast.makeText(context, deleteMessage, Toast.LENGTH_SHORT).show()
+                                        reviewList.removeAt(position)
+                                        notifyItemRemoved(position)
+                                    } else {
+                                        GlobalFunctions.showInfoDialog(context, "Error", deleteMessage)
+                                    }
+                                }
+                                dialog.dismiss()
+                            }
+                            .setNegativeButton("No") { dialog, _ ->
+                                dialog.dismiss()
+                            }
+                            .create()
+                            .show()
                     } else {
-                        GlobalFunctions.showInfoDialog(holder.itemView.context, "Error", message)
+                        // Mostrar mensaje de error si no puede eliminar la reseña
+                        GlobalFunctions.showInfoDialog(context, "Error", message)
                     }
                 }
             } else {
-                GlobalFunctions.showInfoDialog(holder.itemView.context, "Error", "Usuario no autenticado.")
+                GlobalFunctions.showInfoDialog(context, "Error", "Usuario no autenticado.")
             }
             true
         }

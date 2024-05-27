@@ -1,8 +1,10 @@
 package com.example.tradeit.controller.main.publish
 
+import android.R
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.ArrayAdapter
 import androidx.core.text.isDigitsOnly
 import com.example.tradeit.controller.statics.GlobalFunctions
 import com.example.tradeit.databinding.ActivityNewProductBinding
@@ -27,10 +29,18 @@ class NewServiceActivity : AppCompatActivity() {
         val durationRS = binding.durationRS
         var duration = 0
         val category = binding.categorySpinner
-        val ubicationET = binding.productUbicationET
+        val ubicationET = binding.autoCompleteCity
         val requirements = binding.requirements
         val nextButton = binding.nextButton
         val elementsList = mutableListOf(titleET, descriptionET, priceET, ubicationET, requirements)
+
+        priceET.isSingleLine = true
+        titleET.isSingleLine = true
+        ubicationET.isSingleLine = true
+
+        val adapter = ArrayAdapter(this, R.layout.simple_dropdown_item_1line, GlobalFunctions.cities)
+        ubicationET.setAdapter(adapter)
+        ubicationET.threshold = 1
 
         durationRS.addOnChangeListener { _, value, _ ->
             val df = DecimalFormat("#")

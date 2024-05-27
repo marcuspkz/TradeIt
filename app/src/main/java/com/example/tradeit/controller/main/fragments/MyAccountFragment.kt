@@ -60,7 +60,7 @@ class MyAccountFragment : Fragment() {
         FirebaseAuth.getInstance().currentUser?.let {
             FirebaseFunctions.averageRating(it.uid) { avgRating ->
                 if (avgRating != 0.0) {
-                    binding.rating.text = "Valoración media: ${avgRating}"
+                    binding.rating.text = "Valoración media: ${String.format("%.1f", avgRating)}"
                 } else {
                     binding.rating.text = "Este usuario no tiene valoraciones."
                 }

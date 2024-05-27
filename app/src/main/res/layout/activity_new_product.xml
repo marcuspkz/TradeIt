@@ -46,7 +46,7 @@
         android:id="@+id/fields"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="85dp"
+        android:layout_marginTop="75dp"
         android:gravity="right"
         android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="@id/next"
@@ -61,14 +61,15 @@
             android:background="@drawable/tb_background"
             android:hint="@string/np_name"
             android:maxLines="1"
-            android:maxLength="30"
+            android:maxLength="45"
+            android:imeOptions="actionDone"
             android:textSize="15sp"></EditText>
 
         <EditText
             android:id="@+id/productDescriptionET"
             android:layout_width="320dp"
             android:layout_height="120dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="30dp"
             android:background="@drawable/tb_background"
             android:gravity="top|left"
             android:hint="@string/np_description"
@@ -81,30 +82,32 @@
             android:id="@+id/categorySpinner"
             android:layout_width="320dp"
             android:layout_height="35dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="30dp"
             android:entries="@array/category_options"
             android:prompt="@string/select_rating_prompt"/>
 
-        <EditText
-            android:id="@+id/productUbicationET"
+        <AutoCompleteTextView
+            android:id="@+id/autoCompleteCity"
             android:layout_width="320dp"
             android:layout_height="35dp"
-            android:layout_marginTop="20dp"
             android:background="@drawable/tb_background"
-            android:hint="@string/np_ubication"
+            android:hint="Ubicación del producto"
             android:maxLines="1"
             android:maxLength="30"
-            android:textSize="15sp"></EditText>
+            android:layout_marginTop="30dp"
+            android:textSize="15sp">
+        </AutoCompleteTextView>
 
         <EditText
             android:id="@+id/productPriceET"
             android:layout_width="120dp"
             android:layout_height="35dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="30dp"
             android:background="@drawable/tb_background"
             android:hint="@string/np_price"
             android:maxLines="1"
             android:maxLength="8"
+            android:imeOptions="actionDone"
             android:textSize="15sp"></EditText>
     </LinearLayout>
 

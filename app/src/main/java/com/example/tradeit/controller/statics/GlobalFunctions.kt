@@ -9,6 +9,16 @@ import java.util.Date
 import java.util.Locale
 
 object GlobalFunctions {
+    val cities = arrayOf(
+        "Álava", "Albacete", "Alicante", "Almería", "Asturias", "Ávila", "Badajoz", "Baleares",
+        "Barcelona", "Burgos", "Cáceres", "Cádiz", "Cantabria", "Castellón", "Ciudad Real",
+        "Córdoba", "Cuenca", "Gerona", "Granada", "Guadalajara", "Guipúzcoa", "Huelva",
+        "Huesca", "Jaén", "La Coruña", "La Rioja", "Las Palmas", "León", "Lérida", "Lugo",
+        "Madrid", "Málaga", "Murcia", "Navarra", "Orense", "Palencia", "Pontevedra", "Salamanca",
+        "Santa Cruz de Tenerife", "Segovia", "Sevilla", "Soria", "Tarragona", "Teruel",
+        "Toledo", "Valencia", "Valladolid", "Vizcaya", "Zamora", "Zaragoza"
+    )
+
     fun removeAccents(text: String): String {
         return text
             .replace("á", "a")

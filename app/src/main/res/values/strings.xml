@@ -86,6 +86,30 @@
         <item>Salud y bienestar</item>
     </string-array>
 
+    <string name="select_service_category_prompt">Categoría...</string>
+    <string-array name="service_options">
+        <item>Limpieza</item>
+        <item>Cuidado de niños</item>
+        <item>Paseo de mascotas</item>
+        <item>Edición de vídeo</item>
+        <item>Edición de fotos</item>
+        <item>Redacción y corrección de textos</item>
+        <item>Clases particulares</item>
+        <item>Reparaciones y mantenimiento</item>
+        <item>Asistencia informática</item>
+        <item>Diseño gráfico</item>
+        <item>Marketing digital</item>
+        <item>Consultoría financiera</item>
+        <item>Servicios legales</item>
+        <item>Organización de eventos</item>
+        <item>Asesoría nutricional</item>
+        <item>Entrenamiento personal</item>
+        <item>Transporte y mudanzas</item>
+        <item>Cuidados de salud a domicilio</item>
+        <item>Planificación de viajes</item>
+        <item>Asesoría en redes sociales</item>
+    </string-array>
+
     <string-array name="category_options_service">
         <item>Precio fijo</item>
         <item>Precio por hora</item>

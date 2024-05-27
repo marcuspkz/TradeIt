@@ -53,16 +53,23 @@ class ServiceDetailActivity : AppCompatActivity() {
                     binding.title.text = service.title
                     binding.image.adjustViewBounds = true
                     binding.image.scaleType = ImageView.ScaleType.FIT_XY
-                    Picasso.get().load(service.image).into(binding.image)
                     binding.price.text = "${service.price}"
                     binding.description.text = service.description
-                    binding.userName.text = service.contact
+                    Picasso.get().load(service.image).into(binding.image)
                     binding.postingDate.text = "Publicado el ${service.postingDate}"
                     binding.ubication.text = "Ubicación: ${service.location}"
                     binding.category.text = "Categoría: ${service.category}"
                     binding.duration.text = "Duración del servicio: ${service.duration} horas"
                     binding.requirementsText.text = "Requisitos adicionales: ${service.requirements}"
                     contactId = service.contactId
+
+                    FirebaseFunctions.getUserById(contactId!!) { user ->
+                        if (user != null) {
+                            binding.userName.text = user.displayName
+                            Picasso.get().load(user.profilePicture).into(binding.sellerImage)
+                        }
+                    }
+
                     val actualUser = FirebaseAuth.getInstance().currentUser
                     if (actualUser != null) {
                         if (contactId == actualUser.uid) {
@@ -70,13 +77,6 @@ class ServiceDetailActivity : AppCompatActivity() {
                         } else {
                             reviewButton.visibility = View.VISIBLE
                             chatButton.visibility = View.VISIBLE
-                        }
-                    }
-                    contactId?.let {
-                        FirebaseFunctions.getUserProfilePicture(it) { profilePictureUrl ->
-                            profilePictureUrl?.let {
-                                Picasso.get().load(it).into(binding.sellerImage)
-                            }
                         }
                     }
                 }

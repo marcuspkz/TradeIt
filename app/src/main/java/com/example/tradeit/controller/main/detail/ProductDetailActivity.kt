@@ -57,11 +57,18 @@ class ProductDetailActivity : AppCompatActivity() {
                     Picasso.get().load(product.image).into(binding.image)
                     binding.price.text = "${product.price}€"
                     binding.description.text = product.description
-                    binding.userName.text = product.seller
                     binding.postingDate.text = "Publicado el ${product.postingDate}"
                     binding.ubication.text = "Ubicación: ${product.ubication}"
                     binding.category.text = "Categoría: ${product.category}"
                     sellerId = product.sellerId
+
+                    FirebaseFunctions.getUserById(sellerId!!) { user ->
+                        if (user != null) {
+                            binding.userName.text = user.displayName
+                            Picasso.get().load(user.profilePicture).into(binding.sellerImage)
+                        }
+                    }
+
                     val actualUser = FirebaseAuth.getInstance().currentUser
                     if (actualUser != null) {
                         if (sellerId == actualUser.uid) {
@@ -69,13 +76,6 @@ class ProductDetailActivity : AppCompatActivity() {
                         } else {
                             reviewButton.visibility = VISIBLE
                             chatButton.visibility = VISIBLE
-                        }
-                    }
-                    sellerId?.let {
-                        FirebaseFunctions.getUserProfilePicture(it) { profilePictureUrl ->
-                            profilePictureUrl?.let {
-                                Picasso.get().load(it).into(binding.sellerImage)
-                            }
                         }
                     }
                 }

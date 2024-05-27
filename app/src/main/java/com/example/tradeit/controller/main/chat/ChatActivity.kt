@@ -33,7 +33,6 @@ class ChatActivity : AppCompatActivity() {
         val sellerId = intent.getStringExtra("toUser").toString()
         val productId = intent.getStringExtra("relatedProduct").toString()
         val fromUserId = intent.getStringExtra("fromUser").toString()
-        val testChat = binding.testChat
         val toUserName = binding.toUserName
         val toUserImage = binding.toUserImage
         val toUserProduct = binding.toUserProduct
@@ -48,9 +47,6 @@ class ChatActivity : AppCompatActivity() {
             binding.rvChat.scrollToPosition(messagesNo - 1)
         }
 
-        /*esto es para determinar qué cabecera sale en el chat
-        * si no se pone, si te abren chat, saldrá la del otro usuario
-        * a partir de aqui, obtainDataId tiene al usuario de enfrente*/
         var obtainDataId = ""
         if (sellerId == FirebaseAuth.getInstance().currentUser?.uid) {
             obtainDataId = fromUserId
@@ -74,14 +70,13 @@ class ChatActivity : AppCompatActivity() {
                 toUserId = user.userId
                 toUserName.text = user.displayName
             } else {
-                //no se pudo obtener el usuario
                 GlobalFunctions.showInfoDialog(this, "Error", "No se pudo obtener el usuario")
             }
         }
 
         sendButton.setOnClickListener {
             var key = "aaaaaaaaaaaaaaaa"
-            if (binding.message.toString() != "") {
+            if (binding.message.text.toString() != "") {
                 val message = Message(
                     FirebaseAuth.getInstance().currentUser?.uid,
                     toUserId, AESCrypt.encrypt(binding.message.text.toString(), key),

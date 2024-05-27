@@ -1,8 +1,10 @@
 package com.example.tradeit.controller.main.publish
 
+import android.R
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.ArrayAdapter
 import com.example.tradeit.controller.statics.GlobalFunctions
 import com.example.tradeit.databinding.ActivityNewProductBinding
 import com.google.firebase.database.FirebaseDatabase
@@ -21,8 +23,16 @@ class NewProductActivity : AppCompatActivity() {
         val descriptionET = binding.productDescriptionET
         val category = binding.categorySpinner
         val priceET = binding.productPriceET
-        val ubicationET = binding.productUbicationET
+        val ubicationET = binding.autoCompleteCity
         val nextButton = binding.nextButton
+
+        titleET.isSingleLine = true
+        priceET.isSingleLine = true
+        ubicationET.isSingleLine = true
+
+        val adapter = ArrayAdapter(this, R.layout.simple_dropdown_item_1line, GlobalFunctions.cities)
+        ubicationET.setAdapter(adapter)
+        ubicationET.threshold = 1
 
         val elementsList = mutableListOf(titleET, descriptionET, priceET, ubicationET)
 

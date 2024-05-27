@@ -18,7 +18,6 @@ import com.squareup.picasso.Picasso
 import kotlinx.coroutines.runBlocking
 
 class UserDetailActivity : AppCompatActivity() {
-    private lateinit var firebase: FirebaseDatabase
     private lateinit var binding: ActivityUserDetailBinding
     private lateinit var reviewAdapter: ReviewAdapter
 
@@ -37,6 +36,7 @@ class UserDetailActivity : AppCompatActivity() {
         FirebaseFunctions.getUserById(sellerId) { user ->
             if (user != null) {
                 displayName.text = user.displayName
+                Picasso.get().load(user.profilePicture).into(binding.profilePicture)
             } else {
                 GlobalFunctions.showInfoDialog(this, "Error", "No se pudo obtener el usuario.")
             }
@@ -44,17 +44,12 @@ class UserDetailActivity : AppCompatActivity() {
 
         FirebaseFunctions.averageRating(sellerId) { avgRating ->
             if (avgRating != 0.0) {
-                binding.rating.text = "Valoración media: ${avgRating}"
+                binding.rating.text = "Valoración media: ${String.format("%.1f", avgRating)}"
             } else {
                 binding.rating.text = "Este usuario no tiene valoraciones."
             }
         }
 
         FirebaseFunctions.getAllReviewsForUser(sellerId, reviewAdapter)
-        FirebaseFunctions.getUserProfilePicture(sellerId) { profilePictureUrl ->
-            profilePictureUrl?.let {
-                Picasso.get().load(it).into(binding.profilePicture)
-            }
-        }
     }
 }
