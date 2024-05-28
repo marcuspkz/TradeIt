@@ -42,7 +42,7 @@ class FavouritesFragment : Fragment() {
         super.onResume()
         FirebaseFunctions.getFavourites(FirebaseAuth.getInstance().currentUser?.uid, favouriteAdapter)
         FirebaseAuth.getInstance().currentUser?.let {
-            FirebaseFunctions.favouritesNo() {favsNo ->
+            FirebaseFunctions.favouritesNo {favsNo ->
                 if (favsNo == 0) {
                     binding.infoFavText.visibility = VISIBLE
                 } else {

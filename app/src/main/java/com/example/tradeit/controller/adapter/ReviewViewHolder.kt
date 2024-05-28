@@ -30,6 +30,6 @@ class ReviewViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         }
         binding.review.text = review.comment
         binding.postingDate.text = review.postingDate
-        binding.rating.text = "Valoración: ${review.rating}"
+        binding.rating.text = "Valoración: ${review.rating} ★"
     }
 }

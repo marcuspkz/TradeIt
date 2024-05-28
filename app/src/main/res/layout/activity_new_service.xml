@@ -141,7 +141,7 @@
                 android:layout_width="320dp"
                 android:layout_height="35dp"
                 android:layout_marginTop="30dp"
-                android:entries="@array/category_options_service"
+                android:entries="@array/service_options"
                 android:prompt="@string/select_rating_prompt"/>
 
             <AutoCompleteTextView

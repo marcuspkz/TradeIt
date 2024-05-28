@@ -44,7 +44,7 @@ class UserDetailActivity : AppCompatActivity() {
 
         FirebaseFunctions.averageRating(sellerId) { avgRating ->
             if (avgRating != 0.0) {
-                binding.rating.text = "Valoración media: ${String.format("%.1f", avgRating)}"
+                binding.rating.text = "Valoración media: ${String.format("%.1f", avgRating)} ★"
             } else {
                 binding.rating.text = "Este usuario no tiene valoraciones."
             }

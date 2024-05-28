@@ -60,4 +60,10 @@ object GlobalFunctions {
         val formatter = SimpleDateFormat("dd/MM/yy - HH:mm")
         return formatter.format(date)
     }
+
+    fun formatDateForPosting(milliseconds: Long): String {
+        val date = Date(milliseconds)
+        val formatter = SimpleDateFormat("dd/MM/yyyy")
+        return formatter.format(date)
+    }
 }

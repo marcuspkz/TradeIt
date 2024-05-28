@@ -17,7 +17,7 @@ import com.google.firebase.database.FirebaseDatabase
 
 class ProductAdapter(private var productList: List<Product> = emptyList()) : RecyclerView.Adapter<ProductViewHolder>() {
     fun updateList(list: List<Product>) {
-        productList = list
+        productList = list.sortedByDescending { it.postingDate }
         notifyDataSetChanged()
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {

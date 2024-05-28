@@ -14,7 +14,7 @@ import com.google.firebase.auth.FirebaseAuth
 
 class ServiceAdapter(private var serviceList: List<Service> = emptyList()) : RecyclerView.Adapter<ServiceViewHolder>() {
     fun updateList(list: List<Service>) {
-        serviceList = list
+        serviceList = list.sortedByDescending { it.postingDate }
         notifyDataSetChanged()
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ServiceViewHolder {

@@ -50,6 +50,11 @@ class MyAccountFragment : Fragment() {
         initUI()
     }
 
+    override fun onResume() {
+        super.onResume()
+        FirebaseAuth.getInstance().currentUser?.let { FirebaseFunctions.getAllReviewsForUser(it.uid, reviewAdapter) }
+    }
+
     private fun initUI() {
         reviewAdapter = ReviewAdapter(mutableListOf())
         binding.rvUserProducts.setHasFixedSize(true)
@@ -60,7 +65,7 @@ class MyAccountFragment : Fragment() {
         FirebaseAuth.getInstance().currentUser?.let {
             FirebaseFunctions.averageRating(it.uid) { avgRating ->
                 if (avgRating != 0.0) {
-                    binding.rating.text = "Valoración media: ${String.format("%.1f", avgRating)}"
+                    binding.rating.text = "Valoración media: ${String.format("%.1f", avgRating)} ★"
                 } else {
                     binding.rating.text = "Este usuario no tiene valoraciones."
                 }

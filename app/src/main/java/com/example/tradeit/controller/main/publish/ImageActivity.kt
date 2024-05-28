@@ -45,7 +45,7 @@ class ImageActivity : AppCompatActivity() {
         val displayName = FirebaseFunctions.getDisplayName(false)
         val userUID = FirebaseFunctions.getDisplayName(true)
 
-        val actualDate = GlobalFunctions.getCurrentDate()
+        val actualDate = System.currentTimeMillis()
         val progressBar = binding.progressBar
 
         val imageTitleTV = binding.imageTitle

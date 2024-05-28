@@ -58,7 +58,7 @@
                     android:id="@+id/title2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Número de estrellas: "
+                    android:text="Número de estrellas ★ "
                     android:textColor="@color/black"
                     android:textSize="16sp"></TextView>
                 <Spinner

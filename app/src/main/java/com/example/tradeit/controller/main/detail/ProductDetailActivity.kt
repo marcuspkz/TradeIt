@@ -57,7 +57,7 @@ class ProductDetailActivity : AppCompatActivity() {
                     Picasso.get().load(product.image).into(binding.image)
                     binding.price.text = "${product.price}€"
                     binding.description.text = product.description
-                    binding.postingDate.text = "Publicado el ${product.postingDate}"
+                    binding.postingDate.text = "Publicado el ${GlobalFunctions.formatDateForPosting(product.postingDate)}"
                     binding.ubication.text = "Ubicación: ${product.ubication}"
                     binding.category.text = "Categoría: ${product.category}"
                     sellerId = product.sellerId

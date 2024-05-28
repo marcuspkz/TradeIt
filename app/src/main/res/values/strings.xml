@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">TradeIt</string>
 
+    <!-- about -->
+    <string name="about">TradeIt!\nVersión 1.0.4052801\n\nDistrubido bajo licencia "CC BY 4.0 Attribution 4.0 International".\n\nDesarrollado por: Marco Zúñiga Cuadrado</string>
+
     <!-- mainactivity-->
     <string name="email">Correo electrónico</string>
     <string name="password">Contraseña</string>
@@ -22,7 +25,7 @@
     <string name="np_title">Publicar producto</string>
     <string name="np_smalltitle">\nIntroduce los datos básicos de tu producto.\nMás adelante, podrás subir una imagen.</string>
     <string name="sv_smalltitle">\nIntroduce los datos básicos del servicio que quieres ofrecer. Más adelante, podrás subir una imagen.</string>
-    <string name="np_smallimage">\nSelecciona una imagen de tu dispositivo.\nEsta imagen se mostrará en la página de\nvisualización del producto.</string>
+    <string name="np_smallimage">\nSelecciona una imagen de tu dispositivo.\nEsta imagen se mostrará en la página de\nvisualización del producto o servicio.</string>
     <string name="np_name">Nombre</string>
     <string name="np_description">Descripción</string>
     <string name="np_category">Categoría</string>
@@ -86,7 +89,7 @@
         <item>Salud y bienestar</item>
     </string-array>
 
-    <string name="select_service_category_prompt">Categoría...</string>
+    <string name="select_service_category">Categoría...</string>
     <string-array name="service_options">
         <item>Limpieza</item>
         <item>Cuidado de niños</item>

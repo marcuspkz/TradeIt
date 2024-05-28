@@ -10,7 +10,7 @@ data class Product (
     val image: String,
     val seller: String?,
     val sellerId: String?,
-    val postingDate: String
+    val postingDate: Long
 ) {
-    constructor() : this("", "", "", "", "", 0, "", "", "", "")
+    constructor() : this("", "", "", "", "", 0, "", "", "", 0)
 }

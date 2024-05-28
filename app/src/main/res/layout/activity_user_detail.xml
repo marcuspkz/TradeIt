@@ -40,8 +40,8 @@
 
                 <ImageView
                     android:id="@+id/profilePicture"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
                     android:src="@drawable/iv_border"></ImageView>
 
                 <LinearLayout
@@ -56,7 +56,7 @@
                         android:layout_marginLeft="10dp"
                         android:text="Usuario"
                         android:textColor="@color/black"
-                        android:textSize="20sp"
+                        android:textSize="24sp"
                         android:textStyle="bold"></TextView>
 
                     <TextView
@@ -92,5 +92,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/line" />
+        app:layout_constraintTop_toBottomOf="@id/line"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

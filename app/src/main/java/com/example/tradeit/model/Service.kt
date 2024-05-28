@@ -12,7 +12,7 @@ class Service (
     val duration: Int,
     val location: String,
     val requirements: String,
-    val postingDate: String
+    val postingDate: Long
     ) {
-        constructor() : this("", "", "", "", "", "", "", "", 0, "", "", "")
+        constructor() : this("", "", "", "", "", "", "", "", 0, "", "", 0)
 }

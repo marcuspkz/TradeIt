@@ -16,7 +16,7 @@ import java.util.Locale
 
 class FavouriteAdapter(private var favouriteList: MutableList<Favourite>) : RecyclerView.Adapter<FavouriteViewHolder>() {
     fun updateList(list: MutableList<Favourite>) {
-        favouriteList = list
+        favouriteList = list.apply { reverse() }
         notifyDataSetChanged()
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavouriteViewHolder {

@@ -12,7 +12,7 @@ import com.example.tradeit.model.chat.Chat
 
 class ChatAdapter(private var chatList: List<Chat> = emptyList()) : RecyclerView.Adapter<ChatViewHolder>() {
     fun updateList(list: List<Chat>) {
-        chatList = list
+        chatList = list.reversed()
         notifyDataSetChanged()
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatViewHolder {

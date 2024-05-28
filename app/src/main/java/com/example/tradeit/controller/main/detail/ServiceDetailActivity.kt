@@ -56,7 +56,7 @@ class ServiceDetailActivity : AppCompatActivity() {
                     binding.price.text = "${service.price}"
                     binding.description.text = service.description
                     Picasso.get().load(service.image).into(binding.image)
-                    binding.postingDate.text = "Publicado el ${service.postingDate}"
+                    binding.postingDate.text = "Publicado el ${GlobalFunctions.formatDateForPosting(service.postingDate)}"
                     binding.ubication.text = "Ubicación: ${service.location}"
                     binding.category.text = "Categoría: ${service.category}"
                     binding.duration.text = "Duración del servicio: ${service.duration} horas"
