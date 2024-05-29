@@ -8,9 +8,10 @@
         android:id="@+id/infoFavText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Mantén pulsado un producto para añadirlo a favoritos"
+        android:text="Mantén pulsado un producto o servicio para añadirlo a favoritos"
         android:textColor="@color/gray"
         android:textSize="14sp"
+        android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -22,9 +23,22 @@
         android:id="@+id/rvFavourites"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="50dp"
+        android:layout_marginBottom="?attr/actionBarSize"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="#8F8E8E"
+        android:text="Manteniendo pulsado un favorito, puedes eliminarlo."
+        android:gravity="top|center"
+        android:padding="6dp"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/rvFavourites"></TextView>
 </androidx.constraintlayout.widget.ConstraintLayout>

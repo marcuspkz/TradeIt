@@ -42,7 +42,7 @@
                 android:layout_marginTop="12dp"
                 android:maxLength="30"
                 android:maxLines="1"
-                android:text="Usuario por defecto"
+                android:text="Usuario de TradeIt!"
                 android:textColor="@color/black"
                 android:textSize="18sp"
                 android:textStyle="bold"></TextView>
@@ -54,7 +54,7 @@
                 android:layout_marginLeft="12dp"
                 android:maxLength="60"
                 android:maxLines="1"
-                android:text="Último mensaje enviado o recibido"
+                android:text="Usuario de TradeIt!"
                 android:textColor="@color/black"
                 android:textSize="12sp"></TextView>
 

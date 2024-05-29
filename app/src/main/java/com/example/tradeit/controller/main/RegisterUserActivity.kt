@@ -27,21 +27,16 @@ class RegisterUserActivity : AppCompatActivity() {
         val passwordET = binding.passwordET
         val password2ET = binding.password2ET
         val registerButton = binding.registerButton
-        val progressBar = binding.progressBar
 
         registerButton.setOnClickListener {
-            progressBar.visibility = View.VISIBLE
             val elementsList = mutableListOf(emailET, displayNameET, passwordET, password2ET)
             if (GlobalFunctions.allEditTextAreFilled(elementsList)) {
                 if (passwordET.text.toString() == password2ET.text.toString()) {
                     FirebaseFunctions.registerUser(displayNameET.text.toString(), emailET.text.toString(), passwordET.text.toString(), this)
-                    progressBar.visibility = View.GONE
                 } else {
-                    progressBar.visibility = View.GONE
                     GlobalFunctions.showInfoDialog(this, "Error", "Las contraseñas no coinciden.")
                 }
             } else {
-                progressBar.visibility = View.GONE
                 GlobalFunctions.showInfoDialog(this, "Error", "Es necesario completar todos los campos.")
             }
         }

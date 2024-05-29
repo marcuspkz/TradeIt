@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.tradeit.AboutActivity
 import com.example.tradeit.controller.adapter.ReviewAdapter
 import com.example.tradeit.controller.main.AccountInfoActivity
 import com.example.tradeit.controller.main.MainActivity
@@ -76,6 +77,11 @@ class MyAccountFragment : Fragment() {
 
         binding.infoButton.setOnClickListener {
             val intent = Intent(requireContext(), AccountInfoActivity::class.java)
+            startActivity(intent)
+        }
+
+        binding.aboutButton.setOnClickListener {
+            val intent = Intent(requireContext(), AboutActivity::class.java)
             startActivity(intent)
         }
 

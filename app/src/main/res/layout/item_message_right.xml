@@ -32,7 +32,7 @@
                     android:layout_height="wrap_content"
                     android:maxLength="300"
                     android:maxLines="10"
-                    android:text="Lorem ipsum dolor sit amet"
+                    android:text="Mensaje de TradeIt!"
                     android:textColor="#FFFFFF"
                     android:textSize="14sp"></TextView>
                 <LinearLayout

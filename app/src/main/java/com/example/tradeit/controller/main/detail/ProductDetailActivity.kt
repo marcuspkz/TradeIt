@@ -147,12 +147,12 @@ class ProductDetailActivity : AppCompatActivity() {
 
         chatButton.setOnClickListener {
             firebaseAuth.currentUser?.let { it1 ->
-                FirebaseFunctions.chatExists(
+                FirebaseFunctions.getChatId(
                     it1.uid,
                     sellerId.toString(),
                     productId
-                ) { chatExists ->
-                    if (!chatExists) {
+                ) { chatId ->
+                    if (chatId == "") {
                         firebaseAuth.currentUser?.let { currentUser ->
                             FirebaseFunctions.createChat(
                                 currentUser.uid,
@@ -170,7 +170,12 @@ class ProductDetailActivity : AppCompatActivity() {
                             }
                         }
                     } else {
-                        GlobalFunctions.showInfoDialog(this, "Error", "El chat ya existe.")
+                        val intent = Intent(this, ChatActivity::class.java)
+                        intent.putExtra("chatId", chatId)
+                        intent.putExtra("toUser", sellerId)
+                        intent.putExtra("fromUser", FirebaseAuth.getInstance().currentUser?.uid)
+                        intent.putExtra("relatedProduct", productId)
+                        startActivity(intent)
                     }
                 }
             }

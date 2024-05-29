@@ -3,6 +3,10 @@ package com.example.tradeit.controller.main
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.InputType
+import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.example.tradeit.R
@@ -12,6 +16,7 @@ import com.example.tradeit.controller.statics.GlobalFunctions
 import com.example.tradeit.databinding.ActivityAccountInfoBinding
 import com.example.tradeit.databinding.ActivityProductDetailBinding
 import com.google.firebase.Firebase
+import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 
 class AccountInfoActivity : AppCompatActivity() {
@@ -71,23 +76,60 @@ class AccountInfoActivity : AppCompatActivity() {
 
         binding.deleteAccountButton.setOnClickListener {
             val builder = AlertDialog.Builder(this)
-            builder.setTitle("¿Quieres borrar la cuenta?")
-            builder.setPositiveButton("Sí") { dialog, which ->
-                FirebaseFunctions.deleteAccount { success ->
-                    if (success) {
-                        FirebaseAuth.getInstance().signOut()
-                        val intent = Intent(this, MainActivity::class.java)
-                        startActivity(intent)
-                        Toast.makeText(this, "Cuenta eliminada correctamente", Toast.LENGTH_SHORT).show()
-                        finish()
-                    } else {
-                        GlobalFunctions.showInfoDialog(this, "Error", "Error al intentar eliminar la cuenta.")
+            builder.setTitle("Confirmación de contraseña")
+            builder.setMessage("Introduce tu contraseña para confirmar la eliminación de la cuenta")
+
+            val input = EditText(this)
+            input.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+            val layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            layoutParams.setMargins(48, 0, 48, 0)
+            input.layoutParams = layoutParams
+            builder.setView(input)
+
+            builder.setPositiveButton("Confirmar") { dialog, _ ->
+                val password = input.text.toString()
+                val user = FirebaseAuth.getInstance().currentUser
+
+                if (user != null && password.isNotEmpty()) {
+                    val credential = EmailAuthProvider.getCredential(user.email!!, password)
+                    user.reauthenticate(credential).addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            AlertDialog.Builder(this).apply {
+                                setTitle("¿Seguro que quieres borrar la cuenta?")
+                                setPositiveButton("Sí") { _, _ ->
+                                    FirebaseFunctions.deleteAccount { success ->
+                                        if (success) {
+                                            FirebaseAuth.getInstance().signOut()
+                                            val intent = Intent(this@AccountInfoActivity, MainActivity::class.java)
+                                            startActivity(intent)
+                                            Toast.makeText(this@AccountInfoActivity, "Cuenta eliminada correctamente.", Toast.LENGTH_SHORT).show()
+                                            finish()
+                                        } else {
+                                            GlobalFunctions.showInfoDialog(this@AccountInfoActivity, "Error", "Error al intentar eliminar la cuenta.")
+                                        }
+                                    }
+                                }
+                                setNegativeButton("Cancelar") { dialog, _ -> dialog.cancel() }
+                                create().show()
+                            }
+                        } else {
+                            GlobalFunctions.showInfoDialog(this, "Error",  "Contraseña incorrecta. Inténtalo de nuevo.")
+                        }
                     }
+                } else {
+                    GlobalFunctions.showInfoDialog(this, "Error",  "La contraseña no puede estar vacía.")
                 }
             }
+
             builder.setNegativeButton("Cancelar") { dialog, _ -> dialog.cancel() }
             val dialog = builder.create()
             dialog.show()
+
+            val messageView = dialog.findViewById<TextView>(android.R.id.message)
+            messageView?.setPadding(48, 0, 48, 0)
         }
     }
 }

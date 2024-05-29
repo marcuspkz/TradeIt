@@ -9,6 +9,7 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.marginBottom
 import com.example.tradeit.controller.statics.FirebaseFunctions
 import com.example.tradeit.controller.statics.GlobalFunctions
 import com.example.tradeit.databinding.ActivityMainBinding
@@ -16,14 +17,12 @@ import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var firebaseAuth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        firebaseAuth = FirebaseAuth.getInstance()
         val emailET = binding.emailET
         val passwordET = binding.passwordET
         val loginButton = binding.loginButton
@@ -31,7 +30,7 @@ class MainActivity : AppCompatActivity() {
 
         loginButton.setOnClickListener {
             if (emailET.text.toString() != "" && passwordET.text.toString() != "") {
-                FirebaseFunctions.loginUser(emailET.text.toString(), passwordET.text.toString(), firebaseAuth, this)
+                FirebaseFunctions.loginUser(emailET.text.toString(), passwordET.text.toString(), this)
             } else {
                 GlobalFunctions.showInfoDialog(this, "Error", "Es necesario introducir correo electrónico y contraseña.")
             }
@@ -55,7 +54,6 @@ class MainActivity : AppCompatActivity() {
             layoutParams.setMargins(48, 0, 48, 0)
             input.layoutParams = layoutParams
             input.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
-
             builder.setView(input)
 
             builder.setPositiveButton("Enviar") { dialog, which ->
@@ -79,6 +77,5 @@ class MainActivity : AppCompatActivity() {
             val messageView = dialog.findViewById<TextView>(android.R.id.message)
             messageView?.setPadding(48, 0, 48, 0)
         }
-
     }
 }

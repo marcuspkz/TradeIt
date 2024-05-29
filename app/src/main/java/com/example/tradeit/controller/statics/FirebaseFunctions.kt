@@ -611,7 +611,8 @@ object FirebaseFunctions {
         })
     }
 
-    fun loginUser(email: String, password: String, firebaseAuth: FirebaseAuth, context: Context) {
+    fun loginUser(email: String, password: String, context: Context) {
+        var firebaseAuth = FirebaseAuth.getInstance()
         firebaseAuth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(context as MainActivity) { task ->
                 if (task.isSuccessful) {
@@ -826,6 +827,25 @@ object FirebaseFunctions {
         }
     }
 
+    fun userExists(userId: String, callback: (Boolean) -> Unit) {
+        val databaseReference = FirebaseDatabase.getInstance().reference
+        val userRef = databaseReference.child("Users").child(userId)
+
+        userRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()) {
+                    callback(true)
+                } else {
+                    callback(false)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                callback(false)
+            }
+        })
+    }
+
     //CHATS
     fun getUserChats(userId: String?, chatAdapter: ChatAdapter) {
         val databaseReference = FirebaseDatabase.getInstance().reference.child("Chats")
@@ -876,8 +896,7 @@ object FirebaseFunctions {
     }
 
     fun getChatMessages(chatId: String, messageAdapter: MessageAdapter, messageNo: (Int) -> Unit) {
-        val databaseReference =
-            FirebaseDatabase.getInstance().reference.child("Chats").child(chatId).child("Messages")
+        val databaseReference = FirebaseDatabase.getInstance().reference.child("Chats").child(chatId).child("Messages")
 
         val childEventListener = object : ChildEventListener {
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
@@ -904,29 +923,27 @@ object FirebaseFunctions {
         databaseReference.addChildEventListener(childEventListener)
     }
 
-    fun chatExists(fromUser: String, toUser: String, relatedProduct: String, callback: (Boolean) -> Unit) {
+    fun getChatId(fromUser: String, toUser: String, relatedProduct: String, callback: (String) -> Unit) {
         val databaseReference = FirebaseDatabase.getInstance().reference
         val chatsRef = databaseReference.child("Chats")
 
         chatsRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                var chatExists = false
                 for (chatSnapshot in snapshot.children) {
                     val fromUserId = chatSnapshot.child("fromUser").getValue(String::class.java)
                     val toUserId = chatSnapshot.child("toUser").getValue(String::class.java)
                     val relatedProductId = chatSnapshot.child("relatedProduct").getValue(String::class.java)
 
                     if (fromUserId == fromUser && toUserId == toUser && relatedProductId == relatedProduct) {
-                        chatExists = true
-                        break
+                        callback(chatSnapshot.key ?: "")
+                        return
                     }
                 }
-                callback(chatExists)
+                callback("")
             }
 
             override fun onCancelled(error: DatabaseError) {
-                //error de lectura
-                callback(false)
+                callback("")
             }
         })
     }

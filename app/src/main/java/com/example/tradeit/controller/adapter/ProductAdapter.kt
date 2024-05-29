@@ -1,6 +1,7 @@
 package com.example.tradeit.controller.adapter
 
 import android.content.Intent
+import android.provider.Settings.Global
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
@@ -59,9 +60,18 @@ class ProductAdapter(private var productList: List<Product> = emptyList()) : Rec
             true
         }
         holder.itemView.setOnClickListener {
-            val intent = Intent(holder.itemView.context, ProductDetailActivity::class.java)
-            intent.putExtra("productId", productList[position].productId)
-            holder.itemView.context.startActivity(intent)
+            productList[position].sellerId?.let { it1 ->
+                FirebaseFunctions.userExists(it1) { exists ->
+                    if (exists) {
+                        val intent = Intent(holder.itemView.context, ProductDetailActivity::class.java)
+                        intent.putExtra("productId", productList[position].productId)
+                        holder.itemView.context.startActivity(intent)
+                    } else {
+                        val context = holder.itemView.context
+                        GlobalFunctions.showInfoDialog(context, "Error", "Este usuario no existe.")
+                    }
+                }
+            }
         }
     }
     override fun getItemCount() = productList.size

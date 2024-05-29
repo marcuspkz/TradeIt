@@ -32,9 +32,15 @@ class ReviewAdapter(private var reviewList: MutableList<Review>) : RecyclerView.
                 .setTitle("Confirmación")
                 .setMessage("¿Visitar el perfil del usuario?")
                 .setPositiveButton("Sí") { dialog, _ ->
-                    val intent = Intent(context, UserDetailActivity::class.java)
-                    intent.putExtra("sellerId", reviewList[position].publisherId)
-                    context.startActivity(intent)
+                    FirebaseFunctions.userExists(reviewList[position].publisherId) {exists ->
+                        if (exists) {
+                            val intent = Intent(context, UserDetailActivity::class.java)
+                            intent.putExtra("sellerId", reviewList[position].publisherId)
+                            context.startActivity(intent)
+                        } else {
+                            GlobalFunctions.showInfoDialog(context, "Error", "Este usuario no existe.")
+                        }
+                    }
                     dialog.dismiss()
                 }
                 .setNegativeButton("No") { dialog, _ ->

@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tradeit.R
+import com.example.tradeit.controller.main.detail.ProductDetailActivity
 import com.example.tradeit.controller.main.detail.ServiceDetailActivity
 import com.example.tradeit.controller.statics.FirebaseFunctions
 import com.example.tradeit.controller.statics.GlobalFunctions
@@ -56,9 +57,18 @@ class ServiceAdapter(private var serviceList: List<Service> = emptyList()) : Rec
             true
         }
         holder.itemView.setOnClickListener {
-            val intent = Intent(holder.itemView.context, ServiceDetailActivity::class.java)
-            intent.putExtra("serviceId", serviceList[position].serviceId)
-            holder.itemView.context.startActivity(intent)
+            serviceList[position].contactId?.let { it1 ->
+                FirebaseFunctions.userExists(it1) { exists ->
+                    if (exists) {
+                        val intent = Intent(holder.itemView.context, ServiceDetailActivity::class.java)
+                        intent.putExtra("serviceId", serviceList[position].serviceId)
+                        holder.itemView.context.startActivity(intent)
+                    } else {
+                        val context = holder.itemView.context
+                        GlobalFunctions.showInfoDialog(context, "Error", "Este usuario no existe.")
+                    }
+                }
+            }
         }
     }
     override fun getItemCount() = serviceList.size
