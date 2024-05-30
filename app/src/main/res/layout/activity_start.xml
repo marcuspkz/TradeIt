@@ -10,7 +10,7 @@
         android:id="@+id/tabLayout"
         android:layout_width="409dp"
         android:layout_height="wrap_content"
-        app:tabMode="fixed"
+        app:tabMode="scrollable"
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
         app:tabIndicatorColor="@color/main"

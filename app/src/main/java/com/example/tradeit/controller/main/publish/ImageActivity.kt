@@ -1,15 +1,21 @@
 package com.example.tradeit.controller.main.publish
 
+import android.Manifest
 import android.app.ProgressDialog
+import android.content.ContentValues
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.example.tradeit.controller.statics.FirebaseFunctions
 import com.example.tradeit.controller.main.start.StartActivity
 import com.example.tradeit.controller.statics.GlobalFunctions
@@ -25,6 +31,15 @@ class ImageActivity : AppCompatActivity() {
     private lateinit var binding: ActivityImageBinding
     private lateinit var firebase: FirebaseDatabase
     private var selectedImageUri: Uri? = null
+
+    val pickImage =
+        registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+            uri?.let {
+                binding.imageView.scaleType = ImageView.ScaleType.FIT_XY
+                binding.imageView.setImageURI(it)
+                selectedImageUri = it
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,18 +67,9 @@ class ImageActivity : AppCompatActivity() {
         imageTitleTV.text = title
         val chooseImgButton = binding.chooseImage
         val publishButton = binding.publishButton
-        val imageView = binding.imageView
 
         if (isProduct == "false") {
             binding.publishButton.text = "Publicar servicio >>>"
-        }
-
-        val pickImage = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-            uri?.let {
-                imageView.scaleType = ImageView.ScaleType.FIT_XY
-                imageView.setImageURI(it)
-                selectedImageUri = it
-            }
         }
 
         chooseImgButton.setOnClickListener {
