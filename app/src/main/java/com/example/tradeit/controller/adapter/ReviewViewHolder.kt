@@ -28,6 +28,21 @@ class ReviewViewHolder(view: View) : RecyclerView.ViewHolder(view) {
                 }
             }
         }
+
+        review.productId?.let {
+            FirebaseFunctions.getProductById(it) { product ->
+                if (product != null) {
+                    binding.relatedProduct.text = product.title
+                }
+            }
+        }
+        review.serviceId?.let {
+            FirebaseFunctions.getServiceById(it) { service ->
+                if (service != null) {
+                    binding.relatedProduct.text = service.title
+                }
+            }
+        }
         binding.review.text = review.comment
         binding.postingDate.text = review.postingDate
         binding.rating.text = "Valoración: ${review.rating} ★"

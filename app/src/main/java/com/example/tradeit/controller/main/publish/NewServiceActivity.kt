@@ -27,7 +27,7 @@ class NewServiceActivity : AppCompatActivity() {
         val priceET = binding.productPriceET
         val priceSpinner = binding.priceSpinner
         val durationRS = binding.durationRS
-        var duration = 0
+        var duration = 1
         val category = binding.categorySpinner
         val ubicationET = binding.autoCompleteCity
         val requirements = binding.requirements

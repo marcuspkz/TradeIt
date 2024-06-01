@@ -111,7 +111,7 @@ class ProductDetailActivity : AppCompatActivity() {
                         Toast.makeText(this, "Reseña publicada correctamente.", Toast.LENGTH_SHORT).show()
                         dialog.dismiss()
                     } else {
-                        Toast.makeText(this, "Ya se ha publicado una reseña para este usuario.", Toast.LENGTH_SHORT).show()
+                        GlobalFunctions.showInfoDialog(this, "Error", "Ya se ha publicado una reseña para este usuario.")
                     }
                 }
                 dialog.dismiss()

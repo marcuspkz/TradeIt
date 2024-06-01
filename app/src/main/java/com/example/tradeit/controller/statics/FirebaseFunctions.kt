@@ -369,26 +369,36 @@ object FirebaseFunctions {
 
         val currentUser = FirebaseAuth.getInstance().currentUser?.uid
         if (currentUser != null) {
-            userRef.orderByChild("publisherId").equalTo(currentUser)
-                .addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onDataChange(dataSnapshot: DataSnapshot) {
-                        if (dataSnapshot.exists()) {
-                            callback(false)
-                        } else {
-                            val reviewId = userRef.push().key
-                            reviewId?.let {
-                                review.reviewId = it
-                                userRef.child(it).setValue(review).addOnCompleteListener { task ->
-                                    callback(task.isSuccessful)
-                                }
-                            }
+            userRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    var reviewExists = false
+                    for (snapshot in dataSnapshot.children) {
+                        val existingPublisherId = snapshot.child("publisherId").getValue(String::class.java)
+                        val existingRelatedProduct = snapshot.child("productId").getValue(String::class.java)
+
+                        if (existingPublisherId == currentUser && existingRelatedProduct == review.productId) {
+                            reviewExists = true
+                            break
                         }
                     }
 
-                    override fun onCancelled(databaseError: DatabaseError) {
+                    if (reviewExists) {
                         callback(false)
+                    } else {
+                        val reviewId = userRef.push().key
+                        reviewId?.let {
+                            review.reviewId = it
+                            userRef.child(it).setValue(review).addOnCompleteListener { task ->
+                                callback(task.isSuccessful)
+                            }
+                        }
                     }
-                })
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {
+                    callback(false)
+                }
+            })
         } else {
             callback(false)
         }

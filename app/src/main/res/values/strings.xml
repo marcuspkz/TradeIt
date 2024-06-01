@@ -2,7 +2,7 @@
     <string name="app_name">TradeIt</string>
 
     <!-- about -->
-    <string name="about">TradeIt!\nVersión 1.0.4053001\n\nDistrubido bajo licencia "CC BY 4.0 Attribution 4.0 International".\n\nDesarrollado por: Marco Zúñiga Cuadrado</string>
+    <string name="about">TradeIt!\nVersión 1.0.4060101\n\nDistribuido bajo licencia "CC BY 4.0 Attribution 4.0 International".\n\nDesarrollado por: Marco Zúñiga Cuadrado</string>
 
     <!-- mainactivity-->
     <string name="email">Correo electrónico</string>
